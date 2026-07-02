@@ -1,0 +1,5 @@
+2026/05/21-20:37:41.074 8d00 Creating DB e:\Projetos\agendai\.chrome-profile\Default\Local Storage\leveldb since it was missing.
+2026/05/21-20:37:42.433 8d00 Reusing MANIFEST e:\Projetos\agendai\.chrome-profile\Default\Local Storage\leveldb/MANIFEST-000001
+2026/05/21-21:51:59.729 1600 Level-0 table #5: started
+2026/05/21-21:51:59.799 1600 Level-0 table #5: 100301 bytes OK
+2026/05/21-21:51:59.841 1600 Delete type=0 #3

@@ -1,0 +1,7 @@
+2026/05/21-21:51:53.965 3c84 Reusing MANIFEST e:\Projetos\agendai\.chrome-profile\Default\IndexedDB\https_www.reddit.com_0.indexeddb.leveldb/MANIFEST-000001
+2026/05/21-21:51:53.965 3c84 Recovering log #3
+2026/05/21-21:51:53.966 3c84 Reusing old log e:\Projetos\agendai\.chrome-profile\Default\IndexedDB\https_www.reddit.com_0.indexeddb.leveldb/000003.log 
+2026/05/21-21:52:26.038 3c84 Level-0 table #5: started
+2026/05/21-21:52:26.057 3c84 Level-0 table #5: 1729 bytes OK
+2026/05/21-21:52:26.095 3c84 Delete type=0 #3
+2026/05/21-21:52:26.096 3c84 Manual compaction at level-0 from (begin) .. (end); will stop at (end)

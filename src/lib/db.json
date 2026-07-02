@@ -1,0 +1,106 @@
+{
+  "establishments": [
+    {
+      "id": "est-001",
+      "name": "BarberHub Premium",
+      "description": "Estilo clássico e atendimento moderno para o homem contemporâneo. Barba, cabelo e bigode com profissionais renomados.",
+      "address": "Av. Paulista, 1000 - São Paulo, SP",
+      "phone": "(11) 99999-1111",
+      "imageUrl": "https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=500&q=80"
+    },
+    {
+      "id": "est-002",
+      "name": "Salão Beleza Rara",
+      "description": "Especialistas em realçar sua beleza natural. Serviços completos de cabelo, manicure, pedicure e estética facial.",
+      "address": "Rua Oscar Freire, 500 - São Paulo, SP",
+      "phone": "(11) 98888-2222",
+      "imageUrl": "https://images.unsplash.com/photo-1560066984-138dadb4c035?w=500&q=80"
+    }
+  ],
+  "services": [
+    {
+      "id": "svc-001",
+      "establishmentId": "est-001",
+      "name": "Corte Degradê Premium",
+      "description": "Corte moderno com acabamento perfeito, toalha quente e finalização com pomada importada.",
+      "durationMinutes": 45,
+      "price": 65.0,
+      "category": "Cabelo",
+      "imageUrl": "https://images.unsplash.com/photo-1599351431202-1e0f0137899a?w=500&q=80"
+    },
+    {
+      "id": "svc-002",
+      "establishmentId": "est-001",
+      "name": "Barboterapia Clássica",
+      "description": "Relaxamento total. Toalha quente, massagem facial, lâmina descartável e hidratação dos fios.",
+      "durationMinutes": 30,
+      "price": 45.0,
+      "category": "Barba",
+      "imageUrl": "https://images.unsplash.com/photo-1621605815971-fbc98d665033?w=500&q=80"
+    },
+    {
+      "id": "svc-003",
+      "establishmentId": "est-001",
+      "name": "Combo VIP (Cabelo + Barba)",
+      "description": "A experiência completa de cuidados com um desconto especial para clientes premium.",
+      "durationMinutes": 75,
+      "price": 95.0,
+      "category": "Combos",
+      "imageUrl": "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=500&q=80"
+    },
+    {
+      "id": "svc-004",
+      "establishmentId": "est-001",
+      "name": "Tratamento de Pele Express",
+      "description": "Limpeza de pele rápida com máscara de argila negra e hidratação profunda.",
+      "durationMinutes": 30,
+      "price": 60.0,
+      "category": "Estética",
+      "imageUrl": "https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?w=500&q=80"
+    },
+    {
+      "id": "svc-005",
+      "establishmentId": "est-002",
+      "name": "Escova e Hidratação de Lino",
+      "description": "Tratamento capilar intensivo com óleos essenciais e escovação modeladora premium.",
+      "durationMinutes": 60,
+      "price": 120.0,
+      "category": "Cabelo",
+      "imageUrl": "https://images.unsplash.com/photo-1562322140-8baeececf3df?w=500&q=80"
+    },
+    {
+      "id": "svc-006",
+      "establishmentId": "est-002",
+      "name": "Manicure & Pedicure Premium",
+      "description": "Cuidados completos para unhas das mãos e pés, com esmaltação importada e massagem relaxante.",
+      "durationMinutes": 50,
+      "price": 80.0,
+      "category": "Unhas",
+      "imageUrl": "https://images.unsplash.com/photo-1519014816548-bf5fe059798b?w=500&q=80"
+    }
+  ],
+  "bookings": [
+    {
+      "id": "bkg-001",
+      "establishmentId": "est-001",
+      "serviceId": "svc-001",
+      "clientName": "João Silva",
+      "clientEmail": "joao@email.com",
+      "clientPhone": "(11) 98888-8888",
+      "date": "2026-05-22",
+      "time": "14:00",
+      "status": "Confirmado"
+    },
+    {
+      "id": "bkg-002",
+      "establishmentId": "est-001",
+      "serviceId": "svc-002",
+      "clientName": "Carlos Mendes",
+      "clientEmail": "carlos@email.com",
+      "clientPhone": "(11) 97777-7777",
+      "date": "2026-05-22",
+      "time": "15:30",
+      "status": "Pendente"
+    }
+  ]
+}
