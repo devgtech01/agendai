@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { getEstablishmentByOwnerId, getBookingsByDate, getServices, Booking, Service, Establishment, Professional } from '@/lib/db';
+import ProfissionalHeader from '@/components/ProfissionalHeader';
 
 export default function ProfissionalAgendaPage() {
   const router = useRouter();
@@ -370,33 +371,9 @@ export default function ProfissionalAgendaPage() {
         }
       `}</style>
 
-      {/* Topnav */}
-      <header style={{ background: 'var(--color-surface)', padding: '12px 24px', position: 'sticky', top: 0, zIndex: 10, borderBottom: '1px solid var(--color-border)' }}>
-        <div className="container flex justify-between items-center">
-          <div className="flex items-center gap-6">
-            <Link href="/" style={{ textDecoration: 'none' }}>
-              <div style={{ fontSize: '18px', fontWeight: 500, color: 'var(--color-text)', letterSpacing: '0.02em' }}>
-                Agend<span style={{ color: 'var(--color-accent)' }}>ai</span> <span style={{ fontWeight: 400, color: 'var(--color-muted)', fontSize: '14px' }}>Profissional</span>
-              </div>
-            </Link>
-            <nav className="hidden md:flex gap-4">
-              <Link href="/profissional/dashboard" style={{ fontSize: '14px', color: 'var(--color-muted)', textDecoration: 'none' }}>Dashboard</Link>
-              <Link href="/profissional/agenda" style={{ fontSize: '14px', fontWeight: 500, color: 'var(--color-text)' }}>Minha Agenda</Link>
-              <Link href="/profissional/services" style={{ fontSize: '14px', color: 'var(--color-muted)', textDecoration: 'none' }}>Meus Serviços</Link>
-              <Link href="/profissional/team" style={{ fontSize: '14px', color: 'var(--color-muted)', textDecoration: 'none' }}>Minha Equipe</Link>
-              <Link href="/profissional/settings" style={{ fontSize: '14px', color: 'var(--color-muted)', textDecoration: 'none' }}>Meu Estabelecimento</Link>
-            </nav>
-          </div>
-          <div className="flex items-center gap-4">
-            <span style={{ fontSize: '14px', color: 'var(--color-muted)' }}>{establishment.name}</span>
-            <button onClick={handleLogout} className="btn btn-secondary btn-sm">
-              Sair
-            </button>
-          </div>
-        </div>
-      </header>
+      <ProfissionalHeader establishmentName={establishment.name} />
 
-      <main className="container" style={{ flex: 1, padding: 'var(--space-10) var(--space-6)' }}>
+      <main className="container" style={{ flex: 1, padding: 'var(--space-8) var(--space-4) calc(80px + var(--space-8)) var(--space-4)' }}>
         {services.length === 0 && (
           <div style={{
             background: '#FEF3E2',

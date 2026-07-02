@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { getEstablishmentByOwnerId, getServices, addService, deleteService, Service, Establishment } from '@/lib/db';
+import ProfissionalHeader from '@/components/ProfissionalHeader';
 
 export default function ProfissionalServicesPage() {
   const router = useRouter();
@@ -110,33 +111,9 @@ export default function ProfissionalServicesPage() {
 
   return (
     <div className="flex flex-col min-h-screen bg-[var(--color-background)]">
-      {/* Topnav */}
-      <header style={{ background: 'var(--color-surface)', padding: '12px 24px', position: 'sticky', top: 0, zIndex: 10, borderBottom: '1px solid var(--color-border)' }}>
-        <div className="container flex justify-between items-center">
-          <div className="flex items-center gap-6">
-            <Link href="/" style={{ textDecoration: 'none' }}>
-              <div style={{ fontSize: '18px', fontWeight: 500, color: 'var(--color-text)', letterSpacing: '0.02em' }}>
-                Agend<span style={{ color: 'var(--color-accent)' }}>ai</span> <span style={{ fontWeight: 400, color: 'var(--color-muted)', fontSize: '14px' }}>Profissional</span>
-              </div>
-            </Link>
-            <nav className="hidden md:flex gap-4">
-              <Link href="/profissional/dashboard" style={{ fontSize: '14px', color: 'var(--color-muted)', textDecoration: 'none' }}>Dashboard</Link>
-              <Link href="/profissional/agenda" style={{ fontSize: '14px', color: 'var(--color-muted)', textDecoration: 'none' }}>Minha Agenda</Link>
-              <Link href="/profissional/services" style={{ fontSize: '14px', fontWeight: 500, color: 'var(--color-text)' }}>Meus Serviços</Link>
-              <Link href="/profissional/team" style={{ fontSize: '14px', color: 'var(--color-muted)', textDecoration: 'none' }}>Minha Equipe</Link>
-              <Link href="/profissional/settings" style={{ fontSize: '14px', color: 'var(--color-muted)', textDecoration: 'none' }}>Meu Estabelecimento</Link>
-            </nav>
-          </div>
-          <div className="flex items-center gap-4">
-            <span style={{ fontSize: '14px', color: 'var(--color-muted)' }}>{establishment.name}</span>
-            <button onClick={handleLogout} className="btn btn-secondary btn-sm">
-              Sair
-            </button>
-          </div>
-        </div>
-      </header>
+      <ProfissionalHeader establishmentName={establishment.name} />
 
-      <main className="container flex-1" style={{ padding: 'var(--space-10) var(--space-6)', display: 'grid', gridTemplateColumns: '1fr', gap: 'var(--space-10)', maxWidth: '1000px', margin: '0 auto' }}>
+      <main className="container flex-1" style={{ padding: 'var(--space-8) var(--space-4) calc(80px + var(--space-8)) var(--space-4)', display: 'grid', gridTemplateColumns: '1fr', gap: 'var(--space-8)', maxWidth: '1000px', margin: '0 auto' }}>
         
         {/* Sessão de Adicionar Serviço */}
         <section style={{ background: 'var(--color-surface)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '0.5px solid var(--color-border)' }}>

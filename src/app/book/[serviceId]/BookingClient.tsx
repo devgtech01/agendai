@@ -440,7 +440,7 @@ export default function BookingClient({ serviceId }: { serviceId: string }) {
                   🌴 O estabelecimento está fechado nesta data devido a férias/recesso. Por favor, selecione outro dia.
                 </div>
               ) : (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', gap: '8px' }}>
                   {availableSlots.map(({ time, isBooked }) => {
                     const isPast = isPastTime(time);
                     const isDisabled = isBooked || isPast;

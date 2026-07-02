@@ -894,5 +894,69 @@ button, input, select, textarea {
   transform: translateY(0) scale(0.98) !important;
 }
 
+/* ==========================================
+   RESPONSIVIDADE MOBILE COMPLETA (iOS & Android)
+   ========================================== */
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 var(--space-4);
+  }
+
+  .heading-1 {
+    font-size: 22px;
+  }
+
+  .heading-2 {
+    font-size: 18px;
+  }
+
+  .heading-display {
+    font-size: 32px;
+  }
+
+  /* Touch targets confortáveis para dedos em smartphones */
+  .btn, button, input, select, textarea {
+    min-height: 44px;
+  }
+
+  /* Ajuste de formulários em empilhamento vertical */
+  .flex-mobile-col {
+    flex-direction: column !important;
+  }
+
+  .w-mobile-full {
+    width: 100% !important;
+  }
+
+  /* Ajustes de tabelas e grids para não estourarem a tela no mobile */
+  .mobile-grid-1 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .mobile-scroll-x {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --space-6: 16px;
+    --space-8: 24px;
+    --space-10: 28px;
+  }
+
+  .btn {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  .badge {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+}
+
 
 
