@@ -267,10 +267,10 @@ export default function Home() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Coluna de Texto */}
           <div className="lg:col-span-7 text-center lg:text-left relative z-10">
-            <h1 className="font-display text-5xl tracking-tight text-foreground md:text-6xl lg:text-7xl animate-hero-1" style={{ letterSpacing: "-0.03em", lineHeight: 1.1 }}>
+            <h1 className="font-display text-4xl sm:text-5xl tracking-tight text-foreground md:text-6xl lg:text-7xl animate-hero-1" style={{ letterSpacing: "-0.03em", lineHeight: 1.1 }}>
               A simplicidade da organização profissional que sua empresa precisa
             </h1>
-            <p className="mx-auto lg:mx-0 mt-6 max-w-xl text-lg text-muted-foreground animate-hero-2" style={{ lineHeight: 1.6 }}>
+            <p className="mx-auto lg:mx-0 mt-6 max-w-xl text-base sm:text-lg text-muted-foreground animate-hero-2" style={{ lineHeight: 1.6 }}>
               Centralize sua agenda, profissionais e clientes em uma plataforma feita para barbearias clássicas e salões que valorizam o seu cliente
             </p>
             <div className="mt-10 flex flex-col items-center lg:items-start justify-center lg:justify-start gap-3 sm:flex-row max-w-md mx-auto sm:max-w-none lg:mx-0 animate-hero-3">
@@ -300,7 +300,7 @@ export default function Home() {
 
             {/* Card Flutuante 1 (Mockup de Confirmação de Agenda) */}
             <div 
-              className="glass animate-float"
+              className="glass animate-float hidden md:flex"
               style={{
                 position: 'absolute',
                 bottom: '10%',
@@ -308,7 +308,6 @@ export default function Home() {
                 padding: '14px 18px',
                 borderRadius: 'var(--radius-lg)',
                 boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
-                display: 'flex',
                 alignItems: 'center',
                 gap: '12px',
                 zIndex: 20,
@@ -326,7 +325,7 @@ export default function Home() {
 
             {/* Card Flutuante 2 (Profissional Favorito) */}
             <div 
-              className="glass animate-float-delayed"
+              className="glass animate-float-delayed hidden md:flex"
               style={{
                 position: 'absolute',
                 top: '10%',
@@ -334,7 +333,6 @@ export default function Home() {
                 padding: '12px 16px',
                 borderRadius: 'var(--radius-lg)',
                 boxShadow: '0 10px 30px rgba(0,0,0,0.08)',
-                display: 'flex',
                 flexDirection: 'column',
                 gap: '4px',
                 zIndex: 20,
@@ -437,7 +435,7 @@ export default function Home() {
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-8)' }}>
                 {/* --- CARDS DE RESUMO --- */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'var(--space-6)' }}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Clientes Atendidos */}
                   <div style={{ background: 'var(--color-surface)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '0.5px solid var(--color-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', borderBottom: '1px solid var(--color-border)', paddingBottom: '8px' }}>
@@ -496,7 +494,7 @@ export default function Home() {
                 </div>
 
                 {/* --- SEÇÃO DE GRÁFICOS --- */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 'var(--space-6)' }}>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* Gráfico 1 - Receita Mensal */}
                   <div style={{ background: 'var(--color-surface)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '0.5px solid var(--color-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
@@ -505,8 +503,8 @@ export default function Home() {
                         Evolução do Faturamento Mensal (R$ mil)
                       </h3>
                     </div>
-                    <div style={{ position: 'relative', width: '100%', overflowX: 'auto' }}>
-                      <svg width="440" height="180" viewBox="0 0 440 180" style={{ display: 'block', margin: '0 auto' }}>
+                    <div style={{ position: 'relative', width: '100%' }}>
+                      <svg viewBox="0 0 440 180" className="svg-responsive" preserveAspectRatio="xMidYMid meet" style={{ display: 'block', margin: '0 auto' }}>
                         <defs>
                           <linearGradient id="gradient-area" x1="0" y1="0" x2="0" y2="1">
                             <stop offset="0%" stopColor="var(--color-accent)" stopOpacity="0.25" />
@@ -550,8 +548,8 @@ export default function Home() {
                         Fluxo de Clientes por Dia da Semana (Total)
                       </h3>
                     </div>
-                    <div style={{ position: 'relative', width: '100%', overflowX: 'auto' }}>
-                      <svg width="390" height="180" viewBox="0 0 390 180" style={{ display: 'block', margin: '0 auto' }}>
+                    <div style={{ position: 'relative', width: '100%' }}>
+                      <svg viewBox="0 0 390 180" className="svg-responsive" preserveAspectRatio="xMidYMid meet" style={{ display: 'block', margin: '0 auto' }}>
                         {/* Grid Lines */}
                         <line x1="30" y1="30" x2="380" y2="30" stroke="var(--color-border)" strokeWidth="0.5" strokeDasharray="3 3" />
                         <line x1="30" y1="95" x2="380" y2="95" stroke="var(--color-border)" strokeWidth="0.5" strokeDasharray="3 3" />
@@ -594,7 +592,7 @@ export default function Home() {
                 </div>
 
                 {/* --- FORECAST & RANKING DE SERVIÇOS --- */}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'var(--space-6)' }}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Previsão para a Semana */}
                   <div style={{ background: 'var(--color-surface)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '0.5px solid var(--color-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>

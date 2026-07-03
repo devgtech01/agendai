@@ -244,7 +244,7 @@ export default function ProfissionalDashboardPage() {
         </div>
 
         {/* --- CARDS DE RESUMO --- */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'var(--space-6)', marginBottom: 'var(--space-8)' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6" style={{ marginBottom: 'var(--space-8)' }}>
           
           {/* Card Clientes */}
           <div style={{ background: 'var(--color-surface)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '0.5px solid var(--color-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
@@ -299,15 +299,15 @@ export default function ProfissionalDashboardPage() {
         </div>
 
         {/* --- SEÇÃO DE GRÁFICOS --- */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: 'var(--space-6)', marginBottom: 'var(--space-8)' }}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6" style={{ marginBottom: 'var(--space-8)' }}>
           
           {/* Gráfico 1 - Receita Mensal */}
           <div style={{ background: 'var(--color-surface)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '0.5px solid var(--color-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
             <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-text)', marginBottom: '16px' }}>
             Evolução do Faturamento Mensal (R$)
             </h3>
-            <div style={{ position: 'relative', width: '100%', overflowX: 'auto' }}>
-              <svg width="440" height="180" viewBox="0 0 440 180" style={{ display: 'block', margin: '0 auto' }}>
+            <div style={{ position: 'relative', width: '100%' }}>
+              <svg viewBox="0 0 440 180" className="svg-responsive" preserveAspectRatio="xMidYMid meet" style={{ display: 'block', margin: '0 auto' }}>
                 <defs>
                   <linearGradient id="gradient-area" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="var(--color-accent)" stopOpacity="0.25" />
@@ -354,8 +354,8 @@ export default function ProfissionalDashboardPage() {
             <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-text)', marginBottom: '16px' }}>
             Fluxo de Clientes por Dia da Semana (Total)
             </h3>
-            <div style={{ position: 'relative', width: '100%', overflowX: 'auto' }}>
-              <svg width="390" height="180" viewBox="0 0 390 180" style={{ display: 'block', margin: '0 auto' }}>
+            <div style={{ position: 'relative', width: '100%' }}>
+              <svg viewBox="0 0 390 180" className="svg-responsive" preserveAspectRatio="xMidYMid meet" style={{ display: 'block', margin: '0 auto' }}>
                 {/* Grid Lines */}
                 <line x1="30" y1="30" x2="380" y2="30" stroke="var(--color-border)" strokeWidth="0.5" strokeDasharray="3 3" />
                 <line x1="30" y1="95" x2="380" y2="95" stroke="var(--color-border)" strokeWidth="0.5" strokeDasharray="3 3" />
@@ -401,7 +401,7 @@ export default function ProfissionalDashboardPage() {
         </div>
 
         {/* --- FORECAST & RANKING DE SERVIÇOS --- */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 'var(--space-6)' }}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           
           {/* Previsão para a Semana */}
           <div style={{ background: 'var(--color-surface)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '0.5px solid var(--color-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>

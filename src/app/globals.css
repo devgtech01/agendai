@@ -53,6 +53,11 @@
   padding: 0;
 }
 
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
 body {
   background-color: var(--color-background);
   color: var(--color-text);
@@ -957,6 +962,13 @@ button, input, select, textarea {
     padding: 3px 8px;
   }
 }
+
+.svg-responsive {
+  width: 100% !important;
+  height: auto !important;
+  max-width: 100% !important;
+}
+
 
 
 
