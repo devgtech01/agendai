@@ -626,14 +626,27 @@ export default function BookingClient({ serviceId }: { serviceId: string }) {
       {/* ETAPA 4: SUCESSO */}
       {step === 4 && (
         <div className="animate-fade-in flex flex-col items-center text-center gap-6" style={{ padding: 'var(--space-6) 0' }}>
-          <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--color-success)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px', marginBottom: '16px' }}>
+          <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--color-success)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '32px', marginBottom: '8px' }}>
             ✓
           </div>
           <div>
             <h2 className="heading-2" style={{ marginBottom: '8px' }}>Agendamento Confirmado!</h2>
-            <p className="text-muted" style={{ fontSize: '14px', maxWidth: '400px', margin: '0 auto' }}>
+            <p className="text-muted" style={{ fontSize: '14px', maxWidth: '440px', margin: '0 auto', lineHeight: 1.6 }}>
               Parabéns, <strong>{clientName}</strong>! Seu horário para o serviço <strong>{service.name}</strong> na <strong>{establishment.name}</strong> foi reservado para o dia <strong>{selectedDate.split('-').reverse().join('/')}</strong> às <strong>{selectedTime}</strong>.
             </p>
+
+            {/* Aviso destacado de confirmação por e-mail e Spam */}
+            <div style={{ marginTop: '20px', padding: '16px', background: '#FEF3E2', border: '1px solid rgba(193, 90, 46, 0.25)', borderRadius: '12px', fontSize: '13px', color: '#8B5A0A', textAlign: 'left', maxWidth: '440px', margin: '20px auto 0 auto' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 600, fontSize: '14px', color: '#C15A2E', marginBottom: '6px' }}>
+                📧 Confirmação enviada para o seu e-mail!
+              </div>
+              <p style={{ margin: 0, lineHeight: 1.5, color: '#5F5A54' }}>
+                Enviamos todos os detalhes do seu agendamento para <strong>{clientEmail}</strong>.<br />
+                <span style={{ fontSize: '12px', color: '#8C8378', display: 'block', marginTop: '6px' }}>
+                  💡 <em>Caso não encontre na caixa de entrada principal, por favor verifique sua pasta de <strong>Spam / Lixo Eletrônico</strong>.</em>
+                </span>
+              </p>
+            </div>
           </div>
           <button className="btn btn-primary" onClick={() => router.push(`/catalog/${service.establishmentId}`)} style={{ marginTop: '16px' }}>
             Voltar ao Estabelecimento

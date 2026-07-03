@@ -161,52 +161,55 @@ export async function POST(request: Request) {
             `,
           });
 
-          // 2. Enviar e-mail de notificação para o profissional
-          await resend.emails.send({
-            from: process.env.EMAIL_FROM || 'Agendai <atendimento@sisagendai.online>',
-            to: clientEmail,
-            subject: `[Agendai] Novo Agendamento Recebido: ${srvName}! 📅`,
-            html: `
-              <div style="font-family: system-ui, -apple-system, sans-serif; background-color: #F8F7F4; padding: 40px 20px;">
-                <div style="max-width: 500px; margin: 0 auto; background-color: #FFFFFF; border: 1px solid #E4E1DC; border-radius: 16px; padding: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
-                  <div style="text-align: center; margin-bottom: 24px;">
-                    <div style="font-size: 20px; font-weight: 600; color: #1A1A2E; letter-spacing: 0.02em; margin-bottom: 8px;">
-                      Agend<span style="color: #C15A2E;">ai</span> <span style="font-weight: 400; color: #8C8378; font-size: 14px;">Painel</span>
+          // 2. Enviar e-mail de notificação para o profissional/administrador (se configurado)
+          const adminNotifyEmail = process.env.ADMIN_NOTIFY_EMAIL || process.env.NOTIFY_EMAIL;
+          if (adminNotifyEmail) {
+            await resend.emails.send({
+              from: process.env.EMAIL_FROM || 'Agendai <atendimento@sisagendai.online>',
+              to: adminNotifyEmail,
+              subject: `[Agendai] Novo Agendamento Recebido: ${srvName}! 📅`,
+              html: `
+                <div style="font-family: system-ui, -apple-system, sans-serif; background-color: #F8F7F4; padding: 40px 20px;">
+                  <div style="max-width: 500px; margin: 0 auto; background-color: #FFFFFF; border: 1px solid #E4E1DC; border-radius: 16px; padding: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
+                    <div style="text-align: center; margin-bottom: 24px;">
+                      <div style="font-size: 20px; font-weight: 600; color: #1A1A2E; letter-spacing: 0.02em; margin-bottom: 8px;">
+                        Agend<span style="color: #C15A2E;">ai</span> <span style="font-weight: 400; color: #8C8378; font-size: 14px;">Painel</span>
+                      </div>
+                      <h2 style="font-size: 22px; font-weight: 500; color: #2E2B25; margin: 0;">Novo Agendamento!</h2>
+                      <p style="font-size: 14px; color: #8C8378; margin-top: 4px;">Você tem um novo compromisso na sua agenda</p>
                     </div>
-                    <h2 style="font-size: 22px; font-weight: 500; color: #2E2B25; margin: 0;">Novo Agendamento!</h2>
-                    <p style="font-size: 14px; color: #8C8378; margin-top: 4px;">Você tem um novo compromisso na sua agenda</p>
-                  </div>
-                  
-                  <p style="font-size: 15px; color: #5F5A54; line-height: 1.6; margin-bottom: 24px;">
-                    Olá, administrador do <strong>${estName}</strong>!<br />
-                    Um cliente acabou de agendar um horário com você. Veja os dados:
-                  </p>
+                    
+                    <p style="font-size: 15px; color: #5F5A54; line-height: 1.6; margin-bottom: 24px;">
+                      Olá, administrador do <strong>${estName}</strong>!<br />
+                      Um cliente acabou de agendar um horário com você. Veja os dados:
+                    </p>
 
-                  <div style="background-color: #EAF7EC; border-left: 4px solid #2D9D78; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
-                    <p style="margin: 0 0 8px 0; font-size: 14px; color: #235A45;">
-                      👤 <strong>Cliente:</strong> ${clientName}
-                    </p>
-                    <p style="margin: 0 0 8px 0; font-size: 14px; color: #235A45;">
-                      📞 <strong>Contato:</strong> ${clientPhone}
-                    </p>
-                    <p style="margin: 0 0 8px 0; font-size: 14px; color: #235A45;">
-                      ✂️ <strong>Serviço:</strong> ${srvName}
-                    </p>
-                    <p style="margin: 0 0 8px 0; font-size: 14px; color: #235A45;">
-                      📅 <strong>Data:</strong> ${formattedDate}
-                    </p>
-                    <p style="margin: 0; font-size: 14px; color: #235A45;">
-                      ⏱ <strong>Horário:</strong> ${formattedTime}
+                    <div style="background-color: #EAF7EC; border-left: 4px solid #2D9D78; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
+                      <p style="margin: 0 0 8px 0; font-size: 14px; color: #235A45;">
+                        👤 <strong>Cliente:</strong> ${clientName}
+                      </p>
+                      <p style="margin: 0 0 8px 0; font-size: 14px; color: #235A45;">
+                        📞 <strong>Contato:</strong> ${clientPhone}
+                      </p>
+                      <p style="margin: 0 0 8px 0; font-size: 14px; color: #235A45;">
+                        ✂️ <strong>Serviço:</strong> ${srvName}
+                      </p>
+                      <p style="margin: 0 0 8px 0; font-size: 14px; color: #235A45;">
+                        📅 <strong>Data:</strong> ${formattedDate}
+                      </p>
+                      <p style="margin: 0; font-size: 14px; color: #235A45;">
+                        ⏱ <strong>Horário:</strong> ${formattedTime}
+                      </p>
+                    </div>
+
+                    <p style="font-size: 13px; color: #8C8378; line-height: 1.5; text-align: center; margin-top: 32px; border-top: 0.5px solid #E4E1DC; padding-top: 20px;">
+                      Acesse seu <a href="${appUrl}/profissional/agenda" style="color: #C15A2E; text-decoration: none; font-weight: 600;">Painel de Controle</a> para gerenciar este e outros atendimentos.
                     </p>
                   </div>
-
-                  <p style="font-size: 13px; color: #8C8378; line-height: 1.5; text-align: center; margin-top: 32px; border-top: 0.5px solid #E4E1DC; padding-top: 20px;">
-                    Acesse seu <a href="${appUrl}/profissional/agenda" style="color: #C15A2E; text-decoration: none; font-weight: 600;">Painel de Controle</a> para gerenciar este e outros atendimentos.
-                  </p>
                 </div>
-              </div>
-            `,
-          });
+              `,
+            });
+          }
         } catch (emailError) {
           console.error('Erro ao enviar e-mails de confirmação/notificação:', emailError);
         }
