@@ -7,13 +7,23 @@ import Link from 'next/link';
 export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMsg, setErrorMsg] = useState('');
   const router = useRouter();
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulação de login para o MVP
-    if (email && password) {
+    setErrorMsg('');
+
+    // Credenciais padrão de administrador da plataforma
+    const validEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'admin@sisagendai.online';
+    const validPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'AgendaiAdmin2026!';
+
+    if (email.trim().toLowerCase() === validEmail.toLowerCase() && password === validPassword) {
+      // Salvar sessão simples do admin
+      sessionStorage.setItem('adminAuthenticated', 'true');
       router.push('/admin/dashboard');
+    } else {
+      setErrorMsg('E-mail ou senha de administrador incorretos.');
     }
   };
 
@@ -30,6 +40,12 @@ export default function AdminLoginPage() {
             Acesso restrito para gestão da plataforma
           </p>
         </div>
+
+        {errorMsg && (
+          <div className="badge badge-danger w-full p-3 mb-4 text-center text-xs" style={{ borderRadius: '8px' }}>
+            {errorMsg}
+          </div>
+        )}
 
         <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-5)' }}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
