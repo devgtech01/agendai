@@ -21,14 +21,15 @@ export default async function EstablishmentPage({ params }: PageProps) {
       {/* Header Minimal */}
       <header style={{ background: 'var(--color-primary)', padding: '12px 16px', position: 'sticky', top: 0, zIndex: 50, borderBottom: '1px solid rgba(232, 213, 183, 0.15)' }}>
         <div className="container flex justify-between items-center" style={{ padding: 0 }}>
-          <Link href="/catalog" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px', color: 'rgba(232,213,183,0.85)', fontSize: '13px' }}>
-            <span>← <span className="hidden sm:inline">Todos </span>Estabelecimentos</span>
+          <Link href="/catalog" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '4px', color: 'rgba(232,213,183,0.85)', fontSize: '14px', width: '70px' }}>
+            <span>← Voltar</span>
           </Link>
           <Link href="/" style={{ textDecoration: 'none' }}>
-            <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-linen)', letterSpacing: '0.02em' }}>
+            <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-linen)', letterSpacing: '0.02em', textAlign: 'center' }}>
               Agend<span style={{ color: 'var(--color-accent)' }}>ai</span>
             </div>
           </Link>
+          <div style={{ width: '70px' }} /> {/* Spacer para alinhamento centralizado */}
         </div>
       </header>
 
