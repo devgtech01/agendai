@@ -220,40 +220,95 @@ export default function Home() {
 
         {/* Menu Drawer Mobile */}
         {isMobileMenuOpen && (
-          <div className="bg-primary w-full px-6 pb-6 pt-2 md:hidden border-t animate-fade-in" style={{ borderColor: 'rgba(232, 213, 183, 0.1)' }}>
-            <ul className="flex flex-col gap-4" style={{ listStyle: 'none', margin: 0, padding: 0 }}>
-              <li>
-                <Link
-                  href="/profissional"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-base font-medium text-linen block"
-                  style={{ textDecoration: 'none' }}
-                >
-                  Para Profissionais
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/profissional/planos"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-base font-medium text-linen block"
-                  style={{ textDecoration: 'none' }}
-                >
-                  Planos
-                </Link>
-              </li>
-              <div className="h-px bg-linen opacity-10 my-2" />
-              <li>
-                <Link 
-                  href="/catalog" 
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="btn-premium-primary w-full block text-center rounded-lg py-3 text-sm font-medium" 
-                  style={{ textDecoration: 'none' }}
-                >
-                  Agendar horário
-                </Link>
-              </li>
-            </ul>
+          <div 
+            className="md:hidden border-t animate-fade-in"
+            style={{ 
+              background: 'linear-gradient(180deg, #1A1A2E 0%, #151525 100%)',
+              borderColor: 'rgba(232, 213, 183, 0.15)',
+              padding: '16px 20px 24px 20px',
+              boxShadow: '0 12px 30px rgba(0, 0, 0, 0.3)'
+            }}
+          >
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <Link
+                href="/profissional"
+                onClick={() => setIsMobileMenuOpen(false)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '14px 16px',
+                  borderRadius: '12px',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(232, 213, 183, 0.1)',
+                  color: '#E8D5B7',
+                  textDecoration: 'none',
+                  fontSize: '15px',
+                  fontWeight: 500,
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ width: '34px', height: '34px', borderRadius: '8px', background: 'rgba(193, 90, 46, 0.18)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#C15A2E' }}>
+                    <Scissors size={18} />
+                  </div>
+                  <span>Para Profissionais</span>
+                </div>
+                <ChevronRight size={18} style={{ opacity: 0.5 }} />
+              </Link>
+
+              <Link
+                href="/profissional/planos"
+                onClick={() => setIsMobileMenuOpen(false)}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '14px 16px',
+                  borderRadius: '12px',
+                  background: 'rgba(255, 255, 255, 0.05)',
+                  border: '1px solid rgba(232, 213, 183, 0.1)',
+                  color: '#E8D5B7',
+                  textDecoration: 'none',
+                  fontSize: '15px',
+                  fontWeight: 500,
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div style={{ width: '34px', height: '34px', borderRadius: '8px', background: 'rgba(232, 213, 183, 0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#E8D5B7' }}>
+                    <Award size={18} />
+                  </div>
+                  <span>Planos e Preços</span>
+                </div>
+                <ChevronRight size={18} style={{ opacity: 0.5 }} />
+              </Link>
+
+              <div style={{ height: '1px', background: 'rgba(232, 213, 183, 0.12)', margin: '6px 0' }} />
+
+              <Link 
+                href="/catalog" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="btn-premium-primary"
+                style={{ 
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  width: '100%',
+                  textAlign: 'center',
+                  borderRadius: '12px',
+                  padding: '14px 0',
+                  fontSize: '15px',
+                  fontWeight: 600,
+                  textDecoration: 'none',
+                  boxShadow: '0 4px 16px rgba(193, 90, 46, 0.3)'
+                }} 
+              >
+                <Calendar size={18} />
+                <span>Agendar Horário</span>
+              </Link>
+            </div>
           </div>
         )}
       </header>
@@ -1193,35 +1248,36 @@ export default function Home() {
       </section>
 
       {/* Services Section (Vitrines - Carrossel de Parceiros) */}
-      <section className="relative mx-auto max-w-7xl px-4 py-16 reveal-on-scroll" id="services">
-        <div className="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div>
-            <p className="text-sm font-medium text-accent">Parceiros</p>
-            <h2 className="font-display mt-2 text-2xl sm:text-3xl md:text-4xl text-foreground" style={{ letterSpacing: "-0.02em" }}>
-              Alguns de nossos parceiros
-            </h2>
-            <p className="max-w-md mt-1 text-muted-foreground text-sm">
-              Encontre os melhores estabelecimentos da sua cidade, organize e agende em poucos toques.
-            </p>
-          </div>
-          
-          {/* Controles do Carrossel */}
-          <div className="flex items-center gap-3 shrink-0 self-end sm:self-center">
+      <section className="relative mx-auto max-w-7xl px-4 py-16 reveal-on-scroll overflow-hidden" id="services">
+        <div className="mb-4">
+          <span className="text-xs font-semibold text-accent tracking-wider uppercase">Parceiros</span>
+          <h2 className="font-display mt-1 text-2xl sm:text-3xl md:text-4xl text-foreground" style={{ letterSpacing: "-0.02em", lineHeight: 1.2 }}>
+            Alguns de nossos parceiros
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground w-full max-w-xl" style={{ lineHeight: 1.5, wordBreak: 'break-word' }}>
+            Encontre os melhores estabelecimentos da sua cidade, organize e agende em poucos toques.
+          </p>
+        </div>
+
+        {/* Barra de Controles e Dica Visual Mobile */}
+        <div className="flex items-center justify-between gap-3 mb-4 pb-3 border-b" style={{ borderColor: 'var(--color-border)' }}>
+          <span className="text-xs text-muted-foreground font-medium">Deslize para ver mais →</span>
+          <div className="flex items-center gap-2">
             <button 
               onClick={scrollLeft}
               className="press flex items-center justify-center rounded-full border bg-surface text-foreground shadow-sm"
-              style={{ width: '40px', height: '40px', cursor: 'pointer', transition: 'all 0.2s', borderColor: 'var(--color-border)' }}
+              style={{ width: '36px', height: '36px', cursor: 'pointer', transition: 'all 0.2s', borderColor: 'var(--color-border)' }}
               title="Anterior"
             >
-              <ChevronLeft className="h-5 w-5 text-muted-foreground" />
+              <ChevronLeft className="h-4 w-4 text-muted-foreground" />
             </button>
             <button 
               onClick={scrollRight}
               className="press flex items-center justify-center rounded-full border bg-surface text-foreground shadow-sm"
-              style={{ width: '40px', height: '40px', cursor: 'pointer', transition: 'all 0.2s', borderColor: 'var(--color-border)' }}
+              style={{ width: '36px', height: '36px', cursor: 'pointer', transition: 'all 0.2s', borderColor: 'var(--color-border)' }}
               title="Próximo"
             >
-              <ChevronRight className="h-5 w-5 text-muted-foreground" />
+              <ChevronRight className="h-4 w-4 text-muted-foreground" />
             </button>
           </div>
         </div>
