@@ -62,6 +62,7 @@ export default function PrivacidadePage() {
         <div className="container" style={{ textAlign: 'center', color: 'var(--color-muted)' }}>
           <p style={{ marginBottom: 'var(--space-4)' }}>© {new Date().getFullYear()} Agendai. Todos os direitos reservados.</p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 'var(--space-6)' }}>
+            <Link href="/suporte" style={{ color: 'var(--color-muted)', textDecoration: 'none', fontSize: '14px' }}>Suporte</Link>
             <Link href="/termos" style={{ color: 'var(--color-muted)', textDecoration: 'none', fontSize: '14px' }}>Termos de Uso</Link>
             <Link href="/privacidade" style={{ color: 'var(--color-muted)', textDecoration: 'none', fontSize: '14px' }}>Privacidade e Reembolsos</Link>
           </div>

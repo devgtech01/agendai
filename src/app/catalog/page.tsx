@@ -39,6 +39,7 @@ export default function CatalogPage() {
         <div className="container" style={{ textAlign: 'center', color: 'var(--color-muted)' }}>
           <p style={{ marginBottom: 'var(--space-4)', fontSize: '13px' }}>© {new Date().getFullYear()} Agendai. Todos os direitos reservados.</p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 'var(--space-6)' }}>
+            <Link href="/suporte" style={{ color: 'var(--color-muted)', textDecoration: 'none', fontSize: '13px' }}>Suporte</Link>
             <Link href="/termos" style={{ color: 'var(--color-muted)', textDecoration: 'none', fontSize: '13px' }}>Termos de Uso</Link>
             <Link href="/privacidade" style={{ color: 'var(--color-muted)', textDecoration: 'none', fontSize: '13px' }}>Privacidade</Link>
           </div>

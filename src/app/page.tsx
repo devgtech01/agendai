@@ -1351,6 +1351,7 @@ export default function Home() {
           <div className="flex flex-col items-center justify-between gap-4 border-t pt-8 mt-8 sm:flex-row" style={{ borderColor: 'rgba(232, 213, 183, 0.1)' }}>
             <p className="text-xs text-linen/30" style={{ margin: 0 }}>© 2026 Agendai. Desenvolvido com ofício para salões e barbearias premium.</p>
             <div className="flex gap-4 text-xs text-linen/50">
+              <Link href="/suporte" style={{ color: 'inherit', textDecoration: 'none' }}>Suporte</Link>
               <Link href="/termos" style={{ color: 'inherit', textDecoration: 'none' }}>Termos</Link>
               <Link href="/privacidade" style={{ color: 'inherit', textDecoration: 'none' }}>Privacidade</Link>
             </div>
