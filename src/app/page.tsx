@@ -408,8 +408,8 @@ export default function Home() {
 
 
 
-      {/* Dashboard Demo      {/* Dashboard Section */}
-      <section className="relative mx-auto max-w-7xl px-4 py-20 reveal-on-scroll" id="demo">
+      {/* Dashboard Section */}
+      <section className="relative mx-auto max-w-7xl px-4 py-20 reveal-on-scroll overflow-hidden" id="demo">
         <div className="mb-12 text-center">
           <p className="text-sm font-semibold text-accent tracking-wider uppercase">Para profissionais</p>
           <h2 className="font-display mt-2 text-2xl sm:text-3xl md:text-5xl text-foreground" style={{ letterSpacing: "-0.02em" }}>
