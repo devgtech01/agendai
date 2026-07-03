@@ -14,8 +14,13 @@ const dmSerif = DM_Serif_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Agendai | Premium SaaS",
-  description: "Sistema de agendamento moderno para negócios de alto padrão.",
+  title: "Agendai | Sistema de Agendamento Profissional",
+  description: "Sistema de agendamento moderno para barbearias, salões e profissionais independentes.",
+  icons: {
+    icon: "/icon.png",
+    shortcut: "/icon.png",
+    apple: "/icon.png",
+  },
 };
 
 export default function RootLayout({
