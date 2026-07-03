@@ -109,7 +109,8 @@ export async function POST(request: Request) {
           const formattedDate = date.split('-').reverse().join('/');
           const formattedTime = time.slice(0, 5);
 
-          const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+          const rawAppUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://sisagendai.online';
+          const appUrl = rawAppUrl.replace(/\/+$/, '');
           const cancelUrl = `${appUrl}/book/cancel/${newBooking.id}`;
 
           // 1. Enviar e-mail de confirmação para o cliente
@@ -147,14 +148,24 @@ export async function POST(request: Request) {
                     </p>
                   </div>
 
-                  <div style="text-align: center; margin: 32px 0 24px 0;">
-                    <a href="${cancelUrl}" style="display: inline-block; background-color: #C15A2E; color: #FFFFFF; padding: 12px 24px; font-size: 14px; font-weight: 600; border-radius: 8px; text-decoration: none; border: none;">
-                      Cancelar Agendamento
-                    </a>
+                  <!-- Botão de Cancelamento Bulletproof para E-mails -->
+                  <div style="text-align: center; margin: 32px 0 16px 0;">
+                    <table border="0" cellspacing="0" cellpadding="0" align="center" style="margin: 0 auto;">
+                      <tr>
+                        <td align="center" bgcolor="#D9383A" style="border-radius: 8px;">
+                          <a href="${cancelUrl}" target="_blank" style="font-size: 14px; font-family: sans-serif; color: #ffffff; text-decoration: none; border-radius: 8px; padding: 12px 24px; border: 1px solid #D9383A; display: inline-block; font-weight: 600; background-color: #D9383A;">
+                            ❌ Cancelar Agendamento
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+                    <p style="font-size: 11px; color: #8C8378; margin-top: 8px; word-break: break-all;">
+                      Ou acesse: <a href="${cancelUrl}" target="_blank" style="color: #C15A2E; text-decoration: underline;">${cancelUrl}</a>
+                    </p>
                   </div>
 
                   <p style="font-size: 13px; color: #8C8378; line-height: 1.5; text-align: center; margin-top: 32px; border-top: 0.5px solid #E4E1DC; padding-top: 20px;">
-                    Se precisar realizar alguma alteração ou cancelar o atendimento, entre em contato diretamente com o estabelecimento no telefone: <strong>${establishment?.phone || ''}</strong>.
+                    Se precisar realizar alguma alteração ou falar com a equipe, entre em contato no telefone: <strong>${establishment?.phone || ''}</strong>.
                   </p>
                 </div>
               </div>
