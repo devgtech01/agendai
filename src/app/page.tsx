@@ -728,7 +728,7 @@ export default function Home() {
           ) : (
             <>
               {/* Header Agenda */}
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6 w-full">
                 <div>
                   <h3 className="font-display text-xl sm:text-2xl text-foreground" style={{ letterSpacing: "-0.02em" }}>
                     Minha Agenda
@@ -736,18 +736,21 @@ export default function Home() {
                   <p className="mt-0.5 text-xs sm:text-sm text-muted-foreground">Controle seus agendamentos diários</p>
                 </div>
                 <div className="flex gap-4 items-center w-full sm:w-auto">
-                  <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '100%' }}>
                     <label style={{ fontSize: '11px', color: 'var(--color-muted)', marginBottom: '4px' }}>Data da Agenda</label>
                     <input 
                       type="date" 
-                      className="input w-full sm:w-auto text-xs sm:text-sm" 
+                      className="input text-xs sm:text-sm" 
                       style={{ 
                         padding: '6px 10px', 
                         borderRadius: 'var(--radius-md)', 
                         border: '1px solid var(--color-border)', 
                         background: 'var(--color-surface)', 
                         color: 'var(--color-text)',
-                        outline: 'none'
+                        outline: 'none',
+                        width: '100%',
+                        maxWidth: '100%',
+                        boxSizing: 'border-box'
                       }}
                       value={`2026-06-${selectedAgendaDayNumber}`}
                       onChange={(e) => {
@@ -763,53 +766,43 @@ export default function Home() {
               </div>
 
               {/* Resumo / Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-                <div style={{ background: 'var(--color-surface)', padding: '14px 16px', borderRadius: 'var(--radius-lg)', border: '0.5px solid var(--color-border)', boxShadow: '0 1px 4px rgba(0,0,0,0.02)' }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 w-full">
+                <div className="w-full" style={{ background: 'var(--color-surface)', padding: '12px 14px', borderRadius: 'var(--radius-lg)', border: '0.5px solid var(--color-border)', boxShadow: '0 1px 4px rgba(0,0,0,0.02)', boxSizing: 'border-box' }}>
                   <p className="text-muted" style={{ fontSize: '12px', marginBottom: '4px', color: 'var(--color-muted)' }}>Atendimentos no Dia</p>
-                  <h3 style={{ fontSize: '28px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>{demoAtendimentosCount}</h3>
+                  <h3 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>{demoAtendimentosCount}</h3>
                 </div>
-                <div style={{ background: 'var(--color-surface)', padding: '14px 16px', borderRadius: 'var(--radius-lg)', border: '0.5px solid var(--color-border)', boxShadow: '0 1px 4px rgba(0,0,0,0.02)' }}>
+                <div className="w-full" style={{ background: 'var(--color-surface)', padding: '12px 14px', borderRadius: 'var(--radius-lg)', border: '0.5px solid var(--color-border)', boxShadow: '0 1px 4px rgba(0,0,0,0.02)', boxSizing: 'border-box' }}>
                   <p className="text-muted" style={{ fontSize: '12px', marginBottom: '4px', color: 'var(--color-muted)' }}>Ganhos do Dia (Est.)</p>
-                  <h3 style={{ fontSize: '28px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>{demoGanhos}</h3>
+                  <h3 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>{demoGanhos}</h3>
                 </div>
               </div>
 
               {/* Ribbon de Navegação de Dias */}
-              <div style={{ 
-                display: 'flex', 
-                justifyContent: 'space-between', 
-                background: 'var(--color-surface)', 
-                padding: '8px 10px', 
-                borderRadius: 'var(--radius-lg)', 
-                border: '0.5px solid var(--color-border)', 
-                marginBottom: 'var(--space-6)',
-                overflowX: 'auto',
-                gap: '6px'
-              }}>
+              <div 
+                className="flex items-center bg-surface p-1.5 sm:p-2 rounded-xl border border-border mb-6 gap-1 overflow-x-auto w-full"
+                style={{ 
+                  borderWidth: '0.5px',
+                  maxWidth: '100%',
+                  boxSizing: 'border-box',
+                  scrollbarWidth: 'none',
+                  WebkitOverflowScrolling: 'touch'
+                }}
+              >
                 {agendaDays.map((rd, idx) => (
                   <button
                     key={idx}
                     onClick={() => setSelectedAgendaDayNumber(rd.dayNumber)}
+                    className="flex-1 min-w-[38px] sm:min-w-[48px] flex flex-col items-center justify-center py-1.5 px-1 rounded-lg border-none cursor-pointer transition-all duration-200"
                     style={{
-                      flex: 1,
-                      minWidth: '48px',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      padding: '8px 4px',
-                      borderRadius: 'var(--radius-md)',
-                      border: 'none',
                       background: rd.isSelected ? 'var(--color-accent)' : 'transparent',
                       color: rd.isSelected ? '#FFFFFF' : 'var(--color-text)',
-                      cursor: 'pointer',
-                      transition: 'all var(--transition-normal)'
+                      flexShrink: 0
                     }}
                   >
-                    <span style={{ fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', opacity: rd.isSelected ? 0.9 : 0.6, marginBottom: '2px' }}>
+                    <span style={{ fontSize: '9px', fontWeight: 600, textTransform: 'uppercase', opacity: rd.isSelected ? 0.9 : 0.6, marginBottom: '2px' }}>
                       {rd.dayName}
                     </span>
-                    <span style={{ fontSize: '16px', fontWeight: 600 }}>
+                    <span style={{ fontSize: '14px', fontWeight: 600 }}>
                       {rd.dayNumber}
                     </span>
                   </button>
@@ -817,20 +810,22 @@ export default function Home() {
               </div>
 
               {/* Lista de Agendamentos */}
-              <h4 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-text)', marginBottom: '12px' }}>Clientes Agendados</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <h4 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text)', marginBottom: '10px' }}>Clientes Agendados</h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
                 {currentDemoBookings.length === 0 ? (
                   <div style={{ 
-                    padding: '32px 16px', 
+                    padding: '28px 16px', 
                     textAlign: 'center', 
                     background: 'var(--color-surface)', 
                     borderRadius: 'var(--radius-lg)', 
                     border: '0.5px solid var(--color-border)',
-                    color: 'var(--color-muted)' 
+                    color: 'var(--color-muted)',
+                    width: '100%',
+                    boxSizing: 'border-box'
                   }}>
-                    <div style={{ fontSize: '28px', marginBottom: '8px' }}>📅</div>
-                    <p style={{ fontWeight: 500, fontSize: '15px', color: 'var(--color-text)', margin: 0 }}>Folga!</p>
-                    <p style={{ fontSize: '13px', marginTop: '2px', margin: 0 }}>Nenhum agendamento marcado para esta data.</p>
+                    <div style={{ fontSize: '26px', marginBottom: '6px' }}>📅</div>
+                    <p style={{ fontWeight: 500, fontSize: '14px', color: 'var(--color-text)', margin: 0 }}>Folga!</p>
+                    <p style={{ fontSize: '12px', marginTop: '2px', margin: 0 }}>Nenhum agendamento marcado para esta data.</p>
                   </div>
                 ) : (
                   currentDemoBookings.map((apt) => {
@@ -856,18 +851,20 @@ export default function Home() {
                       <div 
                         key={apt.id} 
                         style={{ 
-                          display: 'flex',
                           background: 'var(--color-surface)', 
                           borderRadius: 'var(--radius-lg)', 
                           border: '0.5px solid var(--color-border)', 
                           borderLeft: `4px solid ${leftBorderColor}`,
-                          padding: '12px 14px',
+                          padding: '10px 12px',
                           boxShadow: '0 2px 8px rgba(0,0,0,0.01)',
+                          maxWidth: '100%',
+                          boxSizing: 'border-box',
+                          overflow: 'hidden'
                         }}
-                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 w-full"
                       >
-                        <div className="flex items-center justify-between sm:justify-start gap-4">
-                          <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-text)', letterSpacing: '-0.02em' }}>
+                        <div className="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
+                          <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-text)', letterSpacing: '-0.02em' }}>
                             {apt.time}
                           </div>
                           <span 
@@ -875,8 +872,8 @@ export default function Home() {
                             style={{ 
                               background: statusBg,
                               color: statusColor,
-                              padding: '3px 8px',
-                              fontSize: '11px',
+                              padding: '2px 8px',
+                              fontSize: '10px',
                               fontWeight: 500,
                               borderRadius: '20px',
                               whiteSpace: 'nowrap'
@@ -886,16 +883,16 @@ export default function Home() {
                           </span>
                         </div>
 
-                        <div className="flex-1 flex flex-col gap-1">
+                        <div className="flex-1 flex flex-col gap-0.5 min-w-0 w-full">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span style={{ fontWeight: 600, fontSize: '14px', color: 'var(--color-text)' }}>
+                            <span style={{ fontWeight: 600, fontSize: '13px', color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                               {apt.clientName}
                             </span>
-                            <span style={{ fontSize: '12px', color: '#25D366', fontWeight: 500 }}>
+                            <span style={{ fontSize: '11px', color: '#25D366', fontWeight: 500, whiteSpace: 'nowrap' }}>
                               💬 {apt.clientPhone}
                             </span>
                           </div>
-                          <div style={{ fontSize: '12px', color: 'var(--color-muted)', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+                          <div style={{ fontSize: '11px', color: 'var(--color-muted)', display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
                             <span>{apt.serviceName}</span>
                             <span>•</span>
                             <span>⏱ {apt.duration} min</span>
