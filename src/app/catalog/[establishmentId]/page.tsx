@@ -19,15 +19,16 @@ export default async function EstablishmentPage({ params }: PageProps) {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header Minimal */}
-      <header style={{ background: 'var(--color-primary)', padding: '12px 24px', position: 'sticky', top: 0, zIndex: 50 }}>
-        <div className="container flex items-center">
-          <Link href="/catalog" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '8px', color: 'rgba(232,213,183,0.85)', fontSize: '14px' }}>
-            <span>← Todos Estabelecimentos</span>
+      <header style={{ background: 'var(--color-primary)', padding: '12px 16px', position: 'sticky', top: 0, zIndex: 50, borderBottom: '1px solid rgba(232, 213, 183, 0.15)' }}>
+        <div className="container flex justify-between items-center" style={{ padding: 0 }}>
+          <Link href="/catalog" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '6px', color: 'rgba(232,213,183,0.85)', fontSize: '13px' }}>
+            <span>← <span className="hidden sm:inline">Todos </span>Estabelecimentos</span>
           </Link>
-          <div style={{ flex: 1, textAlign: 'center', fontSize: '18px', fontWeight: 500, color: 'var(--color-linen)', letterSpacing: '0.02em' }}>
-            Agend<span style={{ color: 'var(--color-accent)' }}>ai</span>
-          </div>
-          <div style={{ width: '150px' }}></div> {/* Spacer to balance logo centering */}
+          <Link href="/" style={{ textDecoration: 'none' }}>
+            <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-linen)', letterSpacing: '0.02em' }}>
+              Agend<span style={{ color: 'var(--color-accent)' }}>ai</span>
+            </div>
+          </Link>
         </div>
       </header>
 

@@ -357,16 +357,16 @@ export default function Home() {
       <section className="relative mx-auto max-w-7xl px-4 py-20 reveal-on-scroll" id="demo">
         <div className="mb-12 text-center">
           <p className="text-sm font-semibold text-accent tracking-wider uppercase">Para profissionais</p>
-          <h2 className="font-display mt-2 text-4xl text-foreground md:text-5xl" style={{ letterSpacing: "-0.02em" }}>
+          <h2 className="font-display mt-2 text-2xl sm:text-3xl md:text-5xl text-foreground" style={{ letterSpacing: "-0.02em" }}>
             Tenha o controle do seu negócio na palma da mão
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground">
+          <p className="mx-auto mt-4 max-w-2xl text-muted-foreground text-sm sm:text-base">
             Acompanhe clientes, receita, agendamentos e os serviços mais procurados em um painel pensado para barbearias e salões.
           </p>
         </div>
 
-        <div className="mx-auto max-w-6xl mb-8 flex justify-center">
-          <div style={{ position: 'relative', display: 'inline-flex', padding: '4px', background: 'var(--color-border)', borderRadius: 'var(--radius-lg)' }}>
+        <div className="mx-auto max-w-md mb-8 flex justify-center px-2">
+          <div style={{ position: 'relative', display: 'flex', width: '100%', maxWidth: '380px', padding: '4px', background: 'var(--color-border)', borderRadius: 'var(--radius-lg)' }}>
             {/* Sliding tab background indicator */}
             <div 
               style={{
@@ -385,14 +385,18 @@ export default function Home() {
             <button
               onClick={() => setActiveDemoTab('dashboard')}
               style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
                 position: 'relative',
                 zIndex: 1,
-                padding: '8px 16px',
+                padding: '8px 12px',
                 border: 'none',
                 background: 'transparent',
                 color: activeDemoTab === 'dashboard' ? 'var(--color-text)' : 'var(--color-muted)',
                 fontWeight: activeDemoTab === 'dashboard' ? 600 : 500,
-                fontSize: '14px',
+                fontSize: '13px',
                 borderRadius: 'var(--radius-md)',
                 cursor: 'pointer',
                 transition: 'color 0.25s ease',
@@ -403,14 +407,18 @@ export default function Home() {
             <button
               onClick={() => setActiveDemoTab('agenda')}
               style={{
+                flex: 1,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
                 position: 'relative',
                 zIndex: 1,
-                padding: '8px 16px',
+                padding: '8px 12px',
                 border: 'none',
                 background: 'transparent',
                 color: activeDemoTab === 'agenda' ? 'var(--color-text)' : 'var(--color-muted)',
                 fontWeight: activeDemoTab === 'agenda' ? 600 : 500,
-                fontSize: '14px',
+                fontSize: '13px',
                 borderRadius: 'var(--radius-md)',
                 cursor: 'pointer',
                 transition: 'color 0.25s ease',
@@ -883,10 +891,10 @@ export default function Home() {
       <section className="relative mx-auto max-w-7xl px-4 py-20 reveal-on-scroll" id="booking-demo">
         <div className="mb-12 text-center">
           <p className="text-sm font-semibold text-accent tracking-wider uppercase">Demonstração</p>
-          <h2 className="font-display mt-2 text-4xl text-foreground md:text-5xl" style={{ letterSpacing: "-0.02em" }}>
+          <h2 className="font-display mt-2 text-2xl sm:text-3xl md:text-5xl text-foreground" style={{ letterSpacing: "-0.02em" }}>
             Agendar em três toques
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-muted-foreground">
+          <p className="mx-auto mt-4 max-w-xl text-muted-foreground text-sm sm:text-base">
             Uma experiência fluida, sem fricção e extremamente veloz — pensada para o seu cliente final.
           </p>
         </div>
@@ -1189,7 +1197,7 @@ export default function Home() {
         <div className="mb-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <p className="text-sm font-medium text-accent">Parceiros</p>
-            <h2 className="font-display mt-2 text-4xl text-foreground" style={{ letterSpacing: "-0.02em" }}>
+            <h2 className="font-display mt-2 text-2xl sm:text-3xl md:text-4xl text-foreground" style={{ letterSpacing: "-0.02em" }}>
               Alguns de nossos parceiros
             </h2>
             <p className="max-w-md mt-1 text-muted-foreground text-sm">
