@@ -24,29 +24,23 @@ export default function CancelBookingPage({ params }: PageProps) {
     async function loadData() {
       try {
         setLoading(true);
-        const bk = await getBookingById(bookingId);
-        if (!bk) {
-          setErrorMsg('Agendamento não encontrado.');
-          setLoading(false);
-          return;
-        }
-        
-        if (bk.status === 'Cancelado') {
-          setSuccess(true);
-          setBooking(bk);
+        const res = await fetch(`/api/bookings/cancel?id=${bookingId}`);
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          setErrorMsg(errData.error || 'Agendamento não encontrado.');
           setLoading(false);
           return;
         }
 
-        setBooking(bk);
-
-        const [srv, est] = await Promise.all([
-          getServiceById(bk.serviceId),
-          getEstablishmentById(bk.establishmentId)
-        ]);
-
-        if (srv) setService(srv);
-        if (est) setEstablishment(est);
+        const data = await res.json();
+        if (data.booking) {
+          setBooking(data.booking);
+          if (data.booking.status === 'Cancelado') {
+            setSuccess(true);
+          }
+        }
+        if (data.service) setService(data.service);
+        if (data.establishment) setEstablishment(data.establishment);
       } catch (err) {
         console.error('Erro ao carregar dados do agendamento:', err);
         setErrorMsg('Erro ao carregar informações.');
@@ -62,11 +56,17 @@ export default function CancelBookingPage({ params }: PageProps) {
     setErrorMsg('');
 
     try {
-      const updated = await updateBookingStatus(bookingId, 'Cancelado');
-      if (updated) {
+      const res = await fetch('/api/bookings/cancel', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bookingId })
+      });
+
+      if (res.ok) {
         setSuccess(true);
       } else {
-        setErrorMsg('Falha ao cancelar o agendamento. Tente novamente.');
+        const errData = await res.json().catch(() => ({}));
+        setErrorMsg(errData.error || 'Falha ao cancelar o agendamento. Tente novamente.');
       }
     } catch (err) {
       setErrorMsg('Ocorreu um erro ao cancelar o agendamento.');
