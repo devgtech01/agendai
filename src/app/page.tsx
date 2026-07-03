@@ -420,19 +420,19 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="mx-auto max-w-md mb-6 flex justify-center px-2">
-          <div style={{ position: 'relative', display: 'flex', width: '100%', maxWidth: '380px', padding: '4px', background: 'var(--color-border)', borderRadius: 'var(--radius-lg)' }}>
+        <div className="mx-auto max-w-md mb-8 flex justify-center px-2">
+          <div style={{ position: 'relative', display: 'flex', width: '100%', maxWidth: '380px', padding: '5px', background: 'var(--color-background)', borderRadius: '16px', border: '1px solid var(--color-border)' }}>
             {/* Sliding tab background indicator */}
             <div 
               style={{
                 position: 'absolute',
-                top: '4px',
-                bottom: '4px',
-                left: activeDemoTab === 'dashboard' ? '4px' : 'calc(50% + 2px)',
-                width: 'calc(50% - 6px)',
+                top: '5px',
+                bottom: '5px',
+                left: activeDemoTab === 'dashboard' ? '5px' : 'calc(50% + 2.5px)',
+                width: 'calc(50% - 7.5px)',
                 background: 'var(--color-surface)',
-                borderRadius: 'var(--radius-md)',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+                borderRadius: '12px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                 transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
                 zIndex: 0
               }}
@@ -446,13 +446,13 @@ export default function Home() {
                 justifyContent: 'center',
                 position: 'relative',
                 zIndex: 1,
-                padding: '8px 6px',
+                padding: '9px 12px',
                 border: 'none',
                 background: 'transparent',
                 color: activeDemoTab === 'dashboard' ? 'var(--color-text)' : 'var(--color-muted)',
                 fontWeight: activeDemoTab === 'dashboard' ? 600 : 500,
-                fontSize: '12px',
-                borderRadius: 'var(--radius-md)',
+                fontSize: '13px',
+                borderRadius: '12px',
                 cursor: 'pointer',
                 transition: 'color 0.25s ease',
                 whiteSpace: 'nowrap'
@@ -469,13 +469,13 @@ export default function Home() {
                 justifyContent: 'center',
                 position: 'relative',
                 zIndex: 1,
-                padding: '8px 6px',
+                padding: '9px 12px',
                 border: 'none',
                 background: 'transparent',
                 color: activeDemoTab === 'agenda' ? 'var(--color-text)' : 'var(--color-muted)',
                 fontWeight: activeDemoTab === 'agenda' ? 600 : 500,
-                fontSize: '12px',
-                borderRadius: 'var(--radius-md)',
+                fontSize: '13px',
+                borderRadius: '12px',
                 cursor: 'pointer',
                 transition: 'color 0.25s ease',
                 whiteSpace: 'nowrap'
@@ -486,26 +486,26 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mx-auto max-w-6xl rounded-2xl border bg-surface p-3 sm:p-6 md:p-8 overflow-hidden" style={{ borderWidth: "0.5px" }}>
+        <div className="mx-auto max-w-6xl rounded-3xl border bg-surface p-5 sm:p-8 md:p-10 overflow-hidden w-full" style={{ borderWidth: "1px", borderColor: "var(--color-border)", boxShadow: "0 10px 30px rgba(0,0,0,0.03)" }}>
           <div key={activeDemoTab} className="animate-tab-content">
             {activeDemoTab === 'dashboard' ? (
             <>
               {/* Header Dashboard */}
-              <div className="mb-8">
-                <h3 className="font-display text-2xl text-foreground" style={{ letterSpacing: "-0.02em" }}>
+              <div className="mb-6 sm:mb-8">
+                <h3 className="font-display text-2xl sm:text-3xl text-foreground" style={{ letterSpacing: "-0.02em" }}>
                   Dashboard
                 </h3>
-                <p className="mt-1 text-sm text-muted-foreground">Acompanhe os resultados e o crescimento do seu negócio</p>
+                <p className="mt-1 text-xs sm:text-sm text-muted-foreground">Acompanhe os resultados e o crescimento do seu negócio</p>
               </div>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-8)' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}>
                 {/* --- CARDS DE RESUMO --- */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   {/* Clientes Atendidos */}
-                  <div style={{ background: 'var(--color-surface)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '0.5px solid var(--color-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', borderBottom: '1px solid var(--color-border)', paddingBottom: '8px' }}>
+                  <div style={{ background: 'var(--color-surface)', padding: '20px', borderRadius: '18px', border: '1px solid var(--color-border)', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', borderBottom: '1px solid var(--color-border)', paddingBottom: '10px' }}>
                       <Users className="h-4 w-4 text-accent" />
-                      <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>
+                      <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>
                         Clientes Atendidos
                       </h3>
                     </div>
@@ -530,10 +530,10 @@ export default function Home() {
                   </div>
 
                   {/* Receita Faturada */}
-                  <div style={{ background: 'var(--color-surface)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '0.5px solid var(--color-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', borderBottom: '1px solid var(--color-border)', paddingBottom: '8px' }}>
+                  <div style={{ background: 'var(--color-surface)', padding: '20px', borderRadius: '18px', border: '1px solid var(--color-border)', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', borderBottom: '1px solid var(--color-border)', paddingBottom: '10px' }}>
                       <DollarSign className="h-4 w-4 text-accent" />
-                      <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>
+                      <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>
                         Receita Faturada
                       </h3>
                     </div>
@@ -559,12 +559,12 @@ export default function Home() {
                 </div>
 
                 {/* --- SEÇÃO DE GRÁFICOS --- */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                   {/* Gráfico 1 - Receita Mensal */}
-                  <div style={{ background: 'var(--color-surface)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '0.5px solid var(--color-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
+                  <div style={{ background: 'var(--color-surface)', padding: '20px', borderRadius: '18px', border: '1px solid var(--color-border)', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
                       <TrendingUp className="h-4 w-4 text-accent" />
-                      <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>
+                      <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>
                         Evolução do Faturamento Mensal (R$ mil)
                       </h3>
                     </div>
@@ -606,10 +606,10 @@ export default function Home() {
                   </div>
 
                   {/* Gráfico 2 - Fluxo Semanal */}
-                  <div style={{ background: 'var(--color-surface)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '0.5px solid var(--color-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
+                  <div style={{ background: 'var(--color-surface)', padding: '20px', borderRadius: '18px', border: '1px solid var(--color-border)', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
                       <BarChart3 className="h-4 w-4 text-accent" />
-                      <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>
+                      <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>
                         Fluxo de Clientes por Dia da Semana (Total)
                       </h3>
                     </div>
@@ -657,12 +657,12 @@ export default function Home() {
                 </div>
 
                 {/* --- FORECAST & RANKING DE SERVIÇOS --- */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                   {/* Previsão para a Semana */}
-                  <div style={{ background: 'var(--color-surface)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '0.5px solid var(--color-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
+                  <div style={{ background: 'var(--color-surface)', padding: '20px', borderRadius: '18px', border: '1px solid var(--color-border)', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
                       <Calendar className="h-4 w-4 text-accent" />
-                      <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>
+                      <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>
                         Previsão de Agendamentos (Próximos 7 Dias)
                       </h3>
                     </div>
@@ -684,19 +684,19 @@ export default function Home() {
                   </div>
 
                   {/* Ranking de Serviços */}
-                  <div style={{ background: 'var(--color-surface)', padding: 'var(--space-6)', borderRadius: 'var(--radius-xl)', border: '0.5px solid var(--color-border)', boxShadow: '0 4px 12px rgba(0,0,0,0.02)' }}>
+                  <div style={{ background: 'var(--color-surface)', padding: '20px', borderRadius: '18px', border: '1px solid var(--color-border)', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
                       <Sparkles className="h-4 w-4 text-accent" />
-                      <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>
+                      <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>
                         Serviços Mais Procurados
                       </h3>
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                       {sortedServices.map((srv, idx) => {
                         const percentage = Math.round((srv.count / totalServicesCount) * 100);
                         return (
-                          <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
+                          <div key={idx} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
                               <span style={{ fontWeight: 500, color: 'var(--color-text)' }}>
                                 {idx + 1}. {srv.name}
                               </span>
@@ -730,20 +730,20 @@ export default function Home() {
               {/* Header Agenda */}
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6 w-full">
                 <div>
-                  <h3 className="font-display text-xl sm:text-2xl text-foreground" style={{ letterSpacing: "-0.02em" }}>
+                  <h3 className="font-display text-2xl sm:text-3xl text-foreground" style={{ letterSpacing: "-0.02em" }}>
                     Minha Agenda
                   </h3>
                   <p className="mt-0.5 text-xs sm:text-sm text-muted-foreground">Controle seus agendamentos diários</p>
                 </div>
                 <div className="flex gap-4 items-center w-full sm:w-auto">
                   <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '100%' }}>
-                    <label style={{ fontSize: '11px', color: 'var(--color-muted)', marginBottom: '4px' }}>Data da Agenda</label>
+                    <label style={{ fontSize: '11px', color: 'var(--color-muted)', marginBottom: '4px', fontWeight: 500 }}>Data da Agenda</label>
                     <input 
                       type="date" 
                       className="input text-xs sm:text-sm" 
                       style={{ 
-                        padding: '6px 10px', 
-                        borderRadius: 'var(--radius-md)', 
+                        padding: '8px 12px', 
+                        borderRadius: '12px', 
                         border: '1px solid var(--color-border)', 
                         background: 'var(--color-surface)', 
                         color: 'var(--color-text)',
@@ -766,22 +766,21 @@ export default function Home() {
               </div>
 
               {/* Resumo / Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6 w-full">
-                <div className="w-full" style={{ background: 'var(--color-surface)', padding: '12px 14px', borderRadius: 'var(--radius-lg)', border: '0.5px solid var(--color-border)', boxShadow: '0 1px 4px rgba(0,0,0,0.02)', boxSizing: 'border-box' }}>
-                  <p className="text-muted" style={{ fontSize: '12px', marginBottom: '4px', color: 'var(--color-muted)' }}>Atendimentos no Dia</p>
-                  <h3 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>{demoAtendimentosCount}</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6 w-full">
+                <div className="w-full" style={{ background: 'var(--color-surface)', padding: '16px 20px', borderRadius: '18px', border: '1px solid var(--color-border)', boxShadow: '0 2px 8px rgba(0,0,0,0.02)', boxSizing: 'border-box' }}>
+                  <p className="text-muted" style={{ fontSize: '12px', marginBottom: '4px', color: 'var(--color-muted)', fontWeight: 500 }}>Atendimentos no Dia</p>
+                  <h3 style={{ fontSize: '28px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>{demoAtendimentosCount}</h3>
                 </div>
-                <div className="w-full" style={{ background: 'var(--color-surface)', padding: '12px 14px', borderRadius: 'var(--radius-lg)', border: '0.5px solid var(--color-border)', boxShadow: '0 1px 4px rgba(0,0,0,0.02)', boxSizing: 'border-box' }}>
-                  <p className="text-muted" style={{ fontSize: '12px', marginBottom: '4px', color: 'var(--color-muted)' }}>Ganhos do Dia (Est.)</p>
-                  <h3 style={{ fontSize: '24px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>{demoGanhos}</h3>
+                <div className="w-full" style={{ background: 'var(--color-surface)', padding: '16px 20px', borderRadius: '18px', border: '1px solid var(--color-border)', boxShadow: '0 2px 8px rgba(0,0,0,0.02)', boxSizing: 'border-box' }}>
+                  <p className="text-muted" style={{ fontSize: '12px', marginBottom: '4px', color: 'var(--color-muted)', fontWeight: 500 }}>Ganhos do Dia (Est.)</p>
+                  <h3 style={{ fontSize: '28px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>{demoGanhos}</h3>
                 </div>
               </div>
 
-              {/* Ribbon de Navegação de Dias */}
+              {/* Ribbon de Navegação de Dias - SUAVIZADO COM BORDAS EFEITO PILL */}
               <div 
-                className="flex items-center bg-surface p-1.5 sm:p-2 rounded-xl border border-border mb-6 gap-1 overflow-x-auto w-full"
+                className="flex items-center bg-background p-2 rounded-2xl border border-border mb-6 gap-2 overflow-x-auto w-full"
                 style={{ 
-                  borderWidth: '0.5px',
                   maxWidth: '100%',
                   boxSizing: 'border-box',
                   scrollbarWidth: 'none',
@@ -792,17 +791,21 @@ export default function Home() {
                   <button
                     key={idx}
                     onClick={() => setSelectedAgendaDayNumber(rd.dayNumber)}
-                    className="flex-1 min-w-[38px] sm:min-w-[48px] flex flex-col items-center justify-center py-1.5 px-1 rounded-lg border-none cursor-pointer transition-all duration-200"
+                    className="flex-1 min-w-[44px] sm:min-w-[54px] flex flex-col items-center justify-center py-2.5 px-2 rounded-xl border cursor-pointer transition-all duration-200"
                     style={{
-                      background: rd.isSelected ? 'var(--color-accent)' : 'transparent',
+                      borderRadius: '14px',
+                      background: rd.isSelected ? 'var(--color-accent)' : 'var(--color-surface)',
                       color: rd.isSelected ? '#FFFFFF' : 'var(--color-text)',
-                      flexShrink: 0
+                      border: rd.isSelected ? '1px solid transparent' : '1px solid var(--color-border)',
+                      boxShadow: rd.isSelected ? '0 4px 12px rgba(193, 90, 46, 0.3)' : '0 1px 3px rgba(0,0,0,0.02)',
+                      flexShrink: 0,
+                      transform: rd.isSelected ? 'scale(1.02)' : 'scale(1)'
                     }}
                   >
-                    <span style={{ fontSize: '9px', fontWeight: 600, textTransform: 'uppercase', opacity: rd.isSelected ? 0.9 : 0.6, marginBottom: '2px' }}>
+                    <span style={{ fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', opacity: rd.isSelected ? 0.95 : 0.6, marginBottom: '2px' }}>
                       {rd.dayName}
                     </span>
-                    <span style={{ fontSize: '14px', fontWeight: 600 }}>
+                    <span style={{ fontSize: '16px', fontWeight: 700 }}>
                       {rd.dayNumber}
                     </span>
                   </button>
@@ -810,22 +813,22 @@ export default function Home() {
               </div>
 
               {/* Lista de Agendamentos */}
-              <h4 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text)', marginBottom: '10px' }}>Clientes Agendados</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
+              <h4 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-text)', marginBottom: '12px' }}>Clientes Agendados</h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%', maxWidth: '100%', boxSizing: 'border-box' }}>
                 {currentDemoBookings.length === 0 ? (
                   <div style={{ 
-                    padding: '28px 16px', 
+                    padding: '36px 20px', 
                     textAlign: 'center', 
                     background: 'var(--color-surface)', 
-                    borderRadius: 'var(--radius-lg)', 
-                    border: '0.5px solid var(--color-border)',
+                    borderRadius: '18px', 
+                    border: '1px solid var(--color-border)',
                     color: 'var(--color-muted)',
                     width: '100%',
                     boxSizing: 'border-box'
                   }}>
-                    <div style={{ fontSize: '26px', marginBottom: '6px' }}>📅</div>
-                    <p style={{ fontWeight: 500, fontSize: '14px', color: 'var(--color-text)', margin: 0 }}>Folga!</p>
-                    <p style={{ fontSize: '12px', marginTop: '2px', margin: 0 }}>Nenhum agendamento marcado para esta data.</p>
+                    <div style={{ fontSize: '28px', marginBottom: '8px' }}>📅</div>
+                    <p style={{ fontWeight: 500, fontSize: '15px', color: 'var(--color-text)', margin: 0 }}>Folga!</p>
+                    <p style={{ fontSize: '13px', marginTop: '2px', margin: 0 }}>Nenhum agendamento marcado para esta data.</p>
                   </div>
                 ) : (
                   currentDemoBookings.map((apt) => {
@@ -852,19 +855,19 @@ export default function Home() {
                         key={apt.id} 
                         style={{ 
                           background: 'var(--color-surface)', 
-                          borderRadius: 'var(--radius-lg)', 
-                          border: '0.5px solid var(--color-border)', 
+                          borderRadius: '16px', 
+                          border: '1px solid var(--color-border)', 
                           borderLeft: `4px solid ${leftBorderColor}`,
-                          padding: '10px 12px',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.01)',
+                          padding: '14px 16px',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.02)',
                           maxWidth: '100%',
                           boxSizing: 'border-box',
                           overflow: 'hidden'
                         }}
-                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 w-full"
+                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full"
                       >
                         <div className="flex items-center justify-between sm:justify-start gap-3 w-full sm:w-auto">
-                          <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-text)', letterSpacing: '-0.02em' }}>
+                          <div style={{ fontSize: '17px', fontWeight: 700, color: 'var(--color-text)', letterSpacing: '-0.02em' }}>
                             {apt.time}
                           </div>
                           <span 
@@ -872,9 +875,9 @@ export default function Home() {
                             style={{ 
                               background: statusBg,
                               color: statusColor,
-                              padding: '2px 8px',
-                              fontSize: '10px',
-                              fontWeight: 500,
+                              padding: '3px 10px',
+                              fontSize: '11px',
+                              fontWeight: 600,
                               borderRadius: '20px',
                               whiteSpace: 'nowrap'
                             }}
@@ -883,21 +886,21 @@ export default function Home() {
                           </span>
                         </div>
 
-                        <div className="flex-1 flex flex-col gap-0.5 min-w-0 w-full">
+                        <div className="flex-1 flex flex-col gap-1 min-w-0 w-full">
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span style={{ fontWeight: 600, fontSize: '13px', color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            <span style={{ fontWeight: 600, fontSize: '14px', color: 'var(--color-text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                               {apt.clientName}
                             </span>
-                            <span style={{ fontSize: '11px', color: '#25D366', fontWeight: 500, whiteSpace: 'nowrap' }}>
+                            <span style={{ fontSize: '12px', color: '#25D366', fontWeight: 500, whiteSpace: 'nowrap' }}>
                               💬 {apt.clientPhone}
                             </span>
                           </div>
-                          <div style={{ fontSize: '11px', color: 'var(--color-muted)', display: 'flex', alignItems: 'center', gap: '4px', flexWrap: 'wrap' }}>
+                          <div style={{ fontSize: '12px', color: 'var(--color-muted)', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
                             <span>{apt.serviceName}</span>
                             <span>•</span>
                             <span>⏱ {apt.duration} min</span>
                             <span>•</span>
-                            <span style={{ fontWeight: 500, color: 'var(--color-accent)' }}>R$ {apt.price.toFixed(2).replace('.', ',')}</span>
+                            <span style={{ fontWeight: 600, color: 'var(--color-accent)' }}>R$ {apt.price.toFixed(2).replace('.', ',')}</span>
                           </div>
                         </div>
 
@@ -906,9 +909,9 @@ export default function Home() {
                             style={{ 
                               background: statusBg,
                               color: statusColor,
-                              padding: '4px 10px',
+                              padding: '4px 12px',
                               fontSize: '12px',
-                              fontWeight: 500,
+                              fontWeight: 600,
                               borderRadius: '20px',
                               whiteSpace: 'nowrap'
                             }}
@@ -935,7 +938,7 @@ export default function Home() {
             Agendar em três toques
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-muted-foreground text-sm sm:text-base">
-            Uma experiência fluida, sem fricção e extremamente veloz — pensada para o seu cliente final.
+            Uma experiência fluida, sem fricção e extremamente veloz pensada para o seu cliente final.
           </p>
         </div>
 
