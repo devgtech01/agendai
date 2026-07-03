@@ -18,7 +18,8 @@ import {
   RefreshCw,
   LogOut,
   ChevronRight,
-  UserCheck
+  UserCheck,
+  Trash2
 } from 'lucide-react';
 import { SupportTicket, Establishment, Booking } from '@/lib/db';
 
@@ -40,6 +41,11 @@ export default function AdminDashboardPage() {
   const [responseNotes, setResponseNotes] = useState('');
   const [newStatus, setNewStatus] = useState<SupportTicket['status']>('Em Andamento');
   const [updatingTicket, setUpdatingTicket] = useState(false);
+
+  // Modal de Exclusão de Estabelecimento (Confirmação em 2 etapas)
+  const [deletingEstablishment, setDeletingEstablishment] = useState<Establishment | null>(null);
+  const [confirmNameText, setConfirmNameText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const loadData = async () => {
     try {
@@ -103,6 +109,31 @@ export default function AdminDashboardPage() {
     setSelectedTicket(t);
     setNewStatus(t.status);
     setResponseNotes(t.adminNotes || '');
+  };
+
+  const handleDeleteEstablishment = async () => {
+    if (!deletingEstablishment) return;
+    if (confirmNameText.trim() !== deletingEstablishment.name.trim()) return;
+
+    try {
+      setIsDeleting(true);
+      const res = await fetch(`/api/establishments?id=${deletingEstablishment.id}`, {
+        method: 'DELETE',
+      });
+
+      if (res.ok) {
+        setEstablishments(establishments.filter(e => e.id !== deletingEstablishment.id));
+        setDeletingEstablishment(null);
+        setConfirmNameText('');
+      } else {
+        const errData = await res.json().catch(() => ({}));
+        alert(errData.error || 'Falha ao excluir estabelecimento.');
+      }
+    } catch (err) {
+      alert('Erro de conexão ao excluir estabelecimento.');
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   // Filtragem de suporte
@@ -375,9 +406,21 @@ export default function AdminDashboardPage() {
                           <td style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>{est.address}</td>
                           <td style={{ padding: '12px 16px' }}>{est.phone}</td>
                           <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                            <Link href={`/catalog/${est.id}`} target="_blank" className="btn btn-ghost btn-sm">
-                              Ver Vitrine
-                            </Link>
+                            <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
+                              <Link href={`/catalog/${est.id}`} target="_blank" className="btn btn-ghost btn-sm">
+                                Ver Vitrine
+                              </Link>
+                              <button 
+                                onClick={() => {
+                                  setDeletingEstablishment(est);
+                                  setConfirmNameText('');
+                                }} 
+                                className="btn btn-sm"
+                                style={{ background: '#FCEAEA', color: '#D9383A', border: '1px solid #F3C3C3', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                              >
+                                <Trash2 size={14} /> Excluir
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -485,6 +528,71 @@ export default function AdminDashboardPage() {
                 <button onClick={handleUpdateTicket} disabled={updatingTicket} className="btn btn-primary flex items-center gap-2">
                   <Send size={16} />
                   {updatingTicket ? 'Atualizando...' : 'Salvar & Notificar Usuário'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL DE CONFIRMAÇÃO EM 2 ETAPAS - EXCLUSÃO DE ESTABELECIMENTO */}
+      {deletingEstablishment && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(4px)', zIndex: 100, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <div style={{ background: 'var(--color-surface)', width: '100%', maxWidth: '500px', borderRadius: '16px', border: '1px solid var(--color-border)', boxShadow: '0 20px 40px rgba(0,0,0,0.3)', overflow: 'hidden' }} className="animate-scale-in">
+            <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#FDF2F2' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#D9383A', fontWeight: 700, fontSize: '15px' }}>
+                ⚠️ Confirmação em 2 Etapas - Excluir Estabelecimento
+              </div>
+              <button onClick={() => setDeletingEstablishment(null)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--color-muted)' }}>
+                <X size={18} />
+              </button>
+            </div>
+
+            <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div style={{ background: '#FDF2F2', borderLeft: '4px solid #D9383A', padding: '14px', borderRadius: '8px', fontSize: '13px', color: '#9B1C1C', lineHeight: 1.5 }}>
+                <strong>ATENÇÃO: Ação Irreversível!</strong><br />
+                Você está prestes a excluir permanentemente o estabelecimento <strong>"{deletingEstablishment.name}"</strong>.<br />
+                Todos os serviços, profissionais e agendamentos vinculados a este local serão removidos.
+              </div>
+
+              <div>
+                <label className="input-label" style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-text)', marginBottom: '6px', display: 'block' }}>
+                  Etapa 2: Digite exatamente o nome do estabelecimento abaixo para liberar a exclusão:
+                </label>
+                <div style={{ background: 'var(--color-background)', padding: '8px 12px', borderRadius: '6px', fontSize: '13px', fontWeight: 700, color: 'var(--color-accent)', marginBottom: '8px', userSelect: 'all' }}>
+                  {deletingEstablishment.name}
+                </div>
+                <input 
+                  type="text" 
+                  className="input text-sm"
+                  placeholder={`Digite "${deletingEstablishment.name}"`}
+                  value={confirmNameText}
+                  onChange={(e) => setConfirmNameText(e.target.value)}
+                  autoFocus
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 mt-2">
+                <button onClick={() => setDeletingEstablishment(null)} className="btn btn-ghost" disabled={isDeleting}>
+                  Cancelar
+                </button>
+                <button 
+                  onClick={handleDeleteEstablishment} 
+                  disabled={isDeleting || confirmNameText.trim() !== deletingEstablishment.name.trim()} 
+                  className="btn"
+                  style={{ 
+                    background: confirmNameText.trim() === deletingEstablishment.name.trim() ? '#D9383A' : '#E5E7EB', 
+                    color: confirmNameText.trim() === deletingEstablishment.name.trim() ? '#FFFFFF' : '#9CA3AF',
+                    border: 'none',
+                    fontWeight: 600,
+                    cursor: confirmNameText.trim() === deletingEstablishment.name.trim() ? 'pointer' : 'not-allowed',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <Trash2 size={16} />
+                  {isDeleting ? 'Excluindo...' : 'Confirmar Exclusão Definitiva'}
                 </button>
               </div>
             </div>

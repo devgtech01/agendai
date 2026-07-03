@@ -520,3 +520,17 @@ export async function updateSupportTicketStatus(ticketId: string, status: Suppor
   }
   return mapSupportTicket(data);
 }
+
+export async function deleteEstablishment(id: string): Promise<boolean> {
+  const client = supabaseAdmin || supabase;
+  const { error } = await client
+    .from('establishments')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    console.error('Error deleting establishment:', error);
+    return false;
+  }
+  return true;
+}

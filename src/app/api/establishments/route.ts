@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getEstablishments, addEstablishment } from '@/lib/db';
+import { getEstablishments, addEstablishment, deleteEstablishment } from '@/lib/db';
 
 export async function GET() {
   try {
@@ -32,5 +32,26 @@ export async function POST(request: Request) {
     return NextResponse.json(newEstablishment, { status: 201 });
   } catch (error) {
     return NextResponse.json({ error: 'Erro ao cadastrar estabelecimento.' }, { status: 500 });
+  }
+}
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (!id) {
+      return NextResponse.json({ error: 'ID do estabelecimento não fornecido.' }, { status: 400 });
+    }
+
+    const deleted = await deleteEstablishment(id);
+    if (!deleted) {
+      return NextResponse.json({ error: 'Falha ao excluir o estabelecimento.' }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Erro ao excluir estabelecimento:', error);
+    return NextResponse.json({ error: 'Erro interno ao excluir estabelecimento.' }, { status: 500 });
   }
 }
