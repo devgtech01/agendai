@@ -10,6 +10,7 @@ import {
   Scissors, 
   Users, 
   Store, 
+  LifeBuoy,
   LogOut, 
   Menu, 
   X 
@@ -35,6 +36,7 @@ export default function ProfissionalHeader({ establishmentName }: ProfissionalHe
     { href: '/profissional/services', label: 'Meus Serviços', icon: Scissors },
     { href: '/profissional/team', label: 'Minha Equipe', icon: Users },
     { href: '/profissional/settings', label: 'Meu Estabelecimento', icon: Store },
+    { href: '/profissional/suporte', label: 'Suporte', icon: LifeBuoy },
   ];
 
   return (

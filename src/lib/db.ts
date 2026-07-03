@@ -1,4 +1,21 @@
 import { supabase } from './supabase';
+import { supabaseAdmin } from './supabase-admin';
+
+export interface SupportTicket {
+  id: string;
+  userId?: string;
+  userType: 'professional' | 'client' | 'guest';
+  name: string;
+  email: string;
+  phone?: string;
+  subject: string;
+  message: string;
+  status: 'Aberto' | 'Em Andamento' | 'Resolvido' | 'Fechado';
+  priority: 'Baixa' | 'Media' | 'Alta' | 'Urgente';
+  adminNotes?: string;
+  createdAt: string;
+  updatedAt?: string;
+}
 
 export interface Establishment {
   id: string;
@@ -398,4 +415,108 @@ export async function uploadImage(file: File, bucketName: 'uploads'): Promise<st
     console.error('Unexpected error during image upload:', err);
     return null;
   }
+}
+
+// Mapper & Métodos para Chamados de Suporte
+function mapSupportTicket(data: any): SupportTicket {
+  return {
+    id: data.id,
+    userId: data.user_id,
+    userType: data.user_type || 'professional',
+    name: data.name,
+    email: data.email,
+    phone: data.phone,
+    subject: data.subject,
+    message: data.message,
+    status: data.status || 'Aberto',
+    priority: data.priority || 'Media',
+    adminNotes: data.admin_notes,
+    createdAt: data.created_at,
+    updatedAt: data.updated_at,
+  };
+}
+
+export async function createSupportTicket(ticket: Omit<SupportTicket, 'id' | 'createdAt' | 'status'>): Promise<SupportTicket | null> {
+  const client = supabaseAdmin || supabase;
+  const { data, error } = await client
+    .from('support_tickets')
+    .insert([
+      {
+        user_id: ticket.userId || null,
+        user_type: ticket.userType || 'professional',
+        name: ticket.name,
+        email: ticket.email,
+        phone: ticket.phone || null,
+        subject: ticket.subject,
+        message: ticket.message,
+        priority: ticket.priority || 'Media',
+        status: 'Aberto',
+      },
+    ])
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error creating support ticket:', error);
+    return null;
+  }
+  return mapSupportTicket(data);
+}
+
+export async function getSupportTickets(statusFilter?: string): Promise<SupportTicket[]> {
+  const client = supabaseAdmin || supabase;
+  let query = client
+    .from('support_tickets')
+    .select('*')
+    .order('created_at', { ascending: false });
+
+  if (statusFilter && statusFilter !== 'todos') {
+    query = query.eq('status', statusFilter);
+  }
+
+  const { data, error } = await query;
+  if (error) {
+    console.error('Error fetching support tickets:', error);
+    return [];
+  }
+  return data.map(mapSupportTicket);
+}
+
+export async function getSupportTicketsByUser(email: string): Promise<SupportTicket[]> {
+  const client = supabaseAdmin || supabase;
+  const { data, error } = await client
+    .from('support_tickets')
+    .select('*')
+    .eq('email', email)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching user support tickets:', error);
+    return [];
+  }
+  return data.map(mapSupportTicket);
+}
+
+export async function updateSupportTicketStatus(ticketId: string, status: SupportTicket['status'], adminNotes?: string): Promise<SupportTicket | null> {
+  const client = supabaseAdmin || supabase;
+  const updateData: any = {
+    status,
+    updated_at: new Date().toISOString(),
+  };
+  if (adminNotes !== undefined) {
+    updateData.admin_notes = adminNotes;
+  }
+
+  const { data, error } = await client
+    .from('support_tickets')
+    .update(updateData)
+    .eq('id', ticketId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error updating support ticket:', error);
+    return null;
+  }
+  return mapSupportTicket(data);
 }

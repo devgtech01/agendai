@@ -77,9 +77,26 @@ CREATE POLICY "Agendamentos visiveis para todos" ON bookings FOR SELECT USING (t
 CREATE POLICY "Qualquer um pode criar agendamento (temporario)" ON bookings FOR INSERT WITH CHECK (true);
 CREATE POLICY "Qualquer um pode atualizar agendamento (temporario)" ON bookings FOR UPDATE USING (true);
 
--- Consultas de Atualização (execute no SQL Editor do Supabase se a tabela já existir):
--- ALTER TABLE establishments ADD COLUMN opening_time TIME DEFAULT '08:00:00';
--- ALTER TABLE establishments ADD COLUMN closing_time TIME DEFAULT '19:00:00';
--- ALTER TABLE establishments ADD COLUMN lunch_start TIME DEFAULT '12:00:00';
--- ALTER TABLE establishments ADD COLUMN lunch_end TIME DEFAULT '13:00:00';
+-- Tabela de Chamados de Suporte
+CREATE TABLE IF NOT EXISTS support_tickets (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID REFERENCES auth.users(id) ON DELETE SET NULL,
+    user_type TEXT NOT NULL DEFAULT 'professional' CHECK (user_type IN ('professional', 'client', 'guest')),
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT,
+    subject TEXT NOT NULL,
+    message TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'Aberto' CHECK (status IN ('Aberto', 'Em Andamento', 'Resolvido', 'Fechado')),
+    priority TEXT NOT NULL DEFAULT 'Media' CHECK (priority IN ('Baixa', 'Media', 'Alta', 'Urgente')),
+    admin_notes TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
+);
+
+ALTER TABLE support_tickets ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Qualquer um pode criar chamado de suporte" ON support_tickets FOR INSERT WITH CHECK (true);
+CREATE POLICY "Chamados visiveis para o criador e admins" ON support_tickets FOR SELECT USING (true);
+CREATE POLICY "Admins podem atualizar chamados de suporte" ON support_tickets FOR UPDATE USING (true);
+
 
