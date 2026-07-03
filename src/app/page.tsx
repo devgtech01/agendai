@@ -420,7 +420,7 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="mx-auto max-w-md mb-8 flex justify-center px-2">
+        <div className="mx-auto max-w-md mb-6 flex justify-center px-2">
           <div style={{ position: 'relative', display: 'flex', width: '100%', maxWidth: '380px', padding: '4px', background: 'var(--color-border)', borderRadius: 'var(--radius-lg)' }}>
             {/* Sliding tab background indicator */}
             <div 
@@ -446,15 +446,16 @@ export default function Home() {
                 justifyContent: 'center',
                 position: 'relative',
                 zIndex: 1,
-                padding: '8px 12px',
+                padding: '8px 6px',
                 border: 'none',
                 background: 'transparent',
                 color: activeDemoTab === 'dashboard' ? 'var(--color-text)' : 'var(--color-muted)',
                 fontWeight: activeDemoTab === 'dashboard' ? 600 : 500,
-                fontSize: '13px',
+                fontSize: '12px',
                 borderRadius: 'var(--radius-md)',
                 cursor: 'pointer',
                 transition: 'color 0.25s ease',
+                whiteSpace: 'nowrap'
               }}
             >
               📊 Painel de Análises
@@ -468,15 +469,16 @@ export default function Home() {
                 justifyContent: 'center',
                 position: 'relative',
                 zIndex: 1,
-                padding: '8px 12px',
+                padding: '8px 6px',
                 border: 'none',
                 background: 'transparent',
                 color: activeDemoTab === 'agenda' ? 'var(--color-text)' : 'var(--color-muted)',
                 fontWeight: activeDemoTab === 'agenda' ? 600 : 500,
-                fontSize: '13px',
+                fontSize: '12px',
                 borderRadius: 'var(--radius-md)',
                 cursor: 'pointer',
                 transition: 'color 0.25s ease',
+                whiteSpace: 'nowrap'
               }}
             >
               📅 Agenda Diária
@@ -484,7 +486,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mx-auto max-w-6xl rounded-2xl border bg-surface p-6 md:p-8" style={{ borderWidth: "0.5px" }}>
+        <div className="mx-auto max-w-6xl rounded-2xl border bg-surface p-3 sm:p-6 md:p-8 overflow-hidden" style={{ borderWidth: "0.5px" }}>
           <div key={activeDemoTab} className="animate-tab-content">
             {activeDemoTab === 'dashboard' ? (
             <>
@@ -726,27 +728,25 @@ export default function Home() {
           ) : (
             <>
               {/* Header Agenda */}
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-6">
                 <div>
-                  <h3 className="font-display text-2xl text-foreground" style={{ letterSpacing: "-0.02em" }}>
+                  <h3 className="font-display text-xl sm:text-2xl text-foreground" style={{ letterSpacing: "-0.02em" }}>
                     Minha Agenda
                   </h3>
-                  <p className="mt-1 text-sm text-muted-foreground">Controle seus agendamentos diários</p>
+                  <p className="mt-0.5 text-xs sm:text-sm text-muted-foreground">Controle seus agendamentos diários</p>
                 </div>
-                <div className="flex gap-4 items-center">
-                  <div style={{ display: 'flex', flexDirection: 'column' }}>
-                    <label style={{ fontSize: '12px', color: 'var(--color-muted)', marginBottom: '4px' }}>Data da Agenda</label>
+                <div className="flex gap-4 items-center w-full sm:w-auto">
+                  <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+                    <label style={{ fontSize: '11px', color: 'var(--color-muted)', marginBottom: '4px' }}>Data da Agenda</label>
                     <input 
                       type="date" 
-                      className="input" 
+                      className="input w-full sm:w-auto text-xs sm:text-sm" 
                       style={{ 
-                        padding: '8px 12px', 
-                        minWidth: '160px', 
+                        padding: '6px 10px', 
                         borderRadius: 'var(--radius-md)', 
                         border: '1px solid var(--color-border)', 
                         background: 'var(--color-surface)', 
                         color: 'var(--color-text)',
-                        fontSize: '14px',
                         outline: 'none'
                       }}
                       value={`2026-06-${selectedAgendaDayNumber}`}
@@ -763,14 +763,14 @@ export default function Home() {
               </div>
 
               {/* Resumo / Cards */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 'var(--space-5)', marginBottom: 'var(--space-8)' }}>
-                <div style={{ background: 'var(--color-surface)', padding: 'var(--space-5)', borderRadius: 'var(--radius-lg)', border: '0.5px solid var(--color-border)', boxShadow: '0 1px 4px rgba(0,0,0,0.02)' }}>
-                  <p className="text-muted" style={{ fontSize: '14px', marginBottom: '8px', color: 'var(--color-muted)' }}>Atendimentos no Dia</p>
-                  <h3 style={{ fontSize: '32px', fontWeight: 500, color: 'var(--color-text)', margin: 0 }}>{demoAtendimentosCount}</h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <div style={{ background: 'var(--color-surface)', padding: '14px 16px', borderRadius: 'var(--radius-lg)', border: '0.5px solid var(--color-border)', boxShadow: '0 1px 4px rgba(0,0,0,0.02)' }}>
+                  <p className="text-muted" style={{ fontSize: '12px', marginBottom: '4px', color: 'var(--color-muted)' }}>Atendimentos no Dia</p>
+                  <h3 style={{ fontSize: '28px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>{demoAtendimentosCount}</h3>
                 </div>
-                <div style={{ background: 'var(--color-surface)', padding: 'var(--space-5)', borderRadius: 'var(--radius-lg)', border: '0.5px solid var(--color-border)', boxShadow: '0 1px 4px rgba(0,0,0,0.02)' }}>
-                  <p className="text-muted" style={{ fontSize: '14px', marginBottom: '8px', color: 'var(--color-muted)' }}>Ganhos do Dia (Est.)</p>
-                  <h3 style={{ fontSize: '32px', fontWeight: 500, color: 'var(--color-text)', margin: 0 }}>{demoGanhos}</h3>
+                <div style={{ background: 'var(--color-surface)', padding: '14px 16px', borderRadius: 'var(--radius-lg)', border: '0.5px solid var(--color-border)', boxShadow: '0 1px 4px rgba(0,0,0,0.02)' }}>
+                  <p className="text-muted" style={{ fontSize: '12px', marginBottom: '4px', color: 'var(--color-muted)' }}>Ganhos do Dia (Est.)</p>
+                  <h3 style={{ fontSize: '28px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>{demoGanhos}</h3>
                 </div>
               </div>
 
@@ -779,12 +779,12 @@ export default function Home() {
                 display: 'flex', 
                 justifyContent: 'space-between', 
                 background: 'var(--color-surface)', 
-                padding: '12px 16px', 
+                padding: '8px 10px', 
                 borderRadius: 'var(--radius-lg)', 
                 border: '0.5px solid var(--color-border)', 
                 marginBottom: 'var(--space-6)',
                 overflowX: 'auto',
-                gap: '8px'
+                gap: '6px'
               }}>
                 {agendaDays.map((rd, idx) => (
                   <button
@@ -792,12 +792,12 @@ export default function Home() {
                     onClick={() => setSelectedAgendaDayNumber(rd.dayNumber)}
                     style={{
                       flex: 1,
-                      minWidth: '60px',
+                      minWidth: '48px',
                       display: 'flex',
                       flexDirection: 'column',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      padding: '10px 6px',
+                      padding: '8px 4px',
                       borderRadius: 'var(--radius-md)',
                       border: 'none',
                       background: rd.isSelected ? 'var(--color-accent)' : 'transparent',
@@ -806,10 +806,10 @@ export default function Home() {
                       transition: 'all var(--transition-normal)'
                     }}
                   >
-                    <span style={{ fontSize: '11px', fontWeight: 600, textTransform: 'uppercase', opacity: rd.isSelected ? 0.9 : 0.6, marginBottom: '4px' }}>
+                    <span style={{ fontSize: '10px', fontWeight: 600, textTransform: 'uppercase', opacity: rd.isSelected ? 0.9 : 0.6, marginBottom: '2px' }}>
                       {rd.dayName}
                     </span>
-                    <span style={{ fontSize: '18px', fontWeight: 600 }}>
+                    <span style={{ fontSize: '16px', fontWeight: 600 }}>
                       {rd.dayNumber}
                     </span>
                   </button>
@@ -817,20 +817,20 @@ export default function Home() {
               </div>
 
               {/* Lista de Agendamentos */}
-              <h4 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-text)', marginBottom: '16px' }}>Clientes Agendados</h4>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <h4 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-text)', marginBottom: '12px' }}>Clientes Agendados</h4>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {currentDemoBookings.length === 0 ? (
                   <div style={{ 
-                    padding: '40px 24px', 
+                    padding: '32px 16px', 
                     textAlign: 'center', 
                     background: 'var(--color-surface)', 
                     borderRadius: 'var(--radius-lg)', 
                     border: '0.5px solid var(--color-border)',
                     color: 'var(--color-muted)' 
                   }}>
-                    <div style={{ fontSize: '32px', marginBottom: '12px' }}>📅</div>
-                    <p style={{ fontWeight: 500, fontSize: '16px', color: 'var(--color-text)', margin: 0 }}>Folga!</p>
-                    <p style={{ fontSize: '14px', marginTop: '4px', margin: 0 }}>Nenhum agendamento marcado para esta data.</p>
+                    <div style={{ fontSize: '28px', marginBottom: '8px' }}>📅</div>
+                    <p style={{ fontWeight: 500, fontSize: '15px', color: 'var(--color-text)', margin: 0 }}>Folga!</p>
+                    <p style={{ fontSize: '13px', marginTop: '2px', margin: 0 }}>Nenhum agendamento marcado para esta data.</p>
                   </div>
                 ) : (
                   currentDemoBookings.map((apt) => {
@@ -861,27 +861,41 @@ export default function Home() {
                           borderRadius: 'var(--radius-lg)', 
                           border: '0.5px solid var(--color-border)', 
                           borderLeft: `4px solid ${leftBorderColor}`,
-                          padding: '20px',
+                          padding: '12px 14px',
                           boxShadow: '0 2px 8px rgba(0,0,0,0.01)',
                         }}
-                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                       >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', minWidth: '80px' }}>
-                          <div style={{ fontSize: '20px', fontWeight: 600, color: 'var(--color-text)', letterSpacing: '-0.02em' }}>
+                        <div className="flex items-center justify-between sm:justify-start gap-4">
+                          <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-text)', letterSpacing: '-0.02em' }}>
                             {apt.time}
                           </div>
+                          <span 
+                            className="sm:hidden"
+                            style={{ 
+                              background: statusBg,
+                              color: statusColor,
+                              padding: '3px 8px',
+                              fontSize: '11px',
+                              fontWeight: 500,
+                              borderRadius: '20px',
+                              whiteSpace: 'nowrap'
+                            }}
+                          >
+                            {apt.status}
+                          </span>
                         </div>
 
-                        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                            <span style={{ fontWeight: 600, fontSize: '15px', color: 'var(--color-text)' }}>
+                        <div className="flex-1 flex flex-col gap-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span style={{ fontWeight: 600, fontSize: '14px', color: 'var(--color-text)' }}>
                               {apt.clientName}
                             </span>
                             <span style={{ fontSize: '12px', color: '#25D366', fontWeight: 500 }}>
                               💬 {apt.clientPhone}
                             </span>
                           </div>
-                          <div style={{ fontSize: '13px', color: 'var(--color-muted)', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                          <div style={{ fontSize: '12px', color: 'var(--color-muted)', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
                             <span>{apt.serviceName}</span>
                             <span>•</span>
                             <span>⏱ {apt.duration} min</span>
@@ -890,7 +904,7 @@ export default function Home() {
                           </div>
                         </div>
 
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', justifySelf: 'flex-end', flexWrap: 'wrap' }}>
+                        <div className="hidden sm:flex items-center gap-3">
                           <span 
                             style={{ 
                               background: statusBg,
@@ -898,38 +912,12 @@ export default function Home() {
                               padding: '4px 10px',
                               fontSize: '12px',
                               fontWeight: 500,
-                              borderRadius: 'var(--radius-sm)',
-                              border: apt.status === 'Concluido' ? '1px solid var(--color-border)' : 'none'
+                              borderRadius: '20px',
+                              whiteSpace: 'nowrap'
                             }}
                           >
                             {apt.status}
                           </span>
-                          
-                          <div style={{ display: 'flex', gap: '8px' }}>
-                            {apt.status !== 'Concluido' && (
-                              <>
-                                <button 
-                                  className="press btn btn-primary btn-sm"
-                                  style={{ height: '36px', padding: '0 16px', fontSize: '13px' }}
-                                >
-                                  Concluir
-                                </button>
-                                <button 
-                                  className="press btn btn-ghost btn-sm"
-                                  style={{ 
-                                    height: '36px',
-                                    padding: '0 12px', 
-                                    fontSize: '13px', 
-                                    color: 'var(--color-danger)', 
-                                    borderColor: 'var(--color-danger)',
-                                    background: 'transparent'
-                                  }}
-                                >
-                                  Cancelar
-                                </button>
-                              </>
-                            )}
-                          </div>
                         </div>
                       </div>
                     );
