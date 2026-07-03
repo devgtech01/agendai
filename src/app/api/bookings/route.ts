@@ -114,7 +114,7 @@ export async function POST(request: Request) {
 
           // 1. Enviar e-mail de confirmação para o cliente
           await resend.emails.send({
-            from: 'Agendai <onboarding@resend.dev>',
+            from: process.env.EMAIL_FROM || 'Agendai <atendimento@sisagendai.online>',
             to: clientEmail,
             subject: `Agendamento Confirmado no ${estName}! ✂️`,
             html: `
@@ -161,9 +161,9 @@ export async function POST(request: Request) {
             `,
           });
 
-          // 2. Enviar e-mail de notificação para o profissional (copiado no email do cliente)
+          // 2. Enviar e-mail de notificação para o profissional
           await resend.emails.send({
-            from: 'Agendai <onboarding@resend.dev>',
+            from: process.env.EMAIL_FROM || 'Agendai <atendimento@sisagendai.online>',
             to: clientEmail,
             subject: `[Agendai] Novo Agendamento Recebido: ${srvName}! 📅`,
             html: `
