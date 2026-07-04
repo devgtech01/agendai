@@ -51,8 +51,11 @@ CREATE TABLE bookings (
     date DATE NOT NULL,
     time TIME NOT NULL,
     status TEXT NOT NULL DEFAULT 'Pendente' CHECK (status IN ('Confirmado', 'Pendente', 'Cancelado', 'Concluido')),
+    rating INTEGER CHECK (rating >= 1 AND rating <= 5),
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
 );
+
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS rating INTEGER CHECK (rating >= 1 AND rating <= 5);
 
 -- Habilitar Row Level Security (RLS) básico para permitir leitura pública inicial
 -- (Mais tarde, quando houver autenticação, fecharemos isso apenas para donos/clientes)

@@ -53,6 +53,7 @@ export interface Booking {
   date: string; // YYYY-MM-DD
   time: string; // HH:MM:SS
   status: 'Confirmado' | 'Pendente' | 'Cancelado' | 'Concluido';
+  rating?: number; // 1 a 5 estrelas
 }
 
 export interface Professional {
@@ -104,6 +105,7 @@ function mapBooking(data: any): Booking {
     date: data.date,
     time: data.time,
     status: data.status,
+    rating: data.rating || undefined,
   };
 }
 
@@ -340,6 +342,19 @@ export async function updateBookingStatus(bookingId: string, status: Booking['st
     return null;
   }
   return mapBooking(data);
+}
+
+export async function rateBooking(bookingId: string, rating: number): Promise<boolean> {
+  const { error } = await supabaseAdmin
+    .from('bookings')
+    .update({ rating })
+    .eq('id', bookingId);
+
+  if (error) {
+    console.error('Error rating booking:', error);
+    return false;
+  }
+  return true;
 }
 
 // Métodos para Profissionais (Equipe)

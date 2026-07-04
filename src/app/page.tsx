@@ -1235,91 +1235,54 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Services Section (Vitrines - Carrossel de Parceiros) */}
+      {/* Banner de Teste Grátis de 1 Mês */}
       <section className="relative mx-auto max-w-7xl px-4 py-16 reveal-on-scroll overflow-hidden" id="services">
-        <div className="mb-4">
-          <span className="text-xs font-semibold text-accent tracking-wider uppercase">Parceiros</span>
-          <h2 className="font-display mt-1 text-2xl sm:text-3xl md:text-4xl text-foreground" style={{ letterSpacing: "-0.02em", lineHeight: 1.2 }}>
-            Alguns de nossos parceiros
-          </h2>
-          <p className="mt-2 text-sm text-muted-foreground w-full max-w-xl" style={{ lineHeight: 1.5, wordBreak: 'break-word' }}>
-            Encontre os melhores estabelecimentos da sua cidade, organize e agende em poucos toques.
-          </p>
-        </div>
-
-        {/* Barra de Controles e Dica Visual Mobile */}
-        <div className="flex items-center justify-between gap-3 mb-4 pb-3 border-b" style={{ borderColor: 'var(--color-border)' }}>
-          <span className="text-xs text-muted-foreground font-medium">Deslize para ver mais →</span>
-          <div className="flex items-center gap-2">
-            <button 
-              onClick={scrollLeft}
-              className="press flex items-center justify-center rounded-full border bg-surface text-foreground shadow-sm"
-              style={{ width: '36px', height: '36px', cursor: 'pointer', transition: 'all 0.2s', borderColor: 'var(--color-border)' }}
-              title="Anterior"
-            >
-              <ChevronLeft className="h-4 w-4 text-muted-foreground" />
-            </button>
-            <button 
-              onClick={scrollRight}
-              className="press flex items-center justify-center rounded-full border bg-surface text-foreground shadow-sm"
-              style={{ width: '36px', height: '36px', cursor: 'pointer', transition: 'all 0.2s', borderColor: 'var(--color-border)' }}
-              title="Próximo"
-            >
-              <ChevronRight className="h-4 w-4 text-muted-foreground" />
-            </button>
-          </div>
-        </div>
-
-        {/* Contêiner de rolagem do carrossel */}
         <div 
-          ref={carouselRef}
-          className="carousel-container"
+          style={{ 
+            background: 'linear-gradient(135deg, #1A1A2E 0%, #151525 60%, #2A1A1E 100%)',
+            borderRadius: '24px',
+            padding: '40px 24px',
+            border: '1px solid rgba(232, 213, 183, 0.2)',
+            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)',
+            color: '#E8D5B7',
+            textAlign: 'center',
+            position: 'relative',
+            overflow: 'hidden'
+          }}
+          className="sm:p-12 md:p-16 flex flex-col items-center"
         >
-          {establishments.map((est) => {
-            return (
-              <div key={est.name} className="carousel-item">
-                <article
-                  className="card-hover overflow-hidden rounded-xl border bg-surface flex flex-col shadow-sm h-full"
-                  style={{ borderWidth: "0.5px" }}
-                >
-                  <div className="carousel-card-img-container">
-                    <div 
-                      className="carousel-card-img"
-                      style={{ 
-                        backgroundImage: `url(${est.image})`,
-                      }} 
-                    />
-                  </div>
+          <div style={{ position: 'absolute', top: '-50px', right: '-50px', width: '200px', height: '200px', background: 'var(--color-accent)', opacity: 0.15, filter: 'blur(60px)', borderRadius: '50%' }} />
+          <div style={{ position: 'absolute', bottom: '-50px', left: '-50px', width: '200px', height: '200px', background: '#E8D5B7', opacity: 0.1, filter: 'blur(60px)', borderRadius: '50%' }} />
 
-                  <div className="flex-1 flex flex-col p-6">
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <h3 className="text-lg font-bold text-foreground" style={{ margin: 0, lineHeight: 1.2 }}>
-                        {est.name}
-                      </h3>
-                      {est.badge && (
-                        <span className="rounded-full bg-accent-soft px-2.5 py-0.5 text-[10px] font-bold text-accent uppercase tracking-wider shrink-0 shadow-sm">
-                          Destaque
-                        </span>
-                      )}
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-4" style={{ margin: 0 }}>{est.type}</p>
-                    
-                    <div className="space-y-3 mt-auto">
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <MapPin className="h-4 w-4 text-accent shrink-0" />
-                        <span className="block overflow-hidden text-ellipsis whitespace-nowrap">{est.address}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Star className="h-4 w-4 fill-accent text-accent" />
-                        <span className="text-sm font-bold text-foreground">{est.rating}</span>
-                        <span className="text-xs text-muted-foreground">({est.reviews} avaliações)</span>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              </div>
-            );
-          })}
+          <span className="rounded-full bg-accent/20 px-4 py-1 text-xs font-bold text-accent uppercase tracking-wider mb-4 border border-accent/30 inline-block">
+            🎁 30 Dias Grátis · Sem Cartão no Cadastro
+          </span>
+
+          <h2 className="font-display text-2xl sm:text-4xl md:text-5xl text-linen" style={{ letterSpacing: "-0.02em", lineHeight: 1.2, maxWidth: '820px' }}>
+            Gostou da nossa plataforma? Faça o teste grátis por 1 mês e cancele quando quiser.
+          </h2>
+
+          <p className="mt-4 text-sm sm:text-base text-linen/70 max-w-2xl" style={{ lineHeight: 1.6 }}>
+            Experimente todos os recursos premium do Agendai. Organize seus horários, controle o faturamento da sua equipe e ofereça agendamento online 24h para seus clientes.
+          </p>
+
+          <div className="mt-8 flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
+            <Link 
+              href="/profissional/register" 
+              className="btn-premium-primary px-8 py-3.5 text-sm font-semibold rounded-xl text-center" 
+              style={{ textDecoration: 'none', display: 'inline-flex', itemsCenter: 'center', justifyContent: 'center', gap: '8px' }}
+            >
+              <Sparkles className="h-4 w-4" />
+              Começar Teste Grátis de 30 Dias
+            </Link>
+            <Link 
+              href="/profissional/planos" 
+              className="btn btn-ghost px-8 py-3.5 text-sm font-semibold rounded-xl text-center" 
+              style={{ textDecoration: 'none', color: '#E8D5B7', border: '1px solid rgba(232, 213, 183, 0.3)', display: 'inline-flex', itemsCenter: 'center', justifyContent: 'center' }}
+            >
+              Ver Todos os Planos
+            </Link>
+          </div>
         </div>
       </section>
 
