@@ -58,7 +58,15 @@ export default function ProfissionalLoginPage() {
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-            <label className="input-label">Senha</label>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <label className="input-label">Senha</label>
+              <Link 
+                href="/profissional/esqueci-senha" 
+                style={{ fontSize: '12px', color: 'var(--color-accent)', textDecoration: 'none', fontWeight: 500 }}
+              >
+                Esqueceu sua senha?
+              </Link>
+            </div>
             <input 
               type="password" 
               className="input"
