@@ -1270,7 +1270,7 @@ export default function Home() {
             <Link 
               href="/profissional/register" 
               className="btn-premium-primary px-8 py-3.5 text-sm font-semibold rounded-xl text-center" 
-              style={{ textDecoration: 'none', display: 'inline-flex', itemsCenter: 'center', justifyContent: 'center', gap: '8px' }}
+              style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
             >
               <Sparkles className="h-4 w-4" />
               Começar Teste Grátis de 30 Dias
@@ -1278,7 +1278,7 @@ export default function Home() {
             <Link 
               href="/profissional/planos" 
               className="btn btn-ghost px-8 py-3.5 text-sm font-semibold rounded-xl text-center" 
-              style={{ textDecoration: 'none', color: '#E8D5B7', border: '1px solid rgba(232, 213, 183, 0.3)', display: 'inline-flex', itemsCenter: 'center', justifyContent: 'center' }}
+              style={{ textDecoration: 'none', color: '#E8D5B7', border: '1px solid rgba(232, 213, 183, 0.3)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
             >
               Ver Todos os Planos
             </Link>
