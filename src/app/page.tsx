@@ -47,17 +47,18 @@ const slots = ["09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "14:00", "1
 export default function Home() {
   const carouselRef = useRef<HTMLDivElement>(null);
 
-  // Hook de revelação ao rolar (Scroll Reveal)
+  // Hook de revelação ao rolar (Scroll Reveal) otimizado para mobile
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('revealed');
+            observer.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.05, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.01, rootMargin: '100px 0px 100px 0px' }
     );
 
     const elements = document.querySelectorAll('.reveal-on-scroll');
@@ -314,10 +315,10 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative mx-auto max-w-7xl px-4 py-16 md:py-24 overflow-hidden">
-        {/* Glow Shapes flutuantes e animadas */}
-        <div className="glow-shape-1 drift-glow-1" style={{ top: '-10%', left: '15%' }} />
-        <div className="glow-shape-2 drift-glow-2" style={{ bottom: '10%', right: '10%' }} />
+      <section className="relative mx-auto max-w-7xl px-4 py-16 md:py-24">
+        {/* Glow Shapes flutuantes e animadas - pointer-events-none para não travar o toque no mobile */}
+        <div className="glow-shape-1 drift-glow-1" style={{ top: '-10%', left: '15%', pointerEvents: 'none' }} />
+        <div className="glow-shape-2 drift-glow-2" style={{ bottom: '10%', right: '10%', pointerEvents: 'none' }} />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           {/* Coluna de Texto */}
@@ -332,7 +333,7 @@ export default function Home() {
               <Link href="/profissional" className="btn-premium-primary w-full rounded-lg px-7 py-3.5 text-base font-medium sm:w-auto text-center" style={{ textDecoration: 'none' }}>
                 Começar agora
               </Link>
-              <a href="#booking-demo" className="btn-premium-secondary w-full rounded-lg px-7 py-3.5 text-base font-medium sm:w-auto text-center" style={{ textDecoration: 'none' }}>
+              <a href="#demo" className="btn-premium-secondary w-full rounded-lg px-7 py-3.5 text-base font-medium sm:w-auto text-center" style={{ textDecoration: 'none' }}>
                 Ver demonstração
               </a>
             </div>
@@ -409,7 +410,7 @@ export default function Home() {
 
 
       {/* Dashboard Section */}
-      <section className="relative mx-auto max-w-7xl px-4 py-20 reveal-on-scroll overflow-hidden" id="demo">
+      <section className="relative mx-auto max-w-7xl px-4 py-16 sm:py-20 reveal-on-scroll" id="demo">
         <div className="mb-12 text-center">
           <p className="text-sm font-semibold text-accent tracking-wider uppercase">Para profissionais</p>
           <h2 className="font-display mt-2 text-2xl sm:text-3xl md:text-5xl text-foreground" style={{ letterSpacing: "-0.02em" }}>
@@ -434,7 +435,8 @@ export default function Home() {
                 borderRadius: '12px',
                 boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                 transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-                zIndex: 0
+                zIndex: 0,
+                pointerEvents: 'none'
               }}
             />
             <button
@@ -1275,12 +1277,6 @@ export default function Home() {
             >
               Ver todos os planos →
             </Link>
-          </div>
-
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-xs sm:text-sm text-muted-foreground border-t pt-6 w-full max-w-xl" style={{ borderColor: 'var(--color-border)' }}>
-            <span className="flex items-center gap-2"><span className="text-accent font-bold">✓</span> Sem cartão no cadastro</span>
-            <span className="flex items-center gap-2"><span className="text-accent font-bold">✓</span> Configuração em 2 min</span>
-            <span className="flex items-center gap-2"><span className="text-accent font-bold">✓</span> Cancele quando quiser</span>
           </div>
 
         </div>
