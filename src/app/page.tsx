@@ -1235,54 +1235,82 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Banner de Teste Grátis de 1 Mês */}
+      {/* Seção Banner Teste Grátis UI/UX Reformulada */}
       <section className="relative mx-auto max-w-7xl px-4 py-16 reveal-on-scroll overflow-hidden" id="services">
         <div 
+          className="relative rounded-3xl border bg-surface p-6 sm:p-12 md:p-16 flex flex-col items-center text-center overflow-hidden shadow-xl"
           style={{ 
-            background: 'linear-gradient(135deg, #1A1A2E 0%, #151525 60%, #2A1A1E 100%)',
-            borderRadius: '24px',
-            padding: '40px 24px',
-            border: '1px solid rgba(232, 213, 183, 0.2)',
-            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)',
-            color: '#E8D5B7',
-            textAlign: 'center',
-            position: 'relative',
-            overflow: 'hidden'
+            borderColor: 'var(--color-border)',
+            boxShadow: '0 20px 50px rgba(0, 0, 0, 0.04)',
+            background: 'linear-gradient(180deg, var(--color-surface) 0%, var(--color-background) 100%)'
           }}
-          className="sm:p-12 md:p-16 flex flex-col items-center"
         >
-          <div style={{ position: 'absolute', top: '-50px', right: '-50px', width: '200px', height: '200px', background: 'var(--color-accent)', opacity: 0.15, filter: 'blur(60px)', borderRadius: '50%' }} />
-          <div style={{ position: 'absolute', bottom: '-50px', left: '-50px', width: '200px', height: '200px', background: '#E8D5B7', opacity: 0.1, filter: 'blur(60px)', borderRadius: '50%' }} />
+          {/* Efeitos sutis de iluminação de fundo */}
+          <div style={{ position: 'absolute', top: '-100px', left: '50%', transform: 'translateX(-50%)', width: '400px', height: '400px', background: 'var(--color-accent)', opacity: 0.08, filter: 'blur(90px)', borderRadius: '50%', pointerEvents: 'none' }} />
 
-          <span className="rounded-full bg-accent/20 px-4 py-1 text-xs font-bold text-accent uppercase tracking-wider mb-4 border border-accent/30 inline-block">
-            🎁 30 Dias Grátis · Sem Cartão no Cadastro
-          </span>
+          {/* Badge Topo */}
+          <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold text-accent mb-6 border" style={{ background: 'var(--color-accent-soft)', borderColor: 'rgba(193, 90, 46, 0.2)' }}>
+            <Sparkles className="h-3.5 w-3.5 text-accent" />
+            <span>30 DIAS GRÁTIS DE TESTE</span>
+          </div>
 
-          <h2 className="font-display text-2xl sm:text-4xl md:text-5xl text-linen" style={{ letterSpacing: "-0.02em", lineHeight: 1.2, maxWidth: '820px' }}>
-            Gostou da nossa plataforma? Faça o teste grátis por 1 mês e cancele quando quiser.
+          {/* Título Principal Tipográfico */}
+          <h2 className="font-display text-2xl sm:text-4xl md:text-5xl text-foreground max-w-3xl" style={{ letterSpacing: "-0.02em", lineHeight: 1.25 }}>
+            Gostou da nossa plataforma? Experimente por <span className="text-accent italic font-serif">1 mês grátis</span> e cancele quando quiser.
           </h2>
 
-          <p className="mt-4 text-sm sm:text-base text-linen/70 max-w-2xl" style={{ lineHeight: 1.6 }}>
-            Experimente todos os recursos premium do Agendai. Organize seus horários, controle o faturamento da sua equipe e ofereça agendamento online 24h para seus clientes.
+          {/* Descrição em tom de voz persuasivo */}
+          <p className="mt-4 text-sm sm:text-base text-muted-foreground max-w-2xl" style={{ lineHeight: 1.6 }}>
+            Sem letras miúdas ou complicações. Crie a conta do seu estabelecimento, configure sua equipe e ofereça agendamentos online 24h para seus clientes desde o primeiro minuto.
           </p>
 
-          <div className="mt-8 flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
+          {/* Grid de Diferenciais UI/UX (3 Cards Benefícios) */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 my-8 w-full max-w-3xl">
+            <div className="flex items-center justify-center gap-2.5 p-3.5 rounded-2xl border bg-surface text-xs font-medium text-foreground shadow-sm" style={{ borderColor: 'var(--color-border)' }}>
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent font-bold text-[11px]">✓</span>
+              <span>Sem cartão no cadastro</span>
+            </div>
+            <div className="flex items-center justify-center gap-2.5 p-3.5 rounded-2xl border bg-surface text-xs font-medium text-foreground shadow-sm" style={{ borderColor: 'var(--color-border)' }}>
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent font-bold text-[11px]">✓</span>
+              <span>Configuração em 2 minutos</span>
+            </div>
+            <div className="flex items-center justify-center gap-2.5 p-3.5 rounded-2xl border bg-surface text-xs font-medium text-foreground shadow-sm" style={{ borderColor: 'var(--color-border)' }}>
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-accent/15 text-accent font-bold text-[11px]">✓</span>
+              <span>Cancele a qualquer momento</span>
+            </div>
+          </div>
+
+          {/* Botões de Ação Principais */}
+          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto justify-center">
             <Link 
               href="/profissional/register" 
-              className="btn-premium-primary px-8 py-3.5 text-sm font-semibold rounded-xl text-center" 
-              style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+              className="btn-premium-primary px-8 py-4 text-sm font-semibold rounded-2xl text-center shadow-lg transition-all duration-200" 
+              style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
             >
-              <Sparkles className="h-4 w-4" />
-              Começar Teste Grátis de 30 Dias
+              <span>Começar Teste Grátis de 30 Dias</span>
+              <ArrowRight className="h-4 w-4" />
             </Link>
             <Link 
               href="/profissional/planos" 
-              className="btn btn-ghost px-8 py-3.5 text-sm font-semibold rounded-xl text-center" 
-              style={{ textDecoration: 'none', color: '#E8D5B7', border: '1px solid rgba(232, 213, 183, 0.3)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}
+              className="btn btn-ghost px-8 py-4 text-sm font-semibold rounded-2xl text-center transition-all duration-200" 
+              style={{ 
+                textDecoration: 'none', 
+                color: 'var(--color-text)', 
+                border: '1px solid var(--color-border)', 
+                background: 'var(--color-surface)',
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                justifyContent: 'center' 
+              }}
             >
-              Ver Todos os Planos
+              Conhecer Todos os Planos
             </Link>
           </div>
+
+          {/* Micro-Texto de Confiança */}
+          <p className="mt-5 text-xs text-muted-foreground">
+            Acesso imediato a todos os recursos premium · Suporte via WhatsApp incluso
+          </p>
         </div>
       </section>
 
