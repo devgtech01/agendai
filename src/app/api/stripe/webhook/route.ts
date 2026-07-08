@@ -123,7 +123,7 @@ export async function POST(req: Request) {
         }
 
         if (userId) {
-          const isPlanActive = ['active', 'trialing'].includes(planStatus);
+          const isPlanActive = ['active', 'trialing'].includes(planStatus) && !subscription.cancel_at_period_end;
           const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
             user_metadata: {
               plan_status: isPlanActive ? 'active' : 'inactive',
@@ -134,7 +134,7 @@ export async function POST(req: Request) {
             console.error('Erro ao atualizar assinatura no Supabase via Webhook:', error);
             return NextResponse.json({ error: 'Erro ao atualizar assinatura.' }, { status: 500 });
           }
-          console.log(`Webhook: Assinatura atualizada para o usuário ${userId}. Status: ${planStatus}`);
+          console.log(`Webhook: Assinatura atualizada para o usuário ${userId}. Status: ${planStatus}, CancelAtPeriodEnd: ${subscription.cancel_at_period_end}`);
         } else {
           console.warn(`Webhook: Não foi possível mapear a assinatura atualizada ${subscription.id} para um usuário.`);
         }
