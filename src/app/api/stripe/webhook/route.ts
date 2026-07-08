@@ -63,7 +63,26 @@ export async function POST(req: Request) {
 
       case 'customer.subscription.deleted': {
         const subscription = event.data.object as Stripe.Subscription;
-        const userId = subscription.metadata?.userId;
+        let userId = subscription.metadata?.userId;
+
+        if (!userId && subscription.customer) {
+          try {
+            const customer = await stripe.customers.retrieve(subscription.customer as string);
+            if (customer && !('deleted' in customer) && customer.email) {
+              const { data: listData } = await supabaseAdmin.auth.admin.listUsers({
+                perPage: 1000
+              });
+              const targetUser = listData?.users?.find(
+                u => u.email?.toLowerCase() === customer.email?.toLowerCase()
+              );
+              if (targetUser) {
+                userId = targetUser.id;
+              }
+            }
+          } catch (err) {
+            console.error('Erro no fallback do customer.subscription.deleted:', err);
+          }
+        }
 
         if (userId) {
           // Desativar plano do usuário no Supabase
@@ -78,14 +97,35 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Erro ao desativar plano.' }, { status: 500 });
           }
           console.log(`Webhook: Assinatura desativada/cancelada para o usuário ${userId}`);
+        } else {
+          console.warn(`Webhook: Não foi possível mapear a assinatura deletada ${subscription.id} para um usuário.`);
         }
         break;
       }
 
       case 'customer.subscription.updated': {
         const subscription = event.data.object as Stripe.Subscription;
-        const userId = subscription.metadata?.userId;
+        let userId = subscription.metadata?.userId;
         const planStatus = subscription.status; // active, trialing, past_due, canceled, unpaid
+
+        if (!userId && subscription.customer) {
+          try {
+            const customer = await stripe.customers.retrieve(subscription.customer as string);
+            if (customer && !('deleted' in customer) && customer.email) {
+              const { data: listData } = await supabaseAdmin.auth.admin.listUsers({
+                perPage: 1000
+              });
+              const targetUser = listData?.users?.find(
+                u => u.email?.toLowerCase() === customer.email?.toLowerCase()
+              );
+              if (targetUser) {
+                userId = targetUser.id;
+              }
+            }
+          } catch (err) {
+            console.error('Erro no fallback do customer.subscription.updated:', err);
+          }
+        }
 
         if (userId) {
           const isPlanActive = ['active', 'trialing'].includes(planStatus);
@@ -100,6 +140,8 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: 'Erro ao atualizar assinatura.' }, { status: 500 });
           }
           console.log(`Webhook: Assinatura atualizada para o usuário ${userId}. Status: ${planStatus}`);
+        } else {
+          console.warn(`Webhook: Não foi possível mapear a assinatura atualizada ${subscription.id} para um usuário.`);
         }
         break;
       }

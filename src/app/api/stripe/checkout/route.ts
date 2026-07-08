@@ -88,7 +88,13 @@ export async function POST(req: Request) {
         },
       ],
       mode: 'subscription',
-      subscription_data: planKey === 'mensal' ? { trial_period_days: 30 } : undefined,
+      subscription_data: {
+        ...(planKey === 'mensal' ? { trial_period_days: 30 } : {}),
+        metadata: {
+          userId,
+          planKey,
+        }
+      },
       success_url: `${appUrl}/profissional/dashboard?session_id={CHECKOUT_SESSION_ID}&status=success`,
       cancel_url: `${appUrl}/profissional/planos?status=cancel`,
       metadata: {

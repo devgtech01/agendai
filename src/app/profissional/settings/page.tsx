@@ -152,10 +152,12 @@ export default function ProfissionalSettingsPage() {
         return;
       }
 
-      // Check query parameters to activate the billing tab
+      const isPlanActive = user.user_metadata?.plan_status === 'active';
       const tab = new URLSearchParams(window.location.search).get('tab');
-      if (tab === 'billing') {
+      if (tab === 'billing' || !isPlanActive) {
         setActiveTab('billing');
+      } else {
+        setActiveTab('info');
       }
 
       setUserId(user.id);
@@ -299,17 +301,25 @@ export default function ProfissionalSettingsPage() {
           <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--color-border)', marginBottom: 'var(--space-6)', paddingBottom: '8px' }}>
             <button
               type="button"
-              onClick={() => setActiveTab('info')}
+              onClick={() => {
+                if (userPlanStatus === 'active') {
+                  setActiveTab('info');
+                } else {
+                  setErrorMsg('Assine um plano para liberar o acesso total ao painel e configurações.');
+                  setTimeout(() => setErrorMsg(''), 4000);
+                }
+              }}
               style={{
                 background: 'transparent',
                 border: 'none',
                 fontSize: '14px',
                 fontWeight: activeTab === 'info' ? 600 : 400,
                 color: activeTab === 'info' ? 'var(--color-accent)' : 'var(--color-muted)',
-                cursor: 'pointer',
+                cursor: userPlanStatus === 'active' ? 'pointer' : 'not-allowed',
                 padding: '4px 12px',
                 borderBottom: activeTab === 'info' ? '2px solid var(--color-accent)' : 'none',
-                marginBottom: '-10px'
+                marginBottom: '-10px',
+                opacity: userPlanStatus === 'active' ? 1 : 0.5
               }}
             >
               Informações Gerais
