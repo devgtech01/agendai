@@ -88,19 +88,43 @@ export default function ProfissionalHeader({ establishmentName }: ProfissionalHe
           {/* Lado Direito Desktop & Botão Hamburguer Mobile */}
           <div className="flex items-center gap-3">
             {establishmentName && (
-              <span className="hidden sm:inline" style={{ fontSize: '13px', color: 'var(--color-muted)', fontWeight: 500 }}>
-                {establishmentName}
-              </span>
+              <div className="flex items-center gap-2">
+                <span 
+                  style={{ 
+                    fontSize: '13px', 
+                    color: 'var(--color-muted)', 
+                    fontWeight: 500,
+                    maxWidth: '150px',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }}
+                  title={establishmentName}
+                >
+                  {establishmentName}
+                </span>
+                <button 
+                  onClick={handleLogout} 
+                  title="Sair"
+                  style={{ 
+                    background: 'transparent', 
+                    border: 'none', 
+                    color: 'var(--color-danger)', 
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '6px',
+                    borderRadius: '6px',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(239, 68, 68, 0.08)'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+                >
+                  <LogOut size={16} />
+                </button>
+              </div>
             )}
-            
-            <button 
-              onClick={handleLogout} 
-              className="btn btn-secondary btn-sm hidden md:inline-flex"
-              style={{ padding: '6px 12px', fontSize: '12px' }}
-            >
-              <LogOut size={14} style={{ marginRight: '6px' }} />
-              Sair
-            </button>
 
             {/* Botão do Menu Mobile (Drawer) */}
             <button
