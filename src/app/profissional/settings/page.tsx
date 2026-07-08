@@ -145,48 +145,52 @@ export default function ProfissionalSettingsPage() {
 
   useEffect(() => {
     async function loadSettings() {
-      setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push('/profissional');
-        return;
-      }
+      try {
+        setLoading(true);
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          router.push('/profissional');
+          return;
+        }
 
-      // Buscar status real-time do plano para contornar o cache do JWT
-      const statusRes = await fetch(`/api/auth/status?userId=${user.id}`);
-      const statusData = await statusRes.json();
-      
-      const isPlanActive = statusRes.ok && statusData.planStatus === 'active';
-      const tab = new URLSearchParams(window.location.search).get('tab');
-      if (tab === 'billing' || !isPlanActive) {
-        setActiveTab('billing');
-      } else {
-        setActiveTab('info');
-      }
+        // Buscar status real-time do plano para contornar o cache do JWT
+        const statusRes = await fetch(`/api/auth/status?userId=${user.id}`);
+        const statusData = await statusRes.json();
+        
+        const isPlanActive = statusRes.ok && statusData.planStatus === 'active';
+        const tab = new URLSearchParams(window.location.search).get('tab');
+        if (tab === 'billing' || !isPlanActive) {
+          setActiveTab('billing');
+        } else {
+          setActiveTab('info');
+        }
 
-      setUserId(user.id);
-      setUserEmail(user.email || '');
-      setUserPlan(statusData.plan || 'Nenhum');
-      setUserPlanStatus(statusData.planStatus || 'inactive');
-      setUserTrialUntil(user.user_metadata?.trial_until || null);
-      setUserCustomerId(user.user_metadata?.stripe_customer_id || null);
+        setUserId(user.id);
+        setUserEmail(user.email || '');
+        setUserPlan(statusData.plan || 'Nenhum');
+        setUserPlanStatus(statusData.planStatus || 'inactive');
+        setUserTrialUntil(user.user_metadata?.trial_until || null);
+        setUserCustomerId(user.user_metadata?.stripe_customer_id || null);
 
-      const est = await getEstablishmentByOwnerId(user.id);
-      if (!est) {
+        const est = await getEstablishmentByOwnerId(user.id);
+        if (!est) {
+          return;
+        }
+        setEstablishment(est);
+        setName(est.name);
+        setDescription(est.description || '');
+        setAddress(est.address || '');
+        setPhone(est.phone || '');
+        setImageUrl(est.imageUrl || '');
+        setOpeningTime(est.openingTime ? est.openingTime.slice(0, 5) : '08:00');
+        setClosingTime(est.closingTime ? est.closingTime.slice(0, 5) : '19:00');
+        setLunchStart(est.lunchStart ? est.lunchStart.slice(0, 5) : '12:00');
+        setLunchEnd(est.lunchEnd ? est.lunchEnd.slice(0, 5) : '13:00');
+      } catch (err) {
+        console.error('Erro ao carregar configurações do estabelecimento:', err);
+      } finally {
         setLoading(false);
-        return;
       }
-      setEstablishment(est);
-      setName(est.name);
-      setDescription(est.description || '');
-      setAddress(est.address || '');
-      setPhone(est.phone || '');
-      setImageUrl(est.imageUrl || '');
-      setOpeningTime(est.openingTime ? est.openingTime.slice(0, 5) : '08:00');
-      setClosingTime(est.closingTime ? est.closingTime.slice(0, 5) : '19:00');
-      setLunchStart(est.lunchStart ? est.lunchStart.slice(0, 5) : '12:00');
-      setLunchEnd(est.lunchEnd ? est.lunchEnd.slice(0, 5) : '13:00');
-      setLoading(false);
     }
     loadSettings();
   }, [router]);

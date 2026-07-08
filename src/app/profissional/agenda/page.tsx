@@ -24,47 +24,50 @@ export default function ProfissionalAgendaPage() {
 
   useEffect(() => {
     async function loadDashboard() {
-      setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push('/profissional');
-        return;
-      }
+      try {
+        setLoading(true);
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          router.push('/profissional');
+          return;
+        }
 
-      // Validar status real-time com o servidor para contornar cache local do Supabase
-      const statusRes = await fetch(`/api/auth/status?userId=${user.id}`);
-      const statusData = await statusRes.json();
+        // Validar status real-time com o servidor para contornar cache local do Supabase
+        const statusRes = await fetch(`/api/auth/status?userId=${user.id}`);
+        const statusData = await statusRes.json();
 
-      if (!statusRes.ok || statusData.planStatus !== 'active') {
-        router.push('/profissional/settings?tab=billing');
-        return;
-      }
+        if (!statusRes.ok || statusData.planStatus !== 'active') {
+          router.push('/profissional/settings?tab=billing');
+          return;
+        }
 
-      const est = await getEstablishmentByOwnerId(user.id);
-      if (!est) {
+        const est = await getEstablishmentByOwnerId(user.id);
+        if (!est) {
+          return;
+        }
+        setEstablishment(est);
+
+        const servs = await getServices(est.id);
+        setServices(servs);
+
+        const { data: profs } = await supabase.from('professionals').select('*').eq('establishment_id', est.id);
+        if (profs) {
+          const mappedProfs = profs.map(p => ({
+            id: p.id,
+            establishmentId: p.establishment_id,
+            name: p.name,
+            bio: p.bio
+          }));
+          setProfessionals(mappedProfs);
+        }
+
+        const bks = await getBookingsByDate(est.id, selectedDate, selectedProfessionalId || undefined);
+        setBookings(bks);
+      } catch (err) {
+        console.error('Erro ao carregar dados da agenda:', err);
+      } finally {
         setLoading(false);
-        return;
       }
-      setEstablishment(est);
-
-      const servs = await getServices(est.id);
-      setServices(servs);
-
-      const { data: profs } = await supabase.from('professionals').select('*').eq('establishment_id', est.id);
-      if (profs) {
-        const mappedProfs = profs.map(p => ({
-          id: p.id,
-          establishmentId: p.establishment_id,
-          name: p.name,
-          bio: p.bio
-        }));
-        setProfessionals(mappedProfs);
-      }
-
-      const bks = await getBookingsByDate(est.id, selectedDate, selectedProfessionalId || undefined);
-      setBookings(bks);
-
-      setLoading(false);
     }
     loadDashboard();
   }, [router, selectedDate, selectedProfessionalId]);

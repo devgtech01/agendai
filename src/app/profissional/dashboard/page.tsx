@@ -17,40 +17,43 @@ export default function ProfissionalDashboardPage() {
 
   useEffect(() => {
     async function loadAnalytics() {
-      setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        router.push('/profissional');
-        return;
-      }
+      try {
+        setLoading(true);
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+          router.push('/profissional');
+          return;
+        }
 
-      // Validar status real-time com o servidor para contornar cache local do Supabase
-      const statusRes = await fetch(`/api/auth/status?userId=${user.id}`);
-      const statusData = await statusRes.json();
+        // Validar status real-time com o servidor para contornar cache local do Supabase
+        const statusRes = await fetch(`/api/auth/status?userId=${user.id}`);
+        const statusData = await statusRes.json();
 
-      if (!statusRes.ok || statusData.planStatus !== 'active') {
-        router.push('/profissional/settings?tab=billing');
-        return;
-      }
+        if (!statusRes.ok || statusData.planStatus !== 'active') {
+          router.push('/profissional/settings?tab=billing');
+          return;
+        }
 
-      const est = await getEstablishmentByOwnerId(user.id);
-      if (!est) {
+        const est = await getEstablishmentByOwnerId(user.id);
+        if (!est) {
+          return;
+        }
+        setEstablishment(est);
+
+        // Carregar todos os serviços e todos os agendamentos do estabelecimento
+        const servs = await getServices(est.id);
+        setServices(servs);
+
+        const bks = await getBookings(est.id);
+        setBookings(bks);
+
+        const { data: profs } = await supabase.from('professionals').select('*').eq('establishment_id', est.id);
+        if (profs) setProfessionals(profs);
+      } catch (err) {
+        console.error('Erro ao carregar analíticos do dashboard:', err);
+      } finally {
         setLoading(false);
-        return;
       }
-      setEstablishment(est);
-
-      // Carregar todos os serviços e todos os agendamentos do estabelecimento
-      const servs = await getServices(est.id);
-      setServices(servs);
-
-      const bks = await getBookings(est.id);
-      setBookings(bks);
-
-      const { data: profs } = await supabase.from('professionals').select('*').eq('establishment_id', est.id);
-      if (profs) setProfessionals(profs);
-
-      setLoading(false);
     }
     loadAnalytics();
   }, [router]);
