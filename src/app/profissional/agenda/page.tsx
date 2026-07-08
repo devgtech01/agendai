@@ -31,7 +31,11 @@ export default function ProfissionalAgendaPage() {
         return;
       }
 
-      if (user.user_metadata?.plan_status !== 'active') {
+      // Validar status real-time com o servidor para contornar cache local do Supabase
+      const statusRes = await fetch(`/api/auth/status?userId=${user.id}`);
+      const statusData = await statusRes.json();
+
+      if (!statusRes.ok || statusData.planStatus !== 'active') {
         router.push('/profissional/settings?tab=billing');
         return;
       }

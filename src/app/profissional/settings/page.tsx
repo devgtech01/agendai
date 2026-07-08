@@ -152,7 +152,11 @@ export default function ProfissionalSettingsPage() {
         return;
       }
 
-      const isPlanActive = user.user_metadata?.plan_status === 'active';
+      // Buscar status real-time do plano para contornar o cache do JWT
+      const statusRes = await fetch(`/api/auth/status?userId=${user.id}`);
+      const statusData = await statusRes.json();
+      
+      const isPlanActive = statusRes.ok && statusData.planStatus === 'active';
       const tab = new URLSearchParams(window.location.search).get('tab');
       if (tab === 'billing' || !isPlanActive) {
         setActiveTab('billing');
@@ -162,8 +166,8 @@ export default function ProfissionalSettingsPage() {
 
       setUserId(user.id);
       setUserEmail(user.email || '');
-      setUserPlan(user.user_metadata?.plan || 'Nenhum');
-      setUserPlanStatus(user.user_metadata?.plan_status || 'inactive');
+      setUserPlan(statusData.plan || 'Nenhum');
+      setUserPlanStatus(statusData.planStatus || 'inactive');
       setUserTrialUntil(user.user_metadata?.trial_until || null);
       setUserCustomerId(user.user_metadata?.stripe_customer_id || null);
 
