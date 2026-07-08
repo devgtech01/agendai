@@ -23,9 +23,7 @@ export async function POST(req: Request) {
     }
 
     // 2. Inicializar Stripe
-    const stripe = new Stripe(stripeSecretKey, {
-      apiVersion: '2026-05-27.dahlia',
-    });
+    const stripe = new Stripe(stripeSecretKey);
 
     // 3. Definir detalhes do plano
     let productName = 'Agendai - Plano Mensal';

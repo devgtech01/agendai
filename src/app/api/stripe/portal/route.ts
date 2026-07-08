@@ -20,9 +20,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const stripe = new Stripe(stripeSecretKey, {
-      apiVersion: '2025-01-27.acme' as any,
-    });
+    const stripe = new Stripe(stripeSecretKey);
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
 
