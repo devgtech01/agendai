@@ -40,3 +40,13 @@ export async function getAuthenticatedUser(req: Request): Promise<{ isAdmin: boo
     return null;
   }
 }
+
+export async function checkUserPlanIsActive(userId: string): Promise<boolean> {
+  try {
+    const { data: { user }, error } = await supabaseAdmin.auth.admin.getUserById(userId);
+    if (error || !user) return false;
+    return user.user_metadata?.plan_status === 'active';
+  } catch (err) {
+    return false;
+  }
+}

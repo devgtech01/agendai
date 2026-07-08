@@ -16,6 +16,45 @@ export default async function EstablishmentPage({ params }: PageProps) {
 
   const services = await getServices(establishmentId);
 
+  // Verificar status de faturamento do dono do estabelecimento
+  let isOwnerActive = false;
+  if (establishment.ownerId) {
+    const { supabaseAdmin } = await import('@/lib/supabase-admin');
+    const { data: { user: owner } } = await supabaseAdmin.auth.admin.getUserById(establishment.ownerId);
+    isOwnerActive = owner?.user_metadata?.plan_status === 'active';
+  }
+
+  if (!isOwnerActive) {
+    return (
+      <div className="flex flex-col min-h-screen bg-[var(--color-background)]">
+        <header style={{ background: 'var(--color-primary)', padding: '12px 16px', borderBottom: '1px solid rgba(232, 213, 183, 0.15)' }}>
+          <div className="container flex justify-between items-center" style={{ padding: 0 }}>
+            <Link href="/catalog" style={{ textDecoration: 'none', color: 'rgba(232,213,183,0.85)', fontSize: '14px', width: '70px' }}>
+              ← Voltar
+            </Link>
+            <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-linen)', letterSpacing: '0.02em', textAlign: 'center' }}>
+              Agend<span style={{ color: 'var(--color-accent)' }}>ai</span>
+            </div>
+            <div style={{ width: '70px' }} />
+          </div>
+        </header>
+
+        <main className="container flex flex-col items-center justify-center text-center" style={{ flex: 1, padding: '4rem 1.5rem' }}>
+          <div style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: '20px', padding: '3.5rem 2rem', maxWidth: '500px', boxShadow: '0 10px 30px rgba(0,0,0,0.02)' }}>
+            <div style={{ fontSize: '48px', marginBottom: '20px', display: 'inline-block', filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.05))' }}>🔒</div>
+            <h2 className="heading-2" style={{ marginBottom: '12px', fontWeight: 600 }}>Agendamentos Indisponíveis</h2>
+            <p className="text-muted" style={{ fontSize: '14px', lineHeight: '1.6', marginBottom: '30px' }}>
+              O agendamento online para o estabelecimento <strong>{establishment.name}</strong> está temporariamente pausado por motivos administrativos.
+            </p>
+            <Link href="/catalog" className="btn btn-secondary btn-full" style={{ padding: '12px', fontSize: '14px', fontWeight: 500 }}>
+              Voltar ao Catálogo Geral
+            </Link>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header Minimal */}

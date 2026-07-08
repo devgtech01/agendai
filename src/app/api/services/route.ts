@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServices, addService } from '@/lib/db';
-import { getAuthenticatedUser } from '@/lib/supabase-admin';
+import { getAuthenticatedUser, checkUserPlanIsActive } from '@/lib/supabase-admin';
 
 export async function GET(request: Request) {
   try {
@@ -22,6 +22,14 @@ export async function POST(request: Request) {
     const authContext = await getAuthenticatedUser(request);
     if (!authContext) {
       return NextResponse.json({ error: 'Acesso negado. Autenticação necessária.' }, { status: 401 });
+    }
+
+    // Verificar se o usuário (não-admin) possui plano ativo
+    if (!authContext.isAdmin && authContext.user) {
+      const isActive = await checkUserPlanIsActive(authContext.user.id);
+      if (!isActive) {
+        return NextResponse.json({ error: 'Assinatura inativa. Contrate um plano para gerenciar serviços.' }, { status: 403 });
+      }
     }
 
     const body = await request.json();

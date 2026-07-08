@@ -71,6 +71,23 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Serviço não encontrado.' }, { status: 404 });
     }
 
+    if (!establishment) {
+      return NextResponse.json({ error: 'Estabelecimento não encontrado.' }, { status: 404 });
+    }
+
+    // Verificar se o dono do estabelecimento possui plano ativo
+    if (establishment.ownerId) {
+      const { supabaseAdmin } = await import('@/lib/supabase-admin');
+      const { data: { user: owner } } = await supabaseAdmin.auth.admin.getUserById(establishment.ownerId);
+      const isOwnerActive = owner?.user_metadata?.plan_status === 'active';
+      if (!isOwnerActive) {
+        return NextResponse.json(
+          { error: 'Este estabelecimento está temporariamente indisponível para novos agendamentos por motivos administrativos.' },
+          { status: 403 }
+        );
+      }
+    }
+
     // Algoritmo de colisão de horários (sobreposição por duração)
     const timeToMinutes = (t: string) => {
       const [h, m] = t.split(':').map(Number);
