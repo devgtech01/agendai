@@ -17,6 +17,7 @@ export default function ProfissionalRegisterPage() {
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [checkedFunnel, setCheckedFunnel] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState('');
   const router = useRouter();
@@ -62,77 +63,62 @@ export default function ProfissionalRegisterPage() {
       return;
     }
 
-    // Calcular expiração do teste grátis (30 dias para mensal)
-    const trialEndDate = new Date();
-    trialEndDate.setDate(trialEndDate.getDate() + 30);
-    const trialUntil = selectedPlan === 'mensal' ? trialEndDate.toISOString().split('T')[0] : null;
-
-    // 4. Criar usuário no Supabase Auth com plano e teste grátis no metadado
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: ownerName,
-          plan: selectedPlan,
-          trial_until: trialUntil,
-        }
-      }
-    });
-
-    if (authError) {
-      setError(authError.message);
-      setLoading(false);
-      return;
-    }
-
-    const userId = authData.user?.id;
-
-    if (!userId) {
-      setError('Erro ao criar usuário.');
-      setLoading(false);
-      return;
-    }
-
-    // 2. Criar Estabelecimento vinculado ao owner_id
-    const establishment = await addEstablishment({
-      name: establishmentName,
-      description: 'Bem-vindo ao meu estabelecimento!', // Default description
-      address: 'Endereço pendente', // Default address
-      phone: phone,
-      imageUrl: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80', // Default image
-      ownerId: userId
-    });
-
-    if (!establishment) {
-      setError('Erro ao criar o perfil do estabelecimento. Tente novamente.');
-      setLoading(false);
-      return;
-    }
-
-    // Sucesso - Iniciar fluxo de checkout (real ou simulado)
     try {
+      // 4. Chamar a API segura de registro no servidor
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          password,
+          ownerName,
+          establishmentName,
+          phone,
+          selectedPlan
+        })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || 'Erro ao realizar cadastro.');
+        setLoading(false);
+        return;
+      }
+
+      // Se a confirmação de e-mail for necessária
+      if (data.requiresConfirmation) {
+        setSuccessMessage(data.message);
+        setLoading(false);
+        return;
+      }
+
+      // Se o login foi automático (confirmação desligada)
+      if (data.session) {
+        await supabase.auth.setSession(data.session);
+      }
+
+      // Iniciar fluxo de checkout
       const response = await fetch('/api/stripe/checkout', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
           planKey: selectedPlan,
-          userId,
+          userId: data.userId,
         }),
       });
 
-      const data = await response.json();
-      if (response.ok && data.url) {
-        router.push(data.url);
+      const checkoutData = await response.json();
+      if (response.ok && checkoutData.url) {
+        router.push(checkoutData.url);
       } else {
         router.push('/profissional/dashboard');
       }
-    } catch (err) {
-      console.error('Erro ao chamar API de checkout:', err);
-      router.push('/profissional/dashboard');
+    } catch (err: any) {
+      console.error('Erro no cadastro:', err);
+      setError('Erro de conexão ao realizar cadastro. Tente novamente.');
+      setLoading(false);
     }
   };
 
@@ -145,6 +131,23 @@ export default function ProfissionalRegisterPage() {
           <p className="text-muted" style={{ fontSize: '14px', color: 'var(--color-danger)', lineHeight: 1.5 }}>
             {error || 'Verificando seleção de plano...'}
           </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (successMessage) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[var(--color-background)] p-4 py-12">
+        <div style={{ background: 'var(--color-surface)', width: '100%', maxWidth: '450px', padding: 'var(--space-10)', borderRadius: 'var(--radius-xl)', border: '0.5px solid var(--color-border)', boxShadow: '0 4px 16px rgba(0,0,0,0.04)', textAlign: 'center' }}>
+          <div style={{ fontSize: '48px', marginBottom: '16px' }}>📧</div>
+          <h2 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--color-text)', marginBottom: '8px' }}>Verifique seu E-mail</h2>
+          <p className="text-muted" style={{ fontSize: '14px', color: 'var(--color-success)', background: '#EAF7EC', border: '1px solid #C3E6CB', padding: '14px', borderRadius: 'var(--radius-md)', marginBottom: '24px', lineHeight: 1.5 }}>
+            {successMessage}
+          </p>
+          <Link href="/profissional" className="btn btn-primary btn-full" style={{ textDecoration: 'none' }}>
+            Ir para o Login
+          </Link>
         </div>
       </div>
     );
