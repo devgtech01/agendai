@@ -11,7 +11,9 @@ export default function ProfissionalRegisterPage() {
   const [establishmentName, setEstablishmentName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [confirmEmail, setConfirmEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -38,12 +40,34 @@ export default function ProfissionalRegisterPage() {
     setLoading(true);
     setError('');
 
+    // 1. Validação de Confirmação de E-mail
+    if (email.trim().toLowerCase() !== confirmEmail.trim().toLowerCase()) {
+      setError('Os e-mails informados não coincidem.');
+      setLoading(false);
+      return;
+    }
+
+    // 2. Validação de Complexidade da Senha (Mínimo 8 caracteres, maiúscula, minúscula, número, especial)
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>_#\-+$%&*=/[\]\\';`~^|]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setError('A senha deve conter no mínimo 8 caracteres, incluindo pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial (Ex: @, #, $, %, &, *).');
+      setLoading(false);
+      return;
+    }
+
+    // 3. Validação de Confirmação de Senha
+    if (password !== confirmPassword) {
+      setError('As senhas informadas não coincidem.');
+      setLoading(false);
+      return;
+    }
+
     // Calcular expiração do teste grátis (30 dias para mensal)
     const trialEndDate = new Date();
     trialEndDate.setDate(trialEndDate.getDate() + 30);
     const trialUntil = selectedPlan === 'mensal' ? trialEndDate.toISOString().split('T')[0] : null;
 
-    // 1. Criar usuário no Supabase Auth com plano e teste grátis no metadado
+    // 4. Criar usuário no Supabase Auth com plano e teste grátis no metadado
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
@@ -190,15 +214,43 @@ export default function ProfissionalRegisterPage() {
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <label className="input-label">Confirmar E-mail</label>
+            <input 
+              type="email" 
+              className="input"
+              value={confirmEmail}
+              onChange={(e) => setConfirmEmail(e.target.value)}
+              placeholder="Confirme seu e-mail"
+              required
+            />
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <label className="input-label">Senha</label>
             <input 
               type="password" 
               className="input"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Mínimo 6 caracteres"
+              placeholder="Mínimo 8 caracteres, maiúscula, número e símbolo"
               required
-              minLength={6}
+              minLength={8}
+            />
+            <span style={{ fontSize: '10px', color: 'var(--color-muted)', marginTop: '2px' }}>
+              Deve conter pelo menos 1 maiúscula, 1 minúscula, 1 número e 1 símbolo.
+            </span>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <label className="input-label">Confirmar Senha</label>
+            <input 
+              type="password" 
+              className="input"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirme sua senha"
+              required
+              minLength={8}
             />
           </div>
 

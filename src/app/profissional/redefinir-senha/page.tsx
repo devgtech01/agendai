@@ -33,8 +33,9 @@ export default function RedefinirSenhaPage() {
     setLoading(true);
     setError('');
 
-    if (newPassword.length < 6) {
-      setError('A nova senha deve ter pelo menos 6 caracteres.');
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>_#\-+$%&*=/[\]\\';`~^|]).{8,}$/;
+    if (!passwordRegex.test(newPassword)) {
+      setError('A nova senha deve conter no mínimo 8 caracteres, incluindo pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial (Ex: @, #, $, %, &).');
       setLoading(false);
       return;
     }
@@ -101,9 +102,13 @@ export default function RedefinirSenhaPage() {
                 className="input"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder="Mínimo 8 caracteres, maiúscula, número e símbolo"
                 required
+                minLength={8}
               />
+              <span style={{ fontSize: '10px', color: 'var(--color-muted)', marginTop: '2px' }}>
+                Deve conter pelo menos 1 maiúscula, 1 minúscula, 1 número e 1 símbolo.
+              </span>
             </div>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -113,8 +118,9 @@ export default function RedefinirSenhaPage() {
                 className="input"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder="••••••••"
+                placeholder="Confirme sua nova senha"
                 required
+                minLength={8}
               />
             </div>
 
