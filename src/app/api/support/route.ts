@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createSupportTicket, getSupportTickets, getSupportTicketsByUser, updateSupportTicketStatus } from '@/lib/db';
+import { getAuthenticatedUser } from '@/lib/supabase-admin';
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -10,9 +11,24 @@ export async function GET(request: Request) {
     const email = searchParams.get('email');
     const status = searchParams.get('status');
 
+    const authContext = await getAuthenticatedUser(request);
+    if (!authContext) {
+      return NextResponse.json({ error: 'Acesso negado. Autenticação necessária.' }, { status: 401 });
+    }
+
     if (email) {
+      // O usuário pode ver seus próprios chamados, e o Admin pode ver os chamados de qualquer um
+      const isOwner = authContext.user && authContext.user.email?.toLowerCase() === email.toLowerCase();
+      if (!authContext.isAdmin && !isOwner) {
+        return NextResponse.json({ error: 'Não autorizado a visualizar chamados de outro e-mail.' }, { status: 403 });
+      }
       const tickets = await getSupportTicketsByUser(email);
       return NextResponse.json(tickets);
+    }
+
+    // Apenas Administrador pode ver todos os chamados
+    if (!authContext.isAdmin) {
+      return NextResponse.json({ error: 'Acesso restrito ao Super-Admin.' }, { status: 403 });
     }
 
     const tickets = await getSupportTickets(status || undefined);
@@ -29,6 +45,11 @@ export async function POST(request: Request) {
 
     // Se for atualização de status por um admin
     if (body.action === 'updateStatus') {
+      const authContext = await getAuthenticatedUser(request);
+      if (!authContext || !authContext.isAdmin) {
+        return NextResponse.json({ error: 'Acesso restrito ao Super-Admin.' }, { status: 401 });
+      }
+
       const { ticketId, status, adminNotes } = body;
       if (!ticketId || !status) {
         return NextResponse.json({ error: 'ID e status são obrigatórios.' }, { status: 400 });

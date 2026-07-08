@@ -25,7 +25,11 @@ export default function ProfissionalSuportePage() {
         setUser(user);
 
         if (user?.email) {
-          const res = await fetch(`/api/support?email=${encodeURIComponent(user.email)}`);
+          const { data: { session } } = await supabase.auth.getSession();
+          const token = session?.access_token;
+          const headers = token ? { 'Authorization': `Bearer ${token}` } : undefined;
+          
+          const res = await fetch(`/api/support?email=${encodeURIComponent(user.email)}`, { headers });
           if (res.ok) {
             const data = await res.json();
             setTickets(data);
@@ -48,9 +52,16 @@ export default function ProfissionalSuportePage() {
       setSubmitting(true);
       setFeedback(null);
 
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      const headers: any = { 'Content-Type': 'application/json' };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const res = await fetch('/api/support', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({
           userId: user?.id,
           userType: 'professional',

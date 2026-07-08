@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getBookings, getBookingsByDate, addBooking, getEstablishmentById, getServiceById, getServices } from '@/lib/db';
+import { verifyAdminRequest } from '@/lib/supabase-admin';
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -11,9 +12,30 @@ export async function GET(request: Request) {
     const date = searchParams.get('date');
     const professionalId = searchParams.get('professionalId');
 
+    // Caso de uso: Cliente público agendando horário (verifica apenas horários ocupados)
     if (establishmentId && date) {
       const bookings = await getBookingsByDate(establishmentId, date, professionalId || undefined);
-      return NextResponse.json(bookings);
+      
+      // Sanitização de dados pessoais (PII) para evitar vazamento
+      const sanitizedBookings = bookings.map(b => ({
+        id: b.id,
+        establishmentId: b.establishmentId,
+        serviceId: b.serviceId,
+        professionalId: b.professionalId,
+        date: b.date,
+        time: b.time,
+        status: b.status,
+        clientName: 'Reservado', // Ofuscar nome do cliente
+        clientEmail: '',         // Omitir email
+        clientPhone: ''          // Omitir telefone
+      }));
+      
+      return NextResponse.json(sanitizedBookings);
+    }
+
+    // Apenas Administrador autenticado pode listar agendamentos globais ou de um estabelecimento inteiro
+    if (!verifyAdminRequest(request)) {
+      return NextResponse.json({ error: 'Acesso negado. Autenticação administrativa necessária.' }, { status: 401 });
     }
 
     if (establishmentId) {

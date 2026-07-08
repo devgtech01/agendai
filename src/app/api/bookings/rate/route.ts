@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { rateBooking, getBookingById } from '@/lib/db';
+import { rateBooking } from '@/lib/db';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export async function POST(request: Request) {
   try {
@@ -14,8 +15,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'A avaliação deve ser entre 1 e 5 estrelas.' }, { status: 400 });
     }
 
-    const booking = await getBookingById(bookingId);
-    if (!booking) {
+    const { data: booking, error: fetchError } = await supabaseAdmin
+      .from('bookings')
+      .select('id')
+      .eq('id', bookingId)
+      .single();
+
+    if (fetchError || !booking) {
       return NextResponse.json({ error: 'Agendamento não encontrado.' }, { status: 404 });
     }
 

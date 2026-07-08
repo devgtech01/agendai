@@ -10,3 +10,33 @@ export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
     persistSession: false,
   },
 });
+
+export function verifyAdminRequest(req: Request): boolean {
+  const authHeader = req.headers.get('authorization');
+  const expectedPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'AgendaiAdmin2026!';
+  
+  if (!authHeader) return false;
+  const token = authHeader.replace('Bearer ', '').trim();
+  return token === expectedPassword;
+}
+
+export async function getAuthenticatedUser(req: Request): Promise<{ isAdmin: boolean; user?: any } | null> {
+  const authHeader = req.headers.get('authorization');
+  if (!authHeader) return null;
+  const token = authHeader.replace('Bearer ', '').trim();
+
+  // 1. Verificar se é a senha de Super-Admin
+  const expectedPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'AgendaiAdmin2026!';
+  if (token === expectedPassword) {
+    return { isAdmin: true };
+  }
+
+  // 2. Verificar se é um JWT válido de Usuário no Supabase Auth
+  try {
+    const { data: { user }, error } = await supabaseAdmin.auth.getUser(token);
+    if (error || !user) return null;
+    return { isAdmin: false, user };
+  } catch (err) {
+    return null;
+  }
+}

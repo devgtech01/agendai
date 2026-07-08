@@ -64,21 +64,43 @@ ALTER TABLE establishments ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Estabelecimentos visiveis para todos" ON establishments FOR SELECT USING (true);
 CREATE POLICY "Dono pode inserir seu proprio estabelecimento" ON establishments FOR INSERT WITH CHECK (auth.uid() = owner_id);
 CREATE POLICY "Dono pode atualizar seu proprio estabelecimento" ON establishments FOR UPDATE USING (auth.uid() = owner_id);
+CREATE POLICY "Dono pode deletar seu proprio estabelecimento" ON establishments FOR DELETE USING (auth.uid() = owner_id);
 
 ALTER TABLE services ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Servicos visiveis para todos" ON services FOR SELECT USING (true);
-CREATE POLICY "Qualquer um pode inserir servico (temporario)" ON services FOR INSERT WITH CHECK (true);
-CREATE POLICY "Qualquer um pode atualizar servico (temporario)" ON services FOR UPDATE USING (true);
-CREATE POLICY "Qualquer um pode deletar servico (temporario)" ON services FOR DELETE USING (true);
+CREATE POLICY "Dono pode gerenciar servico (insert)" ON services FOR INSERT WITH CHECK (
+    auth.uid() IN (SELECT owner_id FROM establishments WHERE id = establishment_id)
+);
+CREATE POLICY "Dono pode gerenciar servico (update)" ON services FOR UPDATE USING (
+    auth.uid() IN (SELECT owner_id FROM establishments WHERE id = establishment_id)
+);
+CREATE POLICY "Dono pode gerenciar servico (delete)" ON services FOR DELETE USING (
+    auth.uid() IN (SELECT owner_id FROM establishments WHERE id = establishment_id)
+);
 
 ALTER TABLE professionals ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Profissionais visiveis para todos" ON professionals FOR SELECT USING (true);
-CREATE POLICY "Qualquer um pode inserir profissional (temporario)" ON professionals FOR INSERT WITH CHECK (true);
+CREATE POLICY "Dono pode gerenciar profissionais (insert)" ON professionals FOR INSERT WITH CHECK (
+    auth.uid() IN (SELECT owner_id FROM establishments WHERE id = establishment_id)
+);
+CREATE POLICY "Dono pode gerenciar profissionais (update)" ON professionals FOR UPDATE USING (
+    auth.uid() IN (SELECT owner_id FROM establishments WHERE id = establishment_id)
+);
+CREATE POLICY "Dono pode gerenciar profissionais (delete)" ON professionals FOR DELETE USING (
+    auth.uid() IN (SELECT owner_id FROM establishments WHERE id = establishment_id)
+);
 
 ALTER TABLE bookings ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Agendamentos visiveis para todos" ON bookings FOR SELECT USING (true);
-CREATE POLICY "Qualquer um pode criar agendamento (temporario)" ON bookings FOR INSERT WITH CHECK (true);
-CREATE POLICY "Qualquer um pode atualizar agendamento (temporario)" ON bookings FOR UPDATE USING (true);
+CREATE POLICY "Dono pode ver agendamentos do seu estabelecimento" ON bookings FOR SELECT USING (
+    auth.uid() IN (SELECT owner_id FROM establishments WHERE id = establishment_id)
+);
+CREATE POLICY "Qualquer um pode criar agendamento" ON bookings FOR INSERT WITH CHECK (true);
+CREATE POLICY "Dono pode atualizar agendamentos do seu estabelecimento" ON bookings FOR UPDATE USING (
+    auth.uid() IN (SELECT owner_id FROM establishments WHERE id = establishment_id)
+);
+CREATE POLICY "Dono pode deletar agendamentos do seu estabelecimento" ON bookings FOR DELETE USING (
+    auth.uid() IN (SELECT owner_id FROM establishments WHERE id = establishment_id)
+);
 
 -- Tabela de Chamados de Suporte
 CREATE TABLE IF NOT EXISTS support_tickets (
@@ -99,7 +121,7 @@ CREATE TABLE IF NOT EXISTS support_tickets (
 
 ALTER TABLE support_tickets ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Qualquer um pode criar chamado de suporte" ON support_tickets FOR INSERT WITH CHECK (true);
-CREATE POLICY "Chamados visiveis para o criador e admins" ON support_tickets FOR SELECT USING (true);
-CREATE POLICY "Admins podem atualizar chamados de suporte" ON support_tickets FOR UPDATE USING (true);
+CREATE POLICY "Chamados visiveis para o criador" ON support_tickets FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "Criador pode atualizar seu proprio chamado" ON support_tickets FOR UPDATE USING (auth.uid() = user_id);
 
 

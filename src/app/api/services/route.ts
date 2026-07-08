@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getServices, addService } from '@/lib/db';
+import { getAuthenticatedUser } from '@/lib/supabase-admin';
 
 export async function GET(request: Request) {
   try {
@@ -18,6 +19,11 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const authContext = await getAuthenticatedUser(request);
+    if (!authContext) {
+      return NextResponse.json({ error: 'Acesso negado. Autenticação necessária.' }, { status: 401 });
+    }
+
     const body = await request.json();
     const { establishmentId, name, description, durationMinutes, price, category, imageUrl } = body;
 

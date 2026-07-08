@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
-import { getBookingById, getServiceById, getEstablishmentById, updateBookingStatus } from '@/lib/db';
+import { getServiceById, getEstablishmentById } from '@/lib/db';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -13,18 +14,39 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'ID do agendamento ausente.' }, { status: 400 });
     }
 
-    const booking = await getBookingById(id);
-    if (!booking) {
+    const { data: booking, error: fetchError } = await supabaseAdmin
+      .from('bookings')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (fetchError || !booking) {
       return NextResponse.json({ error: 'Agendamento não encontrado.' }, { status: 404 });
     }
 
+    // Mapear snake_case para camelCase
+    const camelBooking = {
+      id: booking.id,
+      establishmentId: booking.establishment_id,
+      serviceId: booking.service_id,
+      professionalId: booking.professional_id,
+      clientName: booking.client_name,
+      clientEmail: booking.client_email,
+      clientPhone: booking.client_phone,
+      date: booking.date,
+      time: booking.time,
+      status: booking.status,
+      rating: booking.rating,
+      createdAt: booking.created_at
+    };
+
     const [service, establishment] = await Promise.all([
-      getServiceById(booking.serviceId),
-      getEstablishmentById(booking.establishmentId)
+      getServiceById(camelBooking.serviceId),
+      getEstablishmentById(camelBooking.establishmentId)
     ]);
 
     return NextResponse.json({
-      booking,
+      booking: camelBooking,
       service,
       establishment
     });
@@ -43,15 +65,41 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'ID do agendamento ausente.' }, { status: 400 });
     }
 
-    const existingBooking = await getBookingById(bookingId);
-    if (!existingBooking) {
+    const { data: existingBooking, error: fetchError } = await supabaseAdmin
+      .from('bookings')
+      .select('*')
+      .eq('id', bookingId)
+      .single();
+
+    if (fetchError || !existingBooking) {
       return NextResponse.json({ error: 'Agendamento não encontrado.' }, { status: 404 });
     }
 
-    const updated = await updateBookingStatus(bookingId, 'Cancelado');
-    if (!updated) {
+    const { data: updatedData, error: updateError } = await supabaseAdmin
+      .from('bookings')
+      .update({ status: 'Cancelado' })
+      .eq('id', bookingId)
+      .select()
+      .single();
+
+    if (updateError || !updatedData) {
       return NextResponse.json({ error: 'Falha ao atualizar status do agendamento.' }, { status: 500 });
     }
+
+    const updated = {
+      id: updatedData.id,
+      establishmentId: updatedData.establishment_id,
+      serviceId: updatedData.service_id,
+      professionalId: updatedData.professional_id,
+      clientName: updatedData.client_name,
+      clientEmail: updatedData.client_email,
+      clientPhone: updatedData.client_phone,
+      date: updatedData.date,
+      time: updatedData.time,
+      status: updatedData.status,
+      rating: updatedData.rating,
+      createdAt: updatedData.created_at
+    };
 
     // Enviar e-mail de confirmação de cancelamento para o cliente (se disponível)
     if (existingBooking.clientEmail) {

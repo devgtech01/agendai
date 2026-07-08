@@ -50,13 +50,16 @@ export default function AdminDashboardPage() {
   const loadData = async () => {
     try {
       setLoading(true);
+      const token = sessionStorage.getItem('adminToken') || 'AgendaiAdmin2026!';
+      const headers = { 'Authorization': `Bearer ${token}` };
+      
       const [tRes, eRes, bRes] = await Promise.all([
-        fetch('/api/support'),
-        fetch('/api/establishments'),
-        fetch('/api/bookings')
+        fetch('/api/support', { headers }),
+        fetch('/api/establishments', { headers }),
+        fetch('/api/bookings', { headers })
       ]);
 
-      if (tRes.ok) setTickets(await tRes.ok ? await tRes.json() : []);
+      if (tRes.ok) setTickets(await tRes.json());
       if (eRes.ok) setEstablishments(await eRes.json());
       if (bRes.ok) setBookings(await bRes.json());
     } catch (err) {
@@ -67,8 +70,13 @@ export default function AdminDashboardPage() {
   };
 
   useEffect(() => {
-    loadData();
-  }, []);
+    const isAuth = sessionStorage.getItem('adminAuthenticated');
+    if (isAuth !== 'true') {
+      router.push('/admin');
+    } else {
+      loadData();
+    }
+  }, [router]);
 
   const handleLogout = () => {
     router.push('/admin');
@@ -79,9 +87,13 @@ export default function AdminDashboardPage() {
 
     try {
       setUpdatingTicket(true);
+      const token = sessionStorage.getItem('adminToken') || 'AgendaiAdmin2026!';
       const res = await fetch('/api/support', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
           action: 'updateStatus',
           ticketId: selectedTicket.id,
@@ -117,8 +129,12 @@ export default function AdminDashboardPage() {
 
     try {
       setIsDeleting(true);
+      const token = sessionStorage.getItem('adminToken') || 'AgendaiAdmin2026!';
       const res = await fetch(`/api/establishments?id=${deletingEstablishment.id}`, {
         method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       if (res.ok) {

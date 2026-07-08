@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getEstablishments, addEstablishment, deleteEstablishment } from '@/lib/db';
+import { verifyAdminRequest } from '@/lib/supabase-admin';
 
 export async function GET() {
   try {
@@ -12,6 +13,10 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    if (!verifyAdminRequest(request)) {
+      return NextResponse.json({ error: 'Acesso negado. Autenticação administrativa necessária.' }, { status: 401 });
+    }
+
     const body = await request.json();
     const { name, description, address, phone, imageUrl } = body;
 
@@ -37,6 +42,10 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
+    if (!verifyAdminRequest(request)) {
+      return NextResponse.json({ error: 'Acesso negado. Autenticação administrativa necessária.' }, { status: 401 });
+    }
+
     const { searchParams } = new URL(request.url);
     const id = searchParams.get('id');
 

@@ -21,6 +21,7 @@ export default function AdminLoginPage() {
     if (email.trim().toLowerCase() === validEmail.toLowerCase() && password === validPassword) {
       // Salvar sessão simples do admin
       sessionStorage.setItem('adminAuthenticated', 'true');
+      sessionStorage.setItem('adminToken', password);
       router.push('/admin/dashboard');
     } else {
       setErrorMsg('E-mail ou senha de administrador incorretos.');
