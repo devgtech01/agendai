@@ -65,27 +65,24 @@ export async function POST(req: Request) {
         const subscription = event.data.object as Stripe.Subscription;
         let userId = subscription.metadata?.userId;
 
-        if (!userId && subscription.customer) {
+        if (!userId) {
           try {
-            const customer = await stripe.customers.retrieve(subscription.customer as string);
-            if (customer && !('deleted' in customer) && customer.email) {
-              const { data: listData } = await supabaseAdmin.auth.admin.listUsers({
-                perPage: 1000
-              });
-              const targetUser = listData?.users?.find(
-                u => u.email?.toLowerCase() === customer.email?.toLowerCase()
-              );
-              if (targetUser) {
-                userId = targetUser.id;
-              }
+            const { data: listData } = await supabaseAdmin.auth.admin.listUsers({
+              perPage: 1000
+            });
+            const targetUser = listData?.users?.find(
+              u => u.user_metadata?.stripe_subscription_id === subscription.id ||
+                   u.user_metadata?.stripe_customer_id === subscription.customer
+            );
+            if (targetUser) {
+              userId = targetUser.id;
             }
           } catch (err) {
-            console.error('Erro no fallback do customer.subscription.deleted:', err);
+            console.error('Erro ao mapear assinatura deletada por lista de usuários:', err);
           }
         }
 
         if (userId) {
-          // Desativar plano do usuário no Supabase
           const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
             user_metadata: {
               plan_status: 'inactive',
@@ -108,22 +105,20 @@ export async function POST(req: Request) {
         let userId = subscription.metadata?.userId;
         const planStatus = subscription.status; // active, trialing, past_due, canceled, unpaid
 
-        if (!userId && subscription.customer) {
+        if (!userId) {
           try {
-            const customer = await stripe.customers.retrieve(subscription.customer as string);
-            if (customer && !('deleted' in customer) && customer.email) {
-              const { data: listData } = await supabaseAdmin.auth.admin.listUsers({
-                perPage: 1000
-              });
-              const targetUser = listData?.users?.find(
-                u => u.email?.toLowerCase() === customer.email?.toLowerCase()
-              );
-              if (targetUser) {
-                userId = targetUser.id;
-              }
+            const { data: listData } = await supabaseAdmin.auth.admin.listUsers({
+              perPage: 1000
+            });
+            const targetUser = listData?.users?.find(
+              u => u.user_metadata?.stripe_subscription_id === subscription.id ||
+                   u.user_metadata?.stripe_customer_id === subscription.customer
+            );
+            if (targetUser) {
+              userId = targetUser.id;
             }
           } catch (err) {
-            console.error('Erro no fallback do customer.subscription.updated:', err);
+            console.error('Erro ao mapear assinatura atualizada por lista de usuários:', err);
           }
         }
 
@@ -142,6 +137,42 @@ export async function POST(req: Request) {
           console.log(`Webhook: Assinatura atualizada para o usuário ${userId}. Status: ${planStatus}`);
         } else {
           console.warn(`Webhook: Não foi possível mapear a assinatura atualizada ${subscription.id} para um usuário.`);
+        }
+        break;
+      }
+
+      case 'customer.deleted': {
+        const customer = event.data.object as Stripe.Customer | Stripe.DeletedCustomer;
+        let userId;
+
+        try {
+          const { data: listData } = await supabaseAdmin.auth.admin.listUsers({
+            perPage: 1000
+          });
+          const targetUser = listData?.users?.find(
+            u => u.user_metadata?.stripe_customer_id === customer.id
+          );
+          if (targetUser) {
+            userId = targetUser.id;
+          }
+        } catch (err) {
+          console.error('Erro ao mapear cliente deletado por lista de usuários:', err);
+        }
+
+        if (userId) {
+          const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
+            user_metadata: {
+              plan_status: 'inactive',
+            },
+          });
+
+          if (error) {
+            console.error('Erro ao desativar plano por exclusão do cliente via Webhook:', error);
+            return NextResponse.json({ error: 'Erro ao desativar plano.' }, { status: 500 });
+          }
+          console.log(`Webhook: Cliente Stripe ${customer.id} excluído. Plano inativado para o usuário ${userId}`);
+        } else {
+          console.warn(`Webhook: Não foi possível mapear o cliente excluído ${customer.id} para um usuário.`);
         }
         break;
       }
