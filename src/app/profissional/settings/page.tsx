@@ -558,26 +558,15 @@ export default function ProfissionalSettingsPage() {
                 
                 {userPlanStatus === 'active' ? (
                   userCustomerId && userCustomerId !== 'cus_simulado_123' ? (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                      <button
-                        type="button"
-                        onClick={handleManageBilling}
-                        className="btn btn-primary btn-full press"
-                        disabled={portalLoading}
-                        style={{ padding: '12px' }}
-                      >
-                        {portalLoading ? 'Carregando Portal...' : 'Acessar Portal de Faturamento (Stripe)'}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleCancelSubscription}
-                        className="btn btn-secondary press"
-                        disabled={portalLoading}
-                        style={{ padding: '12px', border: '1px solid var(--color-danger)', color: 'var(--color-danger)', cursor: 'pointer', background: 'transparent' }}
-                      >
-                        {portalLoading ? 'Cancelando...' : 'Cancelar Assinatura Agora'}
-                      </button>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={handleCancelSubscription}
+                      className="btn btn-secondary btn-full press"
+                      disabled={portalLoading}
+                      style={{ padding: '12px', border: '1px solid var(--color-danger)', color: 'var(--color-danger)', cursor: 'pointer', background: 'transparent' }}
+                    >
+                      {portalLoading ? 'Cancelando...' : 'Cancelar Assinatura Agora'}
+                    </button>
                   ) : (
                     <div style={{ display: 'flex', gap: '12px' }}>
                       <button
