@@ -67,12 +67,21 @@ export async function POST(req: Request) {
 
         if (!userId) {
           try {
+            let customerEmail: string | undefined;
+            if (subscription.customer) {
+              const customer = await stripe.customers.retrieve(subscription.customer as string);
+              if (customer && !('deleted' in customer) && customer.email) {
+                customerEmail = customer.email;
+              }
+            }
+
             const { data: listData } = await supabaseAdmin.auth.admin.listUsers({
               perPage: 1000
             });
             const targetUser = listData?.users?.find(
               u => u.user_metadata?.stripe_subscription_id === subscription.id ||
-                   u.user_metadata?.stripe_customer_id === subscription.customer
+                   u.user_metadata?.stripe_customer_id === subscription.customer ||
+                   (customerEmail && u.email?.toLowerCase() === customerEmail.toLowerCase())
             );
             if (targetUser) {
               userId = targetUser.id;
@@ -107,12 +116,21 @@ export async function POST(req: Request) {
 
         if (!userId) {
           try {
+            let customerEmail: string | undefined;
+            if (subscription.customer) {
+              const customer = await stripe.customers.retrieve(subscription.customer as string);
+              if (customer && !('deleted' in customer) && customer.email) {
+                customerEmail = customer.email;
+              }
+            }
+
             const { data: listData } = await supabaseAdmin.auth.admin.listUsers({
               perPage: 1000
             });
             const targetUser = listData?.users?.find(
               u => u.user_metadata?.stripe_subscription_id === subscription.id ||
-                   u.user_metadata?.stripe_customer_id === subscription.customer
+                   u.user_metadata?.stripe_customer_id === subscription.customer ||
+                   (customerEmail && u.email?.toLowerCase() === customerEmail.toLowerCase())
             );
             if (targetUser) {
               userId = targetUser.id;

@@ -77,7 +77,23 @@ export async function POST(req: Request) {
       });
     }
 
-    // 6. Criar a sessão de checkout
+    // 6. Consultar se o usuário já usufruiu do período de teste gratuito anteriormente
+    const { supabaseAdmin } = await import('@/lib/supabase-admin');
+    const { data: { user } } = await supabaseAdmin.auth.admin.getUserById(userId);
+    const hasUsedTrial = user?.user_metadata?.trial_used === true;
+
+    const shouldGrantTrial = planKey === 'mensal' && !hasUsedTrial;
+
+    // Se conceder o período de teste, marca-o como utilizado
+    if (shouldGrantTrial) {
+      await supabaseAdmin.auth.admin.updateUserById(userId, {
+        user_metadata: {
+          trial_used: true,
+        },
+      });
+    }
+
+    // 7. Criar a sessão de checkout no Stripe
     const session = await stripe.checkout.sessions.create({
       customer_email: email,
       payment_method_types: ['card'],
@@ -89,7 +105,7 @@ export async function POST(req: Request) {
       ],
       mode: 'subscription',
       subscription_data: {
-        ...(planKey === 'mensal' ? { trial_period_days: 30 } : {}),
+        ...(shouldGrantTrial ? { trial_period_days: 30 } : {}),
         metadata: {
           userId,
           planKey,
