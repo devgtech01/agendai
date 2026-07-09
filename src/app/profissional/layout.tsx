@@ -19,6 +19,7 @@ export default function ProfissionalLayout({
     '/profissional',
     '/profissional/register',
     '/profissional/planos',
+    '/profissional/alterar-plano',
     '/profissional/checkout-simulado',
     '/profissional/esqueci-senha',
     '/profissional/redefinir-senha',
