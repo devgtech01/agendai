@@ -56,7 +56,7 @@ export default function ProfissionalLayout({
 
         // 5. Para todas as outras rotas administrativas (dashboard, agenda, serviços, equipe), exige plano ativo
         if (!isActive) {
-          router.push('/profissional/settings?tab=billing');
+          router.push('/profissional/settings?tab=billing&blocked=true');
           return;
         }
 

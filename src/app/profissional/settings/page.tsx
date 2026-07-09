@@ -35,6 +35,7 @@ export default function ProfissionalSettingsPage() {
   const [userTrialUntil, setUserTrialUntil] = useState<string | null>(null);
   const [userCustomerId, setUserCustomerId] = useState<string | null>(null);
   const [portalLoading, setPortalLoading] = useState(false);
+  const [showBlockedModal, setShowBlockedModal] = useState(false);
 
   // Cropper states
   const [isCropModalOpen, setIsCropModalOpen] = useState(false);
@@ -158,7 +159,16 @@ export default function ProfissionalSettingsPage() {
         const statusData = await statusRes.json();
         
         const isPlanActive = statusRes.ok && statusData.planStatus === 'active';
-        const tab = new URLSearchParams(window.location.search).get('tab');
+        const params = new URLSearchParams(window.location.search);
+        const tab = params.get('tab');
+        const isBlocked = params.get('blocked') === 'true';
+
+        if (isBlocked) {
+          setShowBlockedModal(true);
+          const newUrl = window.location.pathname + '?tab=billing';
+          window.history.replaceState({ path: newUrl }, '', newUrl);
+        }
+
         if (tab === 'billing' || !isPlanActive) {
           setActiveTab('billing');
         } else {
@@ -733,6 +743,70 @@ export default function ProfissionalSettingsPage() {
                 Recortar & Salvar
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showBlockedModal && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.75)',
+          backdropFilter: 'blur(8px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1100,
+          padding: '20px'
+        }}>
+          <div style={{
+            background: 'var(--color-surface)',
+            border: '1.5px solid var(--color-border)',
+            borderRadius: '24px',
+            width: '100%',
+            maxWidth: '420px',
+            padding: '28px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
+            gap: '20px',
+            boxShadow: '0 20px 40px rgba(0,0,0,0.3)'
+          }}>
+            <div style={{
+              width: '56px',
+              height: '56px',
+              borderRadius: '50%',
+              backgroundColor: '#FCEAEA',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#8B2222',
+              fontSize: '24px'
+            }}>
+              🔒
+            </div>
+            
+            <div>
+              <h3 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-text)', marginBottom: '8px' }}>
+                Acesso Restrito
+              </h3>
+              <p style={{ fontSize: '14px', color: 'var(--color-muted)', margin: 0, lineHeight: '1.5' }}>
+                Acesso não permitido, por favor escolha um de nossos planos e tenha acesso completo a nossa plataforma!
+              </p>
+            </div>
+
+            <button
+              type="button"
+              className="btn btn-primary btn-full press"
+              style={{ padding: '12px' }}
+              onClick={() => setShowBlockedModal(false)}
+            >
+              Entendido
+            </button>
           </div>
         </div>
       )}
