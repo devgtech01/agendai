@@ -36,6 +36,7 @@ export default function ProfissionalSettingsPage() {
   const [userCustomerId, setUserCustomerId] = useState<string | null>(null);
   const [portalLoading, setPortalLoading] = useState(false);
   const [showBlockedModal, setShowBlockedModal] = useState(false);
+  const [cancelAtPeriodEnd, setCancelAtPeriodEnd] = useState(false);
 
   // Cropper states
   const [isCropModalOpen, setIsCropModalOpen] = useState(false);
@@ -181,6 +182,7 @@ export default function ProfissionalSettingsPage() {
         setUserPlanStatus(statusData.planStatus || 'inactive');
         setUserTrialUntil(user.user_metadata?.trial_until || null);
         setUserCustomerId(user.user_metadata?.stripe_customer_id || null);
+        setCancelAtPeriodEnd(statusData.cancelAtPeriodEnd === true);
 
         const est = await getEstablishmentByOwnerId(user.id);
         if (!est) {
@@ -293,7 +295,7 @@ export default function ProfissionalSettingsPage() {
   };
 
   const handleCancelSubscription = async () => {
-    if (!window.confirm('Tem certeza de que deseja cancelar sua assinatura imediatamente? Você perderá o acesso aos recursos do painel profissional.')) {
+    if (!window.confirm('Tem certeza de que deseja programar o cancelamento de sua assinatura? O seu acesso permanecerá ativo até o final do período pago/teste atual.')) {
       return;
     }
     setPortalLoading(true);
@@ -307,9 +309,8 @@ export default function ProfissionalSettingsPage() {
       });
       const data = await response.json();
       if (response.ok && data.success) {
-        setSuccessMsg('Sua assinatura foi cancelada com sucesso. Acesso revogado.');
-        setUserPlanStatus('inactive');
-        setUserPlan('Nenhum');
+        setSuccessMsg('Sua assinatura foi programada para cancelamento com sucesso. Seu acesso continuará ativo até o vencimento.');
+        setCancelAtPeriodEnd(true);
         setTimeout(() => {
           setSuccessMsg('');
           window.location.reload();
@@ -561,13 +562,32 @@ export default function ProfissionalSettingsPage() {
                     💡 Você está no período de teste gratuito até <strong>{new Date(userTrialUntil).toLocaleDateString('pt-BR')}</strong>.
                   </p>
                 )}
+
+                {cancelAtPeriodEnd && (
+                  <p style={{ fontSize: '13px', color: '#8B2222', margin: 0, borderTop: '1px solid var(--color-border)', paddingTop: '12px', marginTop: '12px', fontWeight: 500 }}>
+                    ⚠️ O cancelamento está programado. Seu acesso permanecerá ativo até o término do período atual no Stripe.
+                  </p>
+                )}
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text)' }}>Ações de Faturamento</h3>
                 
                 {userPlanStatus === 'active' ? (
-                  userCustomerId && userCustomerId !== 'cus_simulado_123' ? (
+                  cancelAtPeriodEnd ? (
+                    <div>
+                      <p style={{ fontSize: '13px', color: 'var(--color-muted)', marginBottom: '16px' }}>
+                        Sua assinatura já está programada para cancelamento. Se mudar de ideia, você pode escolher ou renovar seu plano a qualquer momento.
+                      </p>
+                      <Link
+                        href="/profissional/alterar-plano"
+                        className="btn btn-primary btn-full text-center press"
+                        style={{ padding: '12px', textDecoration: 'none', display: 'block' }}
+                      >
+                        Assinar Novamente / Escolher Plano
+                      </Link>
+                    </div>
+                  ) : userCustomerId && userCustomerId !== 'cus_simulado_123' ? (
                     <button
                       type="button"
                       onClick={handleCancelSubscription}

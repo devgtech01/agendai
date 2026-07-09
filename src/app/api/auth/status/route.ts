@@ -19,7 +19,8 @@ export async function GET(request: Request) {
 
     return NextResponse.json({
       plan: user.user_metadata?.plan || 'Nenhum',
-      planStatus: user.user_metadata?.plan_status || 'inactive'
+      planStatus: user.user_metadata?.plan_status || 'inactive',
+      cancelAtPeriodEnd: user.user_metadata?.cancel_at_period_end === true
     });
   } catch (error: any) {
     console.error('Erro na API de status do usuário:', error);

@@ -51,27 +51,23 @@ export async function POST(req: Request) {
       }
     }
 
-    // 3. Cancelar no Stripe se houver uma assinatura ativa
+    // 3. Programar cancelamento no Stripe se houver uma assinatura ativa
     if (subscriptionId) {
-      // Cancela imediatamente excluindo a assinatura
-      await stripe.subscriptions.cancel(subscriptionId);
+      // Programa o cancelamento para o fim do período contratado, preservando os dias pagos/gratuitos restantes
+      await stripe.subscriptions.update(subscriptionId, {
+        cancel_at_period_end: true,
+      });
     }
 
-    // 4. Atualizar metadados do usuário para inativo no Supabase
+    // 4. Atualizar metadados do usuário para registrar o cancelamento futuro agendado
     await supabaseAdmin.auth.admin.updateUserById(userId, {
       user_metadata: {
-        plan_status: 'inactive',
+        cancel_at_period_end: true,
       }
     });
 
-    // 5. Atualizar coluna plan_status na tabela establishments
-    await supabaseAdmin
-      .from('establishments')
-      .update({ plan_status: 'inactive' })
-      .eq('owner_id', userId);
-
-    console.log(`Cancelamento imediato processado para o usuário ${userId}`);
-    return NextResponse.json({ success: true, message: 'Assinatura cancelada com sucesso.' });
+    console.log(`Cancelamento programado para o fim do período processado para o usuário ${userId}`);
+    return NextResponse.json({ success: true, message: 'Assinatura programada para cancelamento com sucesso.' });
   } catch (error: any) {
     console.error('Erro ao cancelar assinatura:', error);
     return NextResponse.json({ error: error.message || 'Erro interno no servidor' }, { status: 500 });

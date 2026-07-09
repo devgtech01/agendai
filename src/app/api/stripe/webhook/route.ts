@@ -95,6 +95,7 @@ export async function POST(req: Request) {
           const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
             user_metadata: {
               plan_status: 'inactive',
+              cancel_at_period_end: false,
             },
           });
 
@@ -147,10 +148,11 @@ export async function POST(req: Request) {
         }
 
         if (userId) {
-          const isPlanActive = ['active', 'trialing'].includes(planStatus) && !subscription.cancel_at_period_end;
+          const isPlanActive = ['active', 'trialing'].includes(planStatus);
           const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
             user_metadata: {
               plan_status: isPlanActive ? 'active' : 'inactive',
+              cancel_at_period_end: subscription.cancel_at_period_end,
             },
           });
 
@@ -196,6 +198,7 @@ export async function POST(req: Request) {
           const { error } = await supabaseAdmin.auth.admin.updateUserById(userId, {
             user_metadata: {
               plan_status: 'inactive',
+              cancel_at_period_end: false,
             },
           });
 
