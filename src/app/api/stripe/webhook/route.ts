@@ -98,6 +98,12 @@ export async function POST(req: Request) {
             },
           });
 
+          // Sincronizar status do plano na tabela de estabelecimentos
+          await supabaseAdmin
+            .from('establishments')
+            .update({ plan_status: 'inactive' })
+            .eq('owner_id', userId);
+
           if (error) {
             console.error('Erro ao desativar plano no Supabase via Webhook:', error);
             return NextResponse.json({ error: 'Erro ao desativar plano.' }, { status: 500 });
@@ -148,6 +154,15 @@ export async function POST(req: Request) {
             },
           });
 
+          // Sincronizar status do plano na tabela de estabelecimentos
+          await supabaseAdmin
+            .from('establishments')
+            .update({ 
+              plan_status: isPlanActive ? 'active' : 'inactive',
+              plan: subscription.metadata?.planKey || 'mensal'
+            })
+            .eq('owner_id', userId);
+
           if (error) {
             console.error('Erro ao atualizar assinatura no Supabase via Webhook:', error);
             return NextResponse.json({ error: 'Erro ao atualizar assinatura.' }, { status: 500 });
@@ -183,6 +198,12 @@ export async function POST(req: Request) {
               plan_status: 'inactive',
             },
           });
+
+          // Sincronizar status do plano na tabela de estabelecimentos
+          await supabaseAdmin
+            .from('establishments')
+            .update({ plan_status: 'inactive' })
+            .eq('owner_id', userId);
 
           if (error) {
             console.error('Erro ao desativar plano por exclusão do cliente via Webhook:', error);
