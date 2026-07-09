@@ -559,13 +559,11 @@ export default function ProfissionalSettingsPage() {
 
                 {userPlanStatus === 'active' && userTrialUntil && (
                   <p style={{ fontSize: '13px', color: 'var(--color-muted)', margin: 0, borderTop: '1px solid var(--color-border)', paddingTop: '12px', marginTop: '12px' }}>
-                    💡 Você está no período de teste gratuito até <strong>{new Date(userTrialUntil).toLocaleDateString('pt-BR')}</strong>.
-                  </p>
-                )}
-
-                {cancelAtPeriodEnd && (
-                  <p style={{ fontSize: '13px', color: '#8B2222', margin: 0, borderTop: '1px solid var(--color-border)', paddingTop: '12px', marginTop: '12px', fontWeight: 500 }}>
-                    ⚠️ O cancelamento está programado. Seu acesso permanecerá ativo até o término do período atual no Stripe.
+                    {cancelAtPeriodEnd ? (
+                      <>💡 Sua assinatura expira em <strong>{new Date(userTrialUntil).toLocaleDateString('pt-BR')}</strong>.</>
+                    ) : (
+                      <>💡 Próxima renovação em <strong>{new Date(userTrialUntil).toLocaleDateString('pt-BR')}</strong>.</>
+                    )}
                   </p>
                 )}
               </div>

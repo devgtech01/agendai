@@ -153,6 +153,7 @@ export async function POST(req: Request) {
             user_metadata: {
               plan_status: isPlanActive ? 'active' : 'inactive',
               cancel_at_period_end: subscription.cancel_at_period_end,
+              trial_until: new Date((subscription as any).current_period_end * 1000).toISOString(),
             },
           });
 

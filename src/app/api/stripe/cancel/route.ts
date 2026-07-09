@@ -52,17 +52,20 @@ export async function POST(req: Request) {
     }
 
     // 3. Programar cancelamento no Stripe se houver uma assinatura ativa
+    let currentPeriodEndISO: string | null = null;
     if (subscriptionId) {
       // Programa o cancelamento para o fim do período contratado, preservando os dias pagos/gratuitos restantes
-      await stripe.subscriptions.update(subscriptionId, {
+      const updatedSub = await stripe.subscriptions.update(subscriptionId, {
         cancel_at_period_end: true,
-      });
+      }) as any;
+      currentPeriodEndISO = new Date(updatedSub.current_period_end * 1000).toISOString();
     }
 
     // 4. Atualizar metadados do usuário para registrar o cancelamento futuro agendado
     await supabaseAdmin.auth.admin.updateUserById(userId, {
       user_metadata: {
         cancel_at_period_end: true,
+        ...(currentPeriodEndISO ? { trial_until: currentPeriodEndISO } : {}),
       }
     });
 
