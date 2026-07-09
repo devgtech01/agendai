@@ -282,6 +282,37 @@ export default function ProfissionalSettingsPage() {
     setPortalLoading(false);
   };
 
+  const handleCancelSubscription = async () => {
+    if (!window.confirm('Tem certeza de que deseja cancelar sua assinatura imediatamente? Você perderá o acesso aos recursos do painel profissional.')) {
+      return;
+    }
+    setPortalLoading(true);
+    setErrorMsg('');
+    setSuccessMsg('');
+    try {
+      const response = await fetch('/api/stripe/cancel', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId })
+      });
+      const data = await response.json();
+      if (response.ok && data.success) {
+        setSuccessMsg('Sua assinatura foi cancelada com sucesso. Acesso revogado.');
+        setUserPlanStatus('inactive');
+        setUserPlan('Nenhum');
+        setTimeout(() => {
+          setSuccessMsg('');
+          window.location.reload();
+        }, 3000);
+      } else {
+        setErrorMsg(data.error || 'Erro ao processar cancelamento da assinatura.');
+      }
+    } catch (err) {
+      setErrorMsg('Erro de rede ao solicitar cancelamento.');
+    }
+    setPortalLoading(false);
+  };
+
   if (loading) {
     return <div className="flex min-h-screen items-center justify-center bg-[var(--color-background)]">Carregando dados...</div>;
   }
@@ -527,15 +558,26 @@ export default function ProfissionalSettingsPage() {
                 
                 {userPlanStatus === 'active' ? (
                   userCustomerId && userCustomerId !== 'cus_simulado_123' ? (
-                    <button
-                      type="button"
-                      onClick={handleManageBilling}
-                      className="btn btn-primary btn-full press"
-                      disabled={portalLoading}
-                      style={{ padding: '12px' }}
-                    >
-                      {portalLoading ? 'Carregando Portal...' : 'Acessar Portal de Faturamento (Stripe)'}
-                    </button>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      <button
+                        type="button"
+                        onClick={handleManageBilling}
+                        className="btn btn-primary btn-full press"
+                        disabled={portalLoading}
+                        style={{ padding: '12px' }}
+                      >
+                        {portalLoading ? 'Carregando Portal...' : 'Acessar Portal de Faturamento (Stripe)'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleCancelSubscription}
+                        className="btn btn-secondary press"
+                        disabled={portalLoading}
+                        style={{ padding: '12px', border: '1px solid var(--color-danger)', color: 'var(--color-danger)', cursor: 'pointer', background: 'transparent' }}
+                      >
+                        {portalLoading ? 'Cancelando...' : 'Cancelar Assinatura Agora'}
+                      </button>
+                    </div>
                   ) : (
                     <div style={{ display: 'flex', gap: '12px' }}>
                       <button
