@@ -25,6 +25,7 @@ export default function ProfissionalSettingsPage() {
   const [state, setState] = useState('');
   const [city, setCity] = useState('');
   const [neighborhood, setNeighborhood] = useState('');
+  const [citySuggestions, setCitySuggestions] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -226,6 +227,63 @@ export default function ProfissionalSettingsPage() {
     }
     loadSettings();
   }, [router]);
+
+  const BRAZIL_STATES = [
+    { uf: 'AC', name: 'Acre' },
+    { uf: 'AL', name: 'Alagoas' },
+    { uf: 'AP', name: 'Amapá' },
+    { uf: 'AM', name: 'Amazonas' },
+    { uf: 'BA', name: 'Bahia' },
+    { uf: 'CE', name: 'Ceará' },
+    { uf: 'DF', name: 'Distrito Federal' },
+    { uf: 'ES', name: 'Espírito Santo' },
+    { uf: 'GO', name: 'Goiás' },
+    { uf: 'MA', name: 'Maranhão' },
+    { uf: 'MT', name: 'Mato Grosso' },
+    { uf: 'MS', name: 'Mato Grosso do Sul' },
+    { uf: 'MG', name: 'Minas Gerais' },
+    { uf: 'PA', name: 'Pará' },
+    { uf: 'PB', name: 'Paraíba' },
+    { uf: 'PR', name: 'Paraná' },
+    { uf: 'PE', name: 'Pernambuco' },
+    { uf: 'PI', name: 'Piauí' },
+    { uf: 'RJ', name: 'Rio de Janeiro' },
+    { uf: 'RN', name: 'Rio Grande do Norte' },
+    { uf: 'RS', name: 'Rio Grande do Sul' },
+    { uf: 'RO', name: 'Rondônia' },
+    { uf: 'RR', name: 'Roraima' },
+    { uf: 'SC', name: 'Santa Catarina' },
+    { uf: 'SP', name: 'São Paulo' },
+    { uf: 'SE', name: 'Sergipe' },
+    { uf: 'TO', name: 'Tocantins' }
+  ];
+
+  const normalizeState = (val: string) => {
+    const clean = val.trim().toUpperCase();
+    if (clean.length === 2) return clean;
+    const found = BRAZIL_STATES.find(s => s.name.toUpperCase() === clean);
+    return found ? found.uf : clean;
+  };
+
+  useEffect(() => {
+    if (!state || state.length !== 2) {
+      setCitySuggestions([]);
+      return;
+    }
+    async function fetchCities() {
+      try {
+        const res = await fetch(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${state.toUpperCase()}/municipios`);
+        if (res.ok) {
+          const data = await res.json();
+          const names = data.map((item: any) => item.nome);
+          setCitySuggestions(names);
+        }
+      } catch (err) {
+        console.error('Erro ao buscar cidades do IBGE:', err);
+      }
+    }
+    fetchCities();
+  }, [state]);
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -452,28 +510,43 @@ export default function ProfissionalSettingsPage() {
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr 1.2fr', gap: 'var(--space-4)' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '100px 1.2fr 1.2fr', gap: 'var(--space-4)' }}>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   <label className="input-label">Estado (UF)</label>
                   <input 
                     type="text" 
+                    list="uf-suggestions"
                     className="input" 
                     value={state}
-                    onChange={(e) => setState(e.target.value.toUpperCase().slice(0, 2))}
-                    placeholder="UF"
+                    onChange={(e) => setState(e.target.value)}
+                    onBlur={(e) => setState(normalizeState(e.target.value))}
+                    placeholder="Ex: BA"
                     required 
+                    maxLength={25}
                   />
+                  <datalist id="uf-suggestions">
+                    {BRAZIL_STATES.map(s => (
+                      <option key={s.uf} value={s.uf}>{s.name}</option>
+                    ))}
+                  </datalist>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   <label className="input-label">Cidade</label>
                   <input 
                     type="text" 
+                    list="city-suggestions"
                     className="input" 
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                     placeholder="Cidade"
                     required 
+                    disabled={!state || state.length !== 2}
                   />
+                  <datalist id="city-suggestions">
+                    {citySuggestions.map(cityName => (
+                      <option key={cityName} value={cityName} />
+                    ))}
+                  </datalist>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   <label className="input-label">Bairro</label>
