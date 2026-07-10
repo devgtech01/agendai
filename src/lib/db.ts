@@ -30,6 +30,9 @@ export interface Establishment {
   lunchStart?: string;
   lunchEnd?: string;
   hasTeam?: boolean;
+  state?: string;
+  city?: string;
+  neighborhood?: string;
 }
 
 export interface Service {
@@ -79,6 +82,9 @@ function mapEstablishment(data: any): Establishment {
     lunchStart: data.lunch_start || '12:00:00',
     lunchEnd: data.lunch_end || '13:00:00',
     hasTeam: data.has_team !== false,
+    state: data.state || '',
+    city: data.city || '',
+    neighborhood: data.neighborhood || '',
   };
 }
 
@@ -183,6 +189,9 @@ export async function updateEstablishment(id: string, updates: Partial<Omit<Esta
   if (updates.lunchStart !== undefined) dbUpdates.lunch_start = updates.lunchStart;
   if (updates.lunchEnd !== undefined) dbUpdates.lunch_end = updates.lunchEnd;
   if (updates.hasTeam !== undefined) dbUpdates.has_team = updates.hasTeam;
+  if (updates.state !== undefined) dbUpdates.state = updates.state;
+  if (updates.city !== undefined) dbUpdates.city = updates.city;
+  if (updates.neighborhood !== undefined) dbUpdates.neighborhood = updates.neighborhood;
 
   const { data, error } = await supabase
     .from('establishments')

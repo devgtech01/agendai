@@ -22,6 +22,9 @@ export default function ProfissionalSettingsPage() {
   const [closingTime, setClosingTime] = useState('19:00');
   const [lunchStart, setLunchStart] = useState('12:00');
   const [lunchEnd, setLunchEnd] = useState('13:00');
+  const [state, setState] = useState('');
+  const [city, setCity] = useState('');
+  const [neighborhood, setNeighborhood] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -212,6 +215,9 @@ export default function ProfissionalSettingsPage() {
         setClosingTime(est.closingTime ? est.closingTime.slice(0, 5) : '19:00');
         setLunchStart(est.lunchStart ? est.lunchStart.slice(0, 5) : '12:00');
         setLunchEnd(est.lunchEnd ? est.lunchEnd.slice(0, 5) : '13:00');
+        setState(est.state || '');
+        setCity(est.city || '');
+        setNeighborhood(est.neighborhood || '');
       } catch (err) {
         console.error('Erro ao carregar configurações do estabelecimento:', err);
       } finally {
@@ -244,6 +250,9 @@ export default function ProfissionalSettingsPage() {
       closingTime,
       lunchStart,
       lunchEnd,
+      state,
+      city,
+      neighborhood,
     });
 
     if (updated) {
@@ -441,6 +450,42 @@ export default function ProfissionalSettingsPage() {
                   placeholder="Rua, número, bairro, cidade"
                   required 
                 />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '80px 1fr 1.2fr', gap: 'var(--space-4)' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <label className="input-label">Estado (UF)</label>
+                  <input 
+                    type="text" 
+                    className="input" 
+                    value={state}
+                    onChange={(e) => setState(e.target.value.toUpperCase().slice(0, 2))}
+                    placeholder="UF"
+                    required 
+                  />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <label className="input-label">Cidade</label>
+                  <input 
+                    type="text" 
+                    className="input" 
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    placeholder="Cidade"
+                    required 
+                  />
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <label className="input-label">Bairro</label>
+                  <input 
+                    type="text" 
+                    className="input" 
+                    value={neighborhood}
+                    onChange={(e) => setNeighborhood(e.target.value)}
+                    placeholder="Bairro"
+                    required 
+                  />
+                </div>
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
