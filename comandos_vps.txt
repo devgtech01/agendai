@@ -1,0 +1,67 @@
+===============================================================================
+                       GUIA DE COMANDOS DA VPS - AGENDAI
+===============================================================================
+
+Este arquivo contém todos os comandos necessários para atualizar o sistema,
+gerenciar os processos em segundo plano (PM2) e atualizar o banco de dados.
+
+-------------------------------------------------------------------------------
+1. ATUALIZAÇÃO DO CÓDIGO DA APLICAÇÃO (NEXT.JS)
+-------------------------------------------------------------------------------
+Sempre que novos commits forem enviados para o GitHub, rode esta sequência de
+comandos no terminal da sua VPS para aplicar as alterações em produção:
+
+Comando:
+cd /var/www/agendai && git pull origin main && npm run build && pm2 restart agendai
+
+Descrição:
+- "cd /var/www/agendai": Acessa a pasta onde o projeto está instalado na VPS.
+- "git pull origin main": Baixa a versão mais recente do código do GitHub.
+- "npm run build": Compila o projeto Next.js otimizando para produção.
+- "pm2 restart agendai": Reinicia o servidor Next.js para carregar a nova versão.
+
+-------------------------------------------------------------------------------
+2. INICIALIZAR E GERENCIAR O WORKER DE LEMBRETES DE E-MAIL (PM2)
+-------------------------------------------------------------------------------
+O script de lembretes precisa rodar de forma contínua em segundo plano.
+Utilizamos o PM2 para garantir que o script continue rodando mesmo após
+reinicializações ou erros inesperados.
+
+Comando para iniciar o serviço (rodar apenas na primeira vez):
+pm2 start scripts/reminder-worker.js --name "agendai-reminders"
+
+Comando para monitorar logs em tempo real (ver disparos de e-mail acontecendo):
+pm2 logs agendai-reminders
+
+Comando para ver o status dos processos ativos:
+pm2 status
+
+Comando para reiniciar o worker de lembretes:
+pm2 restart agendai-reminders
+
+Comando para parar o worker de lembretes:
+pm2 stop agendai-reminders
+
+-------------------------------------------------------------------------------
+3. SCRIPTS DE ATUALIZAÇÃO DO BANCO DE DADOS (SUPABASE)
+-------------------------------------------------------------------------------
+Execute estes comandos dentro da aba "SQL Editor" -> "New Query" do seu painel
+do Supabase. Eles criam as colunas adicionais para as novas funções de
+Localização e Lembretes.
+
+Script SQL:
+
+-- Adicionar novas colunas geográficas para filtros do Catálogo
+ALTER TABLE establishments ADD COLUMN IF NOT EXISTS state TEXT;
+ALTER TABLE establishments ADD COLUMN IF NOT EXISTS city TEXT;
+ALTER TABLE establishments ADD COLUMN IF NOT EXISTS neighborhood TEXT;
+
+-- Adicionar coluna de controle de envio de e-mails de lembrete
+ALTER TABLE bookings ADD COLUMN IF NOT EXISTS reminder_sent BOOLEAN DEFAULT FALSE;
+
+-- Adicionar coluna de ativação/desativação de equipe no estabelecimento
+ALTER TABLE establishments ADD COLUMN IF NOT EXISTS has_team BOOLEAN DEFAULT TRUE;
+
+===============================================================================
+                   AGENDAI - TODOS OS DIREITOS RESERVADOS
+===============================================================================
