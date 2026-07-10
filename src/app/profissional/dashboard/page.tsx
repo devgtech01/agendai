@@ -692,7 +692,7 @@ export default function ProfissionalDashboardPage() {
         </div>
 
         {/* --- RANKING E DESEMPENHO DA EQUIPE --- */}
-        {(() => {
+        {establishment.hasTeam !== false && (() => {
           const sortedTeam = Object.values(teamStats).sort((a, b) => b.revenue - a.revenue);
           const totalTeamRevenue = sortedTeam.reduce((acc, p) => acc + p.revenue, 0) || 1;
           const medals = ['🥇 1º Lugar', '🥈 2º Lugar', '🥉 3º Lugar'];

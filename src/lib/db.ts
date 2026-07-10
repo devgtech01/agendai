@@ -29,6 +29,7 @@ export interface Establishment {
   closingTime?: string;
   lunchStart?: string;
   lunchEnd?: string;
+  hasTeam?: boolean;
 }
 
 export interface Service {
@@ -77,6 +78,7 @@ function mapEstablishment(data: any): Establishment {
     closingTime: data.closing_time || '19:00:00',
     lunchStart: data.lunch_start || '12:00:00',
     lunchEnd: data.lunch_end || '13:00:00',
+    hasTeam: data.has_team !== false,
   };
 }
 
@@ -182,6 +184,7 @@ export async function updateEstablishment(id: string, updates: Partial<Omit<Esta
       closing_time: updates.closingTime,
       lunch_start: updates.lunchStart,
       lunch_end: updates.lunchEnd,
+      has_team: updates.hasTeam,
     })
     .eq('id', id)
     .select()
