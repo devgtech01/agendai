@@ -188,8 +188,8 @@ export default function ProfissionalSettingsPage() {
         if (!est) {
           const fallbackEst = {
             name: 'Meu Estabelecimento',
-            description: 'Bem-vindo ao meu estabelecimento!',
-            address: 'Endereço pendente',
+            description: '',
+            address: '',
             phone: user.user_metadata?.phone || '71981032968',
             imageUrl: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
             ownerId: user.id

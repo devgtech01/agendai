@@ -45,8 +45,8 @@ export async function POST(request: Request) {
       .insert([
         {
           name: establishmentName,
-          description: 'Bem-vindo ao meu estabelecimento!',
-          address: 'Endereço pendente',
+          description: '',
+          address: '',
           phone: phone,
           image_url: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
           owner_id: userId

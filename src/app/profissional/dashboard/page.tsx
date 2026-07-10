@@ -16,8 +16,8 @@ export default function ProfissionalDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [dismissedCelebration, setDismissedCelebration] = useState(false);
 
-  const isAddressCompleted = !!(establishment?.address && establishment.address.trim() !== '');
-  const isPhoneCompleted = !!(establishment?.phone && establishment.phone.trim() !== '');
+  const isAddressCompleted = !!(establishment?.address && establishment.address.trim() !== '' && establishment.address.trim() !== 'Endereço pendente');
+  const isPhoneCompleted = !!(establishment?.phone && establishment.phone.trim() !== '' && establishment.description && establishment.description.trim() !== '');
   const isServicesCompleted = services.length > 0;
 
   const completedStepsCount = (isAddressCompleted ? 1 : 0) + (isPhoneCompleted ? 1 : 0) + (isServicesCompleted ? 1 : 0);
@@ -39,8 +39,8 @@ export default function ProfissionalDashboardPage() {
         if (!est) {
           const fallbackEst = {
             name: 'Meu Estabelecimento',
-            description: 'Bem-vindo ao meu estabelecimento!',
-            address: 'Endereço pendente',
+            description: '',
+            address: '',
             phone: user.user_metadata?.phone || '71981032968',
             imageUrl: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
             ownerId: user.id
