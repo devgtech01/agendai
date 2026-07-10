@@ -14,6 +14,14 @@ export default function ProfissionalDashboardPage() {
   const [services, setServices] = useState<Service[]>([]);
   const [professionals, setProfessionals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [dismissedCelebration, setDismissedCelebration] = useState(false);
+
+  const isAddressCompleted = !!(establishment?.address && establishment.address.trim() !== '');
+  const isPhoneCompleted = !!(establishment?.phone && establishment.phone.trim() !== '');
+  const isServicesCompleted = services.length > 0;
+
+  const completedStepsCount = (isAddressCompleted ? 1 : 0) + (isPhoneCompleted ? 1 : 0) + (isServicesCompleted ? 1 : 0);
+  const isOnboardingComplete = completedStepsCount === 3;
 
   useEffect(() => {
     async function loadAnalytics() {
@@ -242,6 +250,200 @@ export default function ProfissionalDashboardPage() {
           <h1 className="heading-1">Dashboard</h1>
           <p className="text-muted" style={{ fontSize: '14px', marginTop: '4px' }}>Acompanhe os resultados e o crescimento do seu negócio</p>
         </div>
+
+        {/* --- ASSISTENTE DE INTEGRAÇÃO (ONBOARDING) --- */}
+        {!isOnboardingComplete ? (
+          <div style={{
+            background: 'var(--color-surface)',
+            border: '1.5px solid var(--color-border)',
+            borderRadius: 'var(--radius-xl)',
+            padding: '24px',
+            marginBottom: 'var(--space-8)',
+            boxShadow: '0 10px 25px rgba(0,0,0,0.03)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '20px'
+          }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                <span style={{ fontSize: '20px' }}>🚀</span>
+                <h2 style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>
+                  Ative seu Catálogo de Agendamentos (Passos Obrigatórios)
+                </h2>
+              </div>
+              <p className="text-muted" style={{ fontSize: '13px', margin: 0 }}>
+                Seu catálogo online só poderá receber agendamentos quando você completar as configurações obrigatórias abaixo.
+              </p>
+            </div>
+
+            {/* Barra de Progresso */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--color-muted)', fontWeight: 500 }}>
+                <span>Progresso de Configuração</span>
+                <span>{Math.round((completedStepsCount / 3) * 100)}% concluído</span>
+              </div>
+              <div style={{ width: '100%', height: '8px', backgroundColor: 'var(--color-background)', borderRadius: '4px', overflow: 'hidden' }}>
+                <div style={{
+                  width: `${(completedStepsCount / 3) * 100}%`,
+                  height: '100%',
+                  backgroundColor: completedStepsCount === 3 ? '#2A6B31' : 'var(--color-primary)',
+                  transition: 'width 0.4s ease-in-out'
+                }} />
+              </div>
+            </div>
+
+            {/* Lista de Passos */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', borderTop: '1px solid var(--color-border)', paddingTop: '20px' }}>
+              
+              {/* Passo 1: Endereço */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                  <span style={{
+                    fontSize: '18px',
+                    color: isAddressCompleted ? '#2A6B31' : 'var(--color-muted)',
+                    marginTop: '2px'
+                  }}>
+                    {isAddressCompleted ? '✅' : '⚪'}
+                  </span>
+                  <div>
+                    <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text)', margin: 0, textDecoration: isAddressCompleted ? 'line-through' : 'none' }}>
+                      Definir Endereço do Estabelecimento
+                    </h4>
+                    <p className="text-muted" style={{ fontSize: '12px', margin: 0 }}>
+                      Adicione a localização para os clientes saberem onde encontrar você.
+                    </p>
+                  </div>
+                </div>
+                {!isAddressCompleted && (
+                  <Link href="/profissional/settings?tab=info" className="btn btn-secondary press" style={{ padding: '6px 14px', fontSize: '13px' }}>
+                    Configurar
+                  </Link>
+                )}
+              </div>
+
+              {/* Passo 2: Telefone & Horários */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                  <span style={{
+                    fontSize: '18px',
+                    color: isPhoneCompleted ? '#2A6B31' : 'var(--color-muted)',
+                    marginTop: '2px'
+                  }}>
+                    {isPhoneCompleted ? '✅' : '⚪'}
+                  </span>
+                  <div>
+                    <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text)', margin: 0, textDecoration: isPhoneCompleted ? 'line-through' : 'none' }}>
+                      Configurar Telefone de Contato e Horários
+                    </h4>
+                    <p className="text-muted" style={{ fontSize: '12px', margin: 0 }}>
+                      Insira um número de contato ativo e os horários de funcionamento do seu estabelecimento.
+                    </p>
+                  </div>
+                </div>
+                {!isPhoneCompleted && (
+                  <Link href="/profissional/settings?tab=info" className="btn btn-secondary press" style={{ padding: '6px 14px', fontSize: '13px' }}>
+                    Configurar
+                  </Link>
+                )}
+              </div>
+
+              {/* Passo 3: Serviços */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+                  <span style={{
+                    fontSize: '18px',
+                    color: isServicesCompleted ? '#2A6B31' : 'var(--color-muted)',
+                    marginTop: '2px'
+                  }}>
+                    {isServicesCompleted ? '✅' : '⚪'}
+                  </span>
+                  <div>
+                    <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text)', margin: 0, textDecoration: isServicesCompleted ? 'line-through' : 'none' }}>
+                      Cadastrar pelo menos 1 Serviço
+                    </h4>
+                    <p className="text-muted" style={{ fontSize: '12px', margin: 0 }}>
+                      Crie os serviços com valores e duração para que os clientes possam agendá-los.
+                    </p>
+                  </div>
+                </div>
+                {!isServicesCompleted && (
+                  <Link href="/profissional/services" className="btn btn-secondary press" style={{ padding: '6px 14px', fontSize: '13px' }}>
+                    Cadastrar
+                  </Link>
+                )}
+              </div>
+
+            </div>
+          </div>
+        ) : (
+          !dismissedCelebration && (
+            <div style={{
+              background: '#EAF7EC',
+              border: '1.5px solid #B8E4BC',
+              borderRadius: 'var(--radius-xl)',
+              padding: '24px',
+              marginBottom: 'var(--space-8)',
+              boxShadow: '0 10px 25px rgba(42, 107, 49, 0.03)',
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '16px',
+              flexWrap: 'wrap'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <span style={{ fontSize: '32px' }}>🎉</span>
+                <div>
+                  <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#2A6B31', margin: '0 0 4px 0' }}>
+                    Parabéns! Seu catálogo está 100% online!
+                  </h2>
+                  <p style={{ fontSize: '13px', color: '#3A8242', margin: 0 }}>
+                    Todos os passos obrigatórios foram preenchidos. Seu estabelecimento está pronto para receber agendamentos.
+                  </p>
+                </div>
+              </div>
+              
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+                <a
+                  href={`/catalog/${establishment.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-primary press"
+                  style={{
+                    backgroundColor: '#2A6B31',
+                    borderColor: '#2A6B31',
+                    color: '#ffffff',
+                    padding: '8px 16px',
+                    fontSize: '13px',
+                    textDecoration: 'none',
+                    borderRadius: 'var(--radius-md)',
+                    fontWeight: 500,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  Visualizar Meu Catálogo
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setDismissedCelebration(true)}
+                  style={{
+                    background: 'transparent',
+                    border: 'none',
+                    color: '#3A8242',
+                    cursor: 'pointer',
+                    fontSize: '13px',
+                    fontWeight: 500,
+                    padding: '8px'
+                  }}
+                >
+                  Fechar
+                </button>
+              </div>
+            </div>
+          )
+        )}
 
         {/* --- CARDS DE RESUMO --- */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6" style={{ marginBottom: 'var(--space-8)' }}>
