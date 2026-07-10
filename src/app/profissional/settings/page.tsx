@@ -499,13 +499,13 @@ export default function ProfissionalSettingsPage() {
               </div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <label className="input-label">Endereço Completo</label>
+                <label className="input-label">Rua/Avenida</label>
                 <input 
                   type="text" 
                   className="input" 
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  placeholder="Rua, número, bairro, cidade"
+                  placeholder="Ex: Rua das Flores, 123"
                   required 
                 />
               </div>

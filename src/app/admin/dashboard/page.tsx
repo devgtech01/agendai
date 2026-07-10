@@ -411,7 +411,7 @@ export default function AdminDashboardPage() {
                       <tr style={{ background: 'var(--color-background)', borderBottom: '1px solid var(--color-border)' }}>
                         <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Nome</th>
                         <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Localização</th>
-                        <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Endereço Completo</th>
+                        <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Rua/Avenida</th>
                         <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Telefone</th>
                         <th style={{ padding: '12px 16px', color: 'var(--color-muted)', textAlign: 'right' }}>Ação</th>
                       </tr>
