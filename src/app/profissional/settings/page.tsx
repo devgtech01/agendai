@@ -498,16 +498,7 @@ export default function ProfissionalSettingsPage() {
                 )}
 
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                  <input 
-                    type="text" 
-                    className="input" 
-                    value={imageUrl}
-                    onChange={(e) => setImageUrl(e.target.value)}
-                    placeholder="Cole a URL da foto ou use o botão ao lado para enviar..."
-                    style={{ flex: 1 }}
-                  />
-                  
-                  <label className="btn btn-secondary" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', height: '42px', padding: '0 16px', margin: 0 }}>
+                  <label className="btn btn-secondary btn-full" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', height: '42px', padding: '0 16px', margin: 0 }}>
                     Selecionar Foto
                     <input 
                       type="file" 
