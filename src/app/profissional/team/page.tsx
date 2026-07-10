@@ -129,31 +129,45 @@ export default function ProfissionalTeamPage() {
             <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text)', margin: '0 0 4px 0' }}>Deseja Adicionar Membros à Equipe?</h3>
             <p className="text-muted" style={{ fontSize: '13px', margin: 0 }}>Ative esta opção se você possui outros colaboradores trabalhando com você.</p>
           </div>
-          <div style={{ display: 'flex', gap: '8px' }}>
-            <button
-              type="button"
-              onClick={() => handleToggleTeam(true)}
-              className={`btn ${hasTeam ? 'btn-primary' : 'btn-secondary'} press`}
-              style={{ padding: '8px 20px', fontSize: '13px', height: '38px', borderRadius: '8px' }}
-              disabled={isUpdatingToggle}
-            >
-              Sim
-            </button>
-            <button
-              type="button"
-              onClick={() => handleToggleTeam(false)}
-              className={`btn ${!hasTeam ? 'btn-danger' : 'btn-secondary'} press`}
-              style={{ 
-                padding: '8px 20px', 
-                fontSize: '13px', 
-                height: '38px', 
-                borderRadius: '8px',
-                ...(!hasTeam ? { backgroundColor: 'var(--color-danger)', borderColor: 'var(--color-danger)', color: '#fff' } : {})
-              }}
-              disabled={isUpdatingToggle}
-            >
-              Não
-            </button>
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <label style={{
+              position: 'relative',
+              display: 'inline-block',
+              width: '56px',
+              height: '30px',
+              cursor: isUpdatingToggle ? 'not-allowed' : 'pointer'
+            }}>
+              <input
+                type="checkbox"
+                checked={hasTeam}
+                onChange={(e) => handleToggleTeam(e.target.checked)}
+                disabled={isUpdatingToggle}
+                style={{ opacity: 0, width: 0, height: 0 }}
+              />
+              <span style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: hasTeam ? '#2A6B31' : '#ccc',
+                transition: '0.3s',
+                borderRadius: '30px',
+                display: 'block'
+              }}>
+                <span style={{
+                  position: 'absolute',
+                  height: '22px',
+                  width: '22px',
+                  left: hasTeam ? '30px' : '4px',
+                  bottom: '4px',
+                  backgroundColor: 'white',
+                  transition: '0.3s',
+                  borderRadius: '50%',
+                  boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                }} />
+              </span>
+            </label>
           </div>
         </section>
 
