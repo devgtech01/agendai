@@ -410,7 +410,8 @@ export default function AdminDashboardPage() {
                     <thead>
                       <tr style={{ background: 'var(--color-background)', borderBottom: '1px solid var(--color-border)' }}>
                         <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Nome</th>
-                        <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Endereço</th>
+                        <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Localização</th>
+                        <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Endereço Completo</th>
                         <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Telefone</th>
                         <th style={{ padding: '12px 16px', color: 'var(--color-muted)', textAlign: 'right' }}>Ação</th>
                       </tr>
@@ -419,6 +420,9 @@ export default function AdminDashboardPage() {
                       {establishments.map((est) => (
                         <tr key={est.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
                           <td style={{ padding: '12px 16px', fontWeight: 600 }}>{est.name}</td>
+                          <td style={{ padding: '12px 16px', color: 'var(--color-accent)', fontWeight: 500 }}>
+                            {est.neighborhood || '---'} · {est.city || '---'} - {est.state || '---'}
+                          </td>
                           <td style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>{est.address}</td>
                           <td style={{ padding: '12px 16px' }}>{est.phone}</td>
                           <td style={{ padding: '12px 16px', textAlign: 'right' }}>
