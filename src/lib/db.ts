@@ -172,20 +172,21 @@ export async function addEstablishment(establishment: Omit<Establishment, 'id'>)
 }
 
 export async function updateEstablishment(id: string, updates: Partial<Omit<Establishment, 'id' | 'ownerId'>>): Promise<Establishment | null> {
+  const dbUpdates: any = {};
+  if (updates.name !== undefined) dbUpdates.name = updates.name;
+  if (updates.description !== undefined) dbUpdates.description = updates.description;
+  if (updates.address !== undefined) dbUpdates.address = updates.address;
+  if (updates.phone !== undefined) dbUpdates.phone = updates.phone;
+  if (updates.imageUrl !== undefined) dbUpdates.image_url = updates.imageUrl;
+  if (updates.openingTime !== undefined) dbUpdates.opening_time = updates.openingTime;
+  if (updates.closingTime !== undefined) dbUpdates.closing_time = updates.closingTime;
+  if (updates.lunchStart !== undefined) dbUpdates.lunch_start = updates.lunchStart;
+  if (updates.lunchEnd !== undefined) dbUpdates.lunch_end = updates.lunchEnd;
+  if (updates.hasTeam !== undefined) dbUpdates.has_team = updates.hasTeam;
+
   const { data, error } = await supabase
     .from('establishments')
-    .update({
-      name: updates.name,
-      description: updates.description,
-      address: updates.address,
-      phone: updates.phone,
-      image_url: updates.imageUrl,
-      opening_time: updates.openingTime,
-      closing_time: updates.closingTime,
-      lunch_start: updates.lunchStart,
-      lunch_end: updates.lunchEnd,
-      has_team: updates.hasTeam,
-    })
+    .update(dbUpdates)
     .eq('id', id)
     .select()
     .single();
