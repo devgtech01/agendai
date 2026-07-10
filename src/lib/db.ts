@@ -58,6 +58,7 @@ export interface Booking {
   time: string; // HH:MM:SS
   status: 'Confirmado' | 'Pendente' | 'Cancelado' | 'Concluido';
   rating?: number; // 1 a 5 estrelas
+  reminderSent?: boolean;
 }
 
 export interface Professional {
@@ -114,6 +115,7 @@ function mapBooking(data: any): Booking {
     time: data.time,
     status: data.status,
     rating: data.rating || undefined,
+    reminderSent: !!data.reminder_sent,
   };
 }
 
