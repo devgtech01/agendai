@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import { getEstablishmentByOwnerId, updateEstablishment, uploadImage, Establishment } from '@/lib/db';
+import { getEstablishmentByOwnerId, updateEstablishment, uploadImage, Establishment, addEstablishment } from '@/lib/db';
 import ProfissionalHeader from '@/components/ProfissionalHeader';
 
 export default function ProfissionalSettingsPage() {
@@ -184,9 +184,23 @@ export default function ProfissionalSettingsPage() {
         setUserCustomerId(user.user_metadata?.stripe_customer_id || null);
         setCancelAtPeriodEnd(statusData.cancelAtPeriodEnd === true);
 
-        const est = await getEstablishmentByOwnerId(user.id);
+        let est = await getEstablishmentByOwnerId(user.id);
         if (!est) {
-          return;
+          const fallbackEst = {
+            name: 'Meu Estabelecimento',
+            description: 'Bem-vindo ao meu estabelecimento!',
+            address: 'Endereço pendente',
+            phone: user.user_metadata?.phone || '71981032968',
+            imageUrl: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+            ownerId: user.id
+          };
+          const created = await addEstablishment(fallbackEst);
+          if (created) {
+            est = created;
+          } else {
+            console.error('Falha ao auto-inicializar estabelecimento');
+            return;
+          }
         }
         setEstablishment(est);
         setName(est.name);

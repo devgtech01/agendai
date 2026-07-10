@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import ProfissionalHeader from '@/components/ProfissionalHeader';
-import { getEstablishmentByOwnerId, getBookings, getServices, Booking, Service, Establishment } from '@/lib/db';
+import { getEstablishmentByOwnerId, getBookings, getServices, Booking, Service, Establishment, addEstablishment } from '@/lib/db';
 
 export default function ProfissionalDashboardPage() {
   const router = useRouter();
@@ -35,9 +35,23 @@ export default function ProfissionalDashboardPage() {
 
 
 
-        const est = await getEstablishmentByOwnerId(user.id);
+        let est = await getEstablishmentByOwnerId(user.id);
         if (!est) {
-          return;
+          const fallbackEst = {
+            name: 'Meu Estabelecimento',
+            description: 'Bem-vindo ao meu estabelecimento!',
+            address: 'Endereço pendente',
+            phone: user.user_metadata?.phone || '71981032968',
+            imageUrl: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+            ownerId: user.id
+          };
+          const created = await addEstablishment(fallbackEst);
+          if (created) {
+            est = created;
+          } else {
+            console.error('Falha ao auto-inicializar estabelecimento no Dashboard');
+            return;
+          }
         }
         setEstablishment(est);
 
