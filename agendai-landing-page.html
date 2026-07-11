@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agendai — Seu salão ou barbearia no piloto automático</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#1A1A2E;
+    --accent:#C15A2E;
+    --accent-hover:#A34A22;
+    --accent-soft:#FAECE7;
+    --linen:#E8D5B7;
+    --bg:#F7F5F2;
+    --text:#2E2B25;
+    --text-muted:#8C8378;
+    --border:#E4E1DC;
+    --white:#FFFFFF;
+    --shadow-sm: 0 2px 8px rgba(26,26,46,0.06);
+    --shadow-md: 0 8px 30px rgba(26,26,46,0.08);
+    --shadow-lg: 0 20px 60px rgba(26,26,46,0.14);
+    --radius-sm: 10px;
+    --radius-md: 18px;
+    --radius-lg: 28px;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+
+  html{scroll-behavior:smooth;}
+
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+
+  h1,h2,h3,h4{
+    font-family:'Playfair Display',serif;
+    font-weight:600;
+    color:var(--primary);
+    letter-spacing:-0.01em;
+  }
+
+  a{text-decoration:none;color:inherit;}
+  ul{list-style:none;}
+  img{max-width:100%;display:block;}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;}
+
+  .container{
+    max-width:1200px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.01ms !important; animation-iteration-count:1 !important; transition-duration:0.01ms !important; scroll-behavior:auto !important;}
+  }
+
+  ::selection{background:var(--linen); color:var(--primary);}
+
+  :focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:3px;
+    border-radius:4px;
+  }
+
+  /* ============ NAV ============ */
+  header.nav{
+    position:fixed;
+    top:0; left:0; right:0;
+    z-index:1000;
+    background:rgba(247,245,242,0.72);
+    backdrop-filter:blur(14px) saturate(160%);
+    -webkit-backdrop-filter:blur(14px) saturate(160%);
+    border-bottom:1px solid var(--border);
+    transition:box-shadow .3s ease;
+  }
+  header.nav.scrolled{ box-shadow:var(--shadow-sm); }
+
+  .nav-inner{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 32px;
+    max-width:1200px;
+    margin:0 auto;
+  }
+
+  .logo{
+    font-family:'Playfair Display',serif;
+    font-size:24px;
+    font-weight:700;
+    color:var(--primary);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .logo .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--accent);
+    display:inline-block;
+  }
+
+  .nav-links{
+    display:flex;
+    gap:36px;
+    font-size:14.5px;
+    font-weight:500;
+    color:var(--text);
+  }
+  .nav-links a{ position:relative; padding:4px 0; }
+  .nav-links a::after{
+    content:'';
+    position:absolute; left:0; bottom:-2px;
+    width:0; height:1.5px;
+    background:var(--accent);
+    transition:width .25s ease;
+  }
+  .nav-links a:hover::after{ width:100%; }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    padding:13px 26px;
+    border-radius:999px;
+    font-weight:600;
+    font-size:14.5px;
+    transition:transform .25s cubic-bezier(.2,.8,.2,1), background .25s ease, box-shadow .25s ease;
+    white-space:nowrap;
+  }
+  .btn-primary{
+    background:var(--accent);
+    color:#fff;
+    box-shadow:0 6px 20px rgba(193,90,46,0.28);
+  }
+  .btn-primary:hover{
+    background:var(--accent-hover);
+    transform:translateY(-2px) scale(1.02);
+    box-shadow:0 10px 26px rgba(163,74,34,0.35);
+  }
+  .btn-ghost{
+    background:transparent;
+    color:var(--primary);
+    border:1px solid var(--border);
+  }
+  .btn-ghost:hover{ background:var(--white); border-color:var(--primary); }
+  .btn-sm{ padding:10px 20px; font-size:13.5px; }
+
+  .nav-cta{ display:flex; align-items:center; gap:16px; }
+  .nav-links-wrap{ display:flex; align-items:center; gap:36px; }
+
+  /* ============ HERO ============ */
+  .hero{
+    padding:168px 0 100px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:'';
+    position:absolute;
+    top:-200px; right:-200px;
+    width:600px; height:600px;
+    background:radial-gradient(circle, rgba(193,90,46,0.10) 0%, rgba(193,90,46,0) 70%);
+    border-radius:50%;
+    pointer-events:none;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.05fr 0.95fr;
+    gap:64px;
+    align-items:center;
+  }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--accent-soft);
+    color:var(--accent);
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+    padding:8px 16px;
+    border-radius:999px;
+    margin-bottom:24px;
+  }
+  .hero h1{
+    font-size:clamp(38px, 5vw, 60px);
+    line-height:1.08;
+    margin-bottom:22px;
+    max-width:620px;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--accent);
+  }
+  .hero p.lead{
+    font-size:18px;
+    color:var(--text-muted);
+    max-width:520px;
+    margin-bottom:36px;
+  }
+  .hero-ctas{
+    display:flex;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+    margin-bottom:40px;
+  }
+  .hero-note{
+    font-size:13.5px;
+    color:var(--text-muted);
+  }
+  /* Phone mockup */
+  .phone-stage{
+    position:relative;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:640px;
+  }
+  .phone-stage::before{
+    content:'';
+    position:absolute;
+    width:380px; height:380px;
+    background:radial-gradient(circle, var(--linen) 0%, rgba(232,213,183,0) 72%);
+    border-radius:50%;
+    filter:blur(4px);
+    z-index:0;
+  }
+  .phone-frame{
+    position:relative;
+    width:290px;
+    height:588px;
+    background:#ffffff;
+    border-radius:46px;
+    box-shadow:
+      0 40px 80px -20px rgba(26,26,46,0.35),
+      0 10px 30px rgba(26,26,46,0.12),
+      inset 0 0 0 2px #f0efec;
+    border:8px solid #ffffff;
+    z-index:2;
+    animation:floaty 5.5s ease-in-out infinite;
+  }
+  .phone-frame::before{
+    content:'';
+    position:absolute;
+    top:0; left:50%;
+    transform:translateX(-50%);
+    width:120px; height:26px;
+    background:#111;
+    border-radius:0 0 18px 18px;
+    z-index:3;
+  }
+  .phone-screen{
+    width:100%;
+    height:100%;
+    border-radius:34px;
+    background:
+      linear-gradient(160deg, var(--accent-soft) 0%, var(--bg) 55%, var(--linen) 100%);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .phone-screen .placeholder-txt{
+    text-align:center;
+    color:var(--accent);
+    font-size:13px;
+    font-weight:600;
+    letter-spacing:0.03em;
+    padding:20px;
+    border:1.5px dashed rgba(193,90,46,0.35);
+    border-radius:16px;
+    background:rgba(255,255,255,0.5);
+    max-width:200px;
+  }
+  .float-card{
+    position:absolute;
+    background:#fff;
+    border-radius:16px;
+    box-shadow:var(--shadow-lg);
+    padding:14px 18px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:13px;
+    font-weight:600;
+    color:var(--primary);
+    z-index:4;
+  }
+  .float-card.c1{ top:70px; left:-40px; animation:floaty 6s ease-in-out infinite; animation-delay:.4s; }
+  .float-card.c2{ bottom:120px; right:-50px; animation:floaty 6.5s ease-in-out infinite; animation-delay:.9s; }
+  .float-card .ico{
+    width:30px; height:30px; border-radius:9px;
+    background:var(--accent-soft);
+    color:var(--accent);
+    display:flex; align-items:center; justify-content:center;
+    font-size:15px;
+  }
+  .float-card small{ display:block; font-weight:400; color:var(--text-muted); font-size:11px; }
+
+  @keyframes floaty{
+    0%,100%{ transform:translateY(0px); }
+    50%{ transform:translateY(-18px); }
+  }
+
+  /* ============ SECTION SHARED ============ */
+  section{ padding:110px 0; }
+  .section-head{
+    max-width:640px;
+    margin:0 auto 60px;
+    text-align:center;
+  }
+  .section-head .eyebrow{ margin-bottom:18px; }
+  .section-head h2{
+    font-size:clamp(30px,3.6vw,42px);
+    line-height:1.15;
+    margin-bottom:16px;
+  }
+  .section-head p{
+    color:var(--text-muted);
+    font-size:16.5px;
+  }
+
+  /* ============ FEATURES ============ */
+  .features{ background:var(--white); border-top:1px solid var(--border); border-bottom:1px solid var(--border); }
+
+  .feature-tabs{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    margin-bottom:52px;
+    background:var(--bg);
+    padding:6px;
+    border-radius:999px;
+    width:fit-content;
+    margin-left:auto; margin-right:auto;
+    border:1px solid var(--border);
+  }
+  .feature-tab{
+    padding:11px 26px;
+    border-radius:999px;
+    font-size:14px;
+    font-weight:600;
+    color:var(--text-muted);
+    transition:all .3s ease;
+  }
+  .feature-tab.active{
+    background:var(--primary);
+    color:#fff;
+    box-shadow:var(--shadow-sm);
+  }
+
+  .feature-panel{ display:none; }
+  .feature-panel.active{ display:block; animation:fadeUp .5s ease; }
+  @keyframes fadeUp{
+    from{ opacity:0; transform:translateY(14px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+
+  .feature-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:24px;
+  }
+  .feature-card{
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:var(--radius-md);
+    padding:30px;
+    transition:transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+  }
+  .feature-card:hover{
+    transform:translateY(-6px);
+    box-shadow:var(--shadow-md);
+    border-color:var(--linen);
+  }
+  .feature-card .ico{
+    width:44px; height:44px;
+    border-radius:12px;
+    background:var(--accent-soft);
+    color:var(--accent);
+    display:flex; align-items:center; justify-content:center;
+    font-size:20px;
+    margin-bottom:18px;
+  }
+  .feature-card h4{ font-size:18px; margin-bottom:10px; }
+  .feature-card p{ font-size:14.5px; color:var(--text-muted); }
+
+  /* interactive: onboarding */
+  .demo-card{
+    grid-column:span 3;
+    background:linear-gradient(135deg, var(--primary) 0%, #262647 100%);
+    border-radius:var(--radius-lg);
+    padding:40px;
+    color:#fff;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+    align-items:center;
+    margin-top:8px;
+  }
+  .demo-card h4{ color:#fff; font-size:22px; margin-bottom:10px; }
+  .demo-card p{ color:rgba(255,255,255,0.65); font-size:14.5px; margin-bottom:24px; }
+  .progress-track{
+    width:100%;
+    height:8px;
+    background:rgba(255,255,255,0.14);
+    border-radius:999px;
+    overflow:hidden;
+    margin-bottom:12px;
+  }
+  .progress-fill{
+    height:100%;
+    width:25%;
+    background:var(--accent);
+    border-radius:999px;
+    transition:width .5s cubic-bezier(.2,.8,.2,1);
+  }
+  .progress-steps{
+    display:flex;
+    justify-content:space-between;
+    font-size:12px;
+    color:rgba(255,255,255,0.55);
+    margin-bottom:26px;
+  }
+  .progress-steps .step.done{ color:var(--linen); }
+  .demo-btn-row{ display:flex; gap:12px; }
+  .demo-btn{
+    padding:10px 18px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.1);
+    color:#fff;
+    font-size:13px;
+    font-weight:600;
+    border:1px solid rgba(255,255,255,0.18);
+    transition:background .25s ease;
+  }
+  .demo-btn:hover{ background:rgba(255,255,255,0.2); }
+  .demo-btn.primary{ background:var(--accent); border-color:transparent; }
+  .demo-btn.primary:hover{ background:var(--accent-hover); }
+
+  .onboard-visual{
+    background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.12);
+    border-radius:16px;
+    padding:22px;
+  }
+  .onboard-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    font-size:13.5px;
+  }
+  .onboard-row:last-child{ border-bottom:none; }
+  .onboard-check{
+    width:20px; height:20px;
+    border-radius:50%;
+    border:1.5px solid rgba(255,255,255,0.3);
+    display:flex; align-items:center; justify-content:center;
+    font-size:11px;
+    flex-shrink:0;
+    transition:all .3s ease;
+  }
+  .onboard-check.done{ background:var(--accent); border-color:var(--accent); }
+  .onboard-row.muted{ color:rgba(255,255,255,0.4); }
+
+  /* toggle switch */
+  .toggle-block{
+    grid-column:span 3;
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:var(--radius-lg);
+    padding:36px 40px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:32px;
+    flex-wrap:wrap;
+  }
+  .toggle-block .txt h4{ font-size:19px; margin-bottom:6px; }
+  .toggle-block .txt p{ color:var(--text-muted); font-size:14.5px; max-width:420px; }
+  .switch{
+    position:relative;
+    width:58px; height:32px;
+    background:var(--border);
+    border-radius:999px;
+    flex-shrink:0;
+    transition:background .3s ease;
+  }
+  .switch.on{ background:var(--accent); }
+  .switch .knob{
+    position:absolute;
+    top:3px; left:3px;
+    width:26px; height:26px;
+    background:#fff;
+    border-radius:50%;
+    box-shadow:0 2px 6px rgba(0,0,0,0.2);
+    transition:transform .3s cubic-bezier(.2,.8,.2,1);
+  }
+  .switch.on .knob{ transform:translateX(26px); }
+
+  .team-reveal{
+    grid-column:span 3;
+    max-height:0;
+    overflow:hidden;
+    transition:max-height .5s ease, opacity .4s ease, margin .4s ease;
+    opacity:0;
+  }
+  .team-reveal.open{
+    max-height:400px;
+    opacity:1;
+    margin-top:20px;
+  }
+  .team-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:16px;
+  }
+  .team-member{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:20px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .avatar{
+    width:42px;height:42px;border-radius:50%;
+    background:var(--linen);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:700; color:var(--primary); font-size:14px;
+    flex-shrink:0;
+  }
+  .team-member .rank{ font-size:18px; margin-left:auto; }
+  .team-member .name{ font-weight:600; font-size:14px; }
+  .team-member .rev{ font-size:12px; color:var(--text-muted); }
+
+  /* IBGE geo demo */
+  .geo-block{
+    grid-column:span 3;
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:var(--radius-lg);
+    padding:36px 40px;
+  }
+  .geo-block .txt{ margin-bottom:22px; }
+  .geo-block h4{ font-size:19px; margin-bottom:6px; }
+  .geo-block p{ color:var(--text-muted); font-size:14.5px; }
+  .geo-row{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:16px;
+  }
+  .geo-select{
+    padding:14px 16px;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:var(--bg);
+    font-size:14px;
+    font-family:inherit;
+    color:var(--text);
+    width:100%;
+  }
+  .geo-select:disabled{ opacity:0.5; }
+
+  /* ============ COMPARISON ============ */
+  .compare{ background:var(--bg); }
+  .compare-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:28px;
+  }
+  .compare-card{
+    border-radius:var(--radius-lg);
+    padding:38px;
+  }
+  .compare-card.before{
+    background:var(--white);
+    border:1.5px dashed var(--border);
+  }
+  .compare-card.after{
+    background:var(--primary);
+    color:#fff;
+    box-shadow:var(--shadow-lg);
+  }
+  .compare-card h3{ font-size:22px; margin-bottom:24px; }
+  .compare-card.after h3{ color:#fff; }
+  .compare-card.before h3{ color:var(--text-muted); }
+  .compare-list li{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+    padding:12px 0;
+    font-size:14.5px;
+    border-bottom:1px solid rgba(0,0,0,0.06);
+  }
+  .compare-card.after .compare-list li{ border-bottom:1px solid rgba(255,255,255,0.1); }
+  .compare-list li:last-child{ border-bottom:none; }
+  .mark{
+    width:20px;height:20px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:11px; flex-shrink:0; margin-top:1px;
+  }
+  .compare-card.before .mark{ background:#F3E9E5; color:#B85C3E; }
+  .compare-card.after .mark{ background:var(--accent); color:#fff; }
+
+  /* ============ PRICING ============ */
+  .pricing{ background:var(--bg); }
+  .plan-toggle{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:16px;
+    margin-bottom:56px;
+  }
+  .plan-toggle span{ font-size:14.5px; font-weight:600; color:var(--text-muted); }
+  .plan-toggle span.active{ color:var(--primary); }
+  .save-badge{
+    background:var(--accent-soft);
+    color:var(--accent);
+    font-size:11.5px;
+    font-weight:700;
+    padding:3px 10px;
+    border-radius:999px;
+    margin-left:6px;
+  }
+
+  .plans-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:24px;
+    align-items:stretch;
+  }
+  .plan-card{
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:var(--radius-lg);
+    padding:38px 32px;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    transition:transform .3s ease, box-shadow .3s ease;
+  }
+  .plan-card:hover{ transform:translateY(-4px); }
+  .plan-card.featured{
+    background:var(--primary);
+    color:#fff;
+    border:none;
+    box-shadow:var(--shadow-lg);
+    transform:scale(1.04);
+  }
+  .plan-card.featured:hover{ transform:scale(1.04) translateY(-4px); }
+  .plan-badge{
+    position:absolute;
+    top:-14px; left:32px;
+    background:var(--accent);
+    color:#fff;
+    font-size:11.5px;
+    font-weight:700;
+    padding:6px 14px;
+    border-radius:999px;
+    letter-spacing:0.02em;
+  }
+  .plan-name{ font-size:14px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--text-muted); margin-bottom:14px; }
+  .plan-card.featured .plan-name{ color:var(--linen); }
+  .plan-price{ font-family:'Playfair Display',serif; font-size:44px; color:var(--primary); margin-bottom:4px; }
+  .plan-card.featured .plan-price{ color:#fff; }
+  .plan-price span{ font-size:15px; font-family:'Inter',sans-serif; color:var(--text-muted); font-weight:500; }
+  .plan-card.featured .plan-price span{ color:rgba(255,255,255,0.6); }
+  .plan-desc{ font-size:13.5px; color:var(--text-muted); margin-bottom:28px; }
+  .plan-card.featured .plan-desc{ color:rgba(255,255,255,0.65); }
+  .plan-features{ margin-bottom:32px; flex-grow:1; }
+  .plan-features li{
+    display:flex; align-items:flex-start; gap:10px;
+    font-size:14px; padding:9px 0;
+  }
+  .plan-features .mark{ width:18px;height:18px;border-radius:50%; background:var(--accent-soft); color:var(--accent); font-size:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px; }
+  .plan-card.featured .plan-features .mark{ background:rgba(255,255,255,0.12); color:var(--linen); }
+  .plan-cta{ width:100%; }
+  .plan-card:not(.featured) .plan-cta{ background:var(--bg); color:var(--primary); border:1px solid var(--border); }
+  .plan-card:not(.featured) .plan-cta:hover{ background:var(--accent-soft); border-color:var(--accent); }
+
+  /* ============ FINAL CTA ============ */
+  .final-cta{
+    background:var(--primary);
+    border-radius:var(--radius-lg);
+    margin:0 auto;
+    max-width:1200px;
+    padding:70px 60px;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .final-cta::before{
+    content:'';
+    position:absolute; inset:0;
+    background:radial-gradient(circle at 30% 20%, rgba(193,90,46,0.25), transparent 55%);
+  }
+  .final-cta h2{ color:#fff; font-size:clamp(28px,3.4vw,40px); margin-bottom:16px; position:relative; }
+  .final-cta p{ color:rgba(255,255,255,0.65); font-size:16px; margin-bottom:32px; position:relative; }
+  .final-cta .hero-ctas{ justify-content:center; position:relative; }
+
+  /* ============ FOOTER ============ */
+  footer{
+    background:var(--white);
+    border-top:1px solid var(--border);
+    padding:64px 0 32px;
+  }
+  .footer-grid{
+    display:grid;
+    grid-template-columns:1.5fr 1fr 1fr 1fr;
+    gap:40px;
+    margin-bottom:48px;
+  }
+  .footer-brand p{ color:var(--text-muted); font-size:14px; margin-top:14px; max-width:280px; }
+  .footer-col h5{ font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--primary); margin-bottom:16px; }
+  .footer-col li{ margin-bottom:10px; }
+  .footer-col a{ font-size:14px; color:var(--text-muted); transition:color .2s ease; }
+  .footer-col a:hover{ color:var(--accent); }
+  .footer-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding-top:28px;
+    border-top:1px solid var(--border);
+    font-size:13px;
+    color:var(--text-muted);
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .trust-badges{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+  .trust-badges span{
+    font-size:12px;
+    border:1px solid var(--border);
+    padding:6px 12px;
+    border-radius:999px;
+    color:var(--text-muted);
+  }
+  .stripe-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:999px;
+    padding:6px 14px 6px 10px;
+    box-shadow:var(--shadow-sm);
+  }
+  .stripe-badge svg{ flex-shrink:0; }
+  .stripe-badge .stripe-wordmark{
+    font-weight:700;
+    color:#635BFF;
+    letter-spacing:-0.01em;
+  }
+  .stripe-badge .stripe-copy{ color:var(--text-muted); }
+
+  /* ============ COOKIE CONSENT ============ */
+  .cookie-banner{
+    position:fixed;
+    bottom:24px; right:24px;
+    max-width:360px;
+    background:var(--white);
+    border:1px solid var(--border);
+    border-radius:18px;
+    box-shadow:var(--shadow-lg);
+    padding:24px;
+    z-index:2000;
+    transform:translateY(140%);
+    transition:transform .5s cubic-bezier(.2,.8,.2,1);
+  }
+  .cookie-banner.show{ transform:translateY(0); }
+  .cookie-banner h5{ font-family:'Playfair Display',serif; font-size:16px; margin-bottom:8px; color:var(--primary); }
+  .cookie-banner p{ font-size:13px; color:var(--text-muted); margin-bottom:18px; }
+  .cookie-actions{ display:flex; gap:10px; }
+  .cookie-actions .btn{ flex:1; padding:10px 14px; font-size:13px; }
+
+  /* ============ RESPONSIVE ============ */
+  @media (max-width: 980px){
+    .nav-links-wrap{ display:none; }
+    .hero-grid{ grid-template-columns:1fr; }
+    .phone-stage{ height:480px; margin-top:20px; }
+    .phone-frame{ width:230px; height:460px; }
+    .feature-grid, .demo-card, .team-grid, .plans-grid, .compare-grid, .geo-row{ grid-template-columns:1fr; }
+    .demo-card, .toggle-block, .geo-block{ grid-column:span 1; }
+    .footer-grid{ grid-template-columns:1fr 1fr; }
+    .plan-card.featured{ transform:scale(1); }
+    section{ padding:70px 0; }
+    .hero{ padding:130px 0 60px; }
+  }
+  @media (max-width: 560px){
+    .footer-grid{ grid-template-columns:1fr; }
+    .footer-bottom{ flex-direction:column; align-items:flex-start; }
+    .cookie-banner{ left:16px; right:16px; max-width:none; }
+    .final-cta{ padding:50px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo"><span class="dot"></span>Agendai</a>
+    <nav class="nav-links-wrap">
+      <ul class="nav-links">
+        <li><a href="#funcionalidades">Funcionalidades</a></li>
+        <li><a href="#comparativo">Resultados</a></li>
+        <li><a href="#planos">Planos</a></li>
+      </ul>
+    </nav>
+    <div class="nav-cta">
+      <a href="#planos" class="btn btn-ghost btn-sm">Entrar</a>
+      <a href="#planos" class="btn btn-primary btn-sm">Teste grátis</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow">✦ Feito para barbearias, salões e clínicas de estética</span>
+        <h1>Seu salão ou barbearia no <em>piloto automático.</em></h1>
+        <p class="lead">O Agendai é o sistema de agendamento e gestão completo que reduz faltas, organiza sua equipe e maximiza o faturamento do seu estabelecimento. Teste grátis hoje.</p>
+        <div class="hero-ctas">
+          <a href="#planos" class="btn btn-primary">Começar Teste Gratuito de 30 dias →</a>
+          <a href="#funcionalidades" class="btn btn-ghost">Ver como funciona</a>
+        </div>
+        <p class="hero-note">Sem fidelidade · Cancele quando quiser</p>
+      </div>
+      <div class="phone-stage">
+        <div class="float-card c1"><span class="ico">💈</span><div>Novo agendamento<small>Corte + Barba · 14:30</small></div></div>
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="placeholder-txt">Espaço reservado para a tela da plataforma Agendai</div>
+          </div>
+        </div>
+        <div class="float-card c2"><span class="ico">⭐</span><div>Avaliação recebida<small>5.0 · Ana P.</small></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" id="funcionalidades">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">O que você ganha</span>
+        <h2>Tudo o que o seu negócio precisa, num só lugar</h2>
+        <p>Duas frentes trabalhando juntas: a gestão que organiza seu dia a dia e a experiência que fideliza seus clientes.</p>
+      </div>
+
+      <div class="feature-tabs">
+        <button class="feature-tab active" data-tab="gestao">Gestão do Estabelecimento</button>
+        <button class="feature-tab" data-tab="cliente">Experiência do Cliente</button>
+      </div>
+
+      <!-- PAINEL GESTÃO -->
+      <div class="feature-panel active" id="panel-gestao">
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="ico">📊</div>
+            <h4>Dashboard Financeiro</h4>
+            <p>Faturamento diário, semanal, mensal e anual em gráficos interativos e elegantes, sempre à mão.</p>
+          </div>
+          <div class="feature-card">
+            <div class="ico">🗺️</div>
+            <h4>Ajustes com API do IBGE</h4>
+            <p>Digite o Estado e o sistema sugere cidades e bairros corretos automaticamente, sem erro de cadastro.</p>
+          </div>
+          <div class="feature-card">
+            <div class="ico">🎧</div>
+            <h4>Suporte Integrado</h4>
+            <p>Painel de chamados com prioridades para resolver dúvidas rapidamente, direto por e-mail.</p>
+          </div>
+
+          <!-- Demo Onboarding -->
+          <div class="demo-card">
+            <div>
+              <h4>Onboarding guiado passo a passo</h4>
+              <p>Configure Endereço, Horários de Funcionamento e Serviços em poucos cliques. Veja o progresso em tempo real.</p>
+              <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+              <div class="progress-steps">
+                <span class="step done">Endereço</span>
+                <span class="step" id="stepHorarios">Horários</span>
+                <span class="step" id="stepServicos">Serviços</span>
+                <span class="step" id="stepPronto">Pronto</span>
+              </div>
+              <div class="demo-btn-row">
+                <button class="demo-btn" id="btnReset">Reiniciar</button>
+                <button class="demo-btn primary" id="btnAvancar">Avançar etapa →</button>
+              </div>
+            </div>
+            <div class="onboard-visual">
+              <div class="onboard-row"><span class="onboard-check done">✓</span> Endereço do estabelecimento</div>
+              <div class="onboard-row muted" id="rowHorarios"><span class="onboard-check">·</span> Horários de funcionamento</div>
+              <div class="onboard-row muted" id="rowServicos"><span class="onboard-check">·</span> Serviços obrigatórios</div>
+              <div class="onboard-row muted" id="rowPronto"><span class="onboard-check">·</span> Estabelecimento pronto para agendar</div>
+            </div>
+          </div>
+
+          <!-- Toggle equipe -->
+          <div class="toggle-block">
+            <div class="txt">
+              <h4>Controle flexível de equipe</h4>
+              <p>Deseja adicionar membros à equipe? Ative para liberar cadastro de profissionais, ticket médio e ranking de faturamento individual.</p>
+            </div>
+            <div class="switch" id="teamSwitch"><div class="knob"></div></div>
+
+            <div class="team-reveal" id="teamReveal">
+              <div class="team-grid">
+                <div class="team-member"><div class="avatar">JP</div><div><div class="name">João Pedro</div><div class="rev">R$ 4.280 no mês</div></div><div class="rank">🥇</div></div>
+                <div class="team-member"><div class="avatar">CM</div><div><div class="name">Camila M.</div><div class="rev">R$ 3.910 no mês</div></div><div class="rank">🥈</div></div>
+                <div class="team-member"><div class="avatar">RS</div><div><div class="name">Rafael S.</div><div class="rev">R$ 3.402 no mês</div></div><div class="rank">🥉</div></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- IBGE demo -->
+          <div class="geo-block">
+            <div class="txt">
+              <h4>Preenchimento preditivo com o IBGE</h4>
+              <p>Selecione o Estado e veja Cidade e Bairro se ajustarem automaticamente — sem digitar endereço errado.</p>
+            </div>
+            <div class="geo-row">
+              <select class="geo-select" id="geoEstado">
+                <option value="">Estado</option>
+                <option value="BA">Bahia</option>
+                <option value="SP">São Paulo</option>
+                <option value="RJ">Rio de Janeiro</option>
+              </select>
+              <select class="geo-select" id="geoCidade" disabled><option value="">Cidade</option></select>
+              <select class="geo-select" id="geoBairro" disabled><option value="">Bairro</option></select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAINEL CLIENTE -->
+      <div class="feature-panel" id="panel-cliente">
+        <div class="feature-grid">
+          <div class="feature-card">
+            <div class="ico">🏪</div>
+            <h4>Vitrine exclusiva</h4>
+            <p>Página personalizada com fotos, endereço completo e todos os serviços do seu estabelecimento.</p>
+          </div>
+          <div class="feature-card">
+            <div class="ico">🔎</div>
+            <h4>Filtros geográficos em cascata</h4>
+            <p>Clientes encontram você buscando por Estado, Cidade e Bairro de forma simples e inteligente.</p>
+          </div>
+          <div class="feature-card">
+            <div class="ico">⏰</div>
+            <h4>Lembrete de 2h antes</h4>
+            <p>E-mail automático responsivo com botão de cancelamento rápido, liberando a vaga na hora.</p>
+          </div>
+          <div class="feature-card">
+            <div class="ico">⭐</div>
+            <h4>Portal de avaliação</h4>
+            <p>Clientes avaliam de 1 a 5 estrelas após o atendimento, alimentando o ranking dos profissionais.</p>
+          </div>
+          <div class="feature-card">
+            <div class="ico">📅</div>
+            <h4>Agendamento 24/7</h4>
+            <p>Sem depender de WhatsApp: seus clientes marcam horário a qualquer momento, de qualquer lugar.</p>
+          </div>
+          <div class="feature-card">
+            <div class="ico">✉️</div>
+            <h4>Comunicação via Resend</h4>
+            <p>E-mails transacionais entregues com confiabilidade, do agendamento à confirmação.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COMPARATIVO -->
+  <section class="compare" id="comparativo">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Antes e depois</span>
+        <h2>O tempo que você recupera com o Agendai</h2>
+        <p>A diferença entre administrar no improviso e administrar com controle.</p>
+      </div>
+      <div class="compare-grid">
+        <div class="compare-card before">
+          <h3>Sem Agendai</h3>
+          <ul class="compare-list">
+            <li><span class="mark">✕</span> WhatsApp congestionado de mensagens e áudios</li>
+            <li><span class="mark">✕</span> No-shows sem aviso, horário perdido</li>
+            <li><span class="mark">✕</span> Caixa controlado em caderno ou planilha solta</li>
+            <li><span class="mark">✕</span> Nenhuma visão clara do desempenho da equipe</li>
+            <li><span class="mark">✕</span> Clientes esperando resposta para agendar</li>
+          </ul>
+        </div>
+        <div class="compare-card after">
+          <h3>Com Agendai</h3>
+          <ul class="compare-list">
+            <li><span class="mark">✓</span> Agendamentos abertos 24 horas por dia</li>
+            <li><span class="mark">✓</span> Lembrete automático 2h antes reduz faltas</li>
+            <li><span class="mark">✓</span> Caixa e faturamento sob controle em tempo real</li>
+            <li><span class="mark">✓</span> Ranking de equipe e ticket médio automáticos</li>
+            <li><span class="mark">✓</span> Cliente agenda sozinho, sem fricção</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="planos">
+    <div class="container">
+      <div class="section-head">
+        <span class="eyebrow">Planos</span>
+        <h2>Um plano completo, no período que fizer sentido pra você</h2>
+        <p>Todos os benefícios inclusos em qualquer período. Quanto mais tempo, maior o desconto.</p>
+      </div>
+
+      <div class="plans-grid">
+        <div class="plan-card">
+          <div class="plan-name">Mensal</div>
+          <div class="plan-price">R$34,90<span>/mês</span></div>
+          <p class="plan-desc">Flexibilidade total, mês a mês.</p>
+          <ul class="plan-features">
+            <li><span class="mark">✓</span> Agendamento ilimitado</li>
+            <li><span class="mark">✓</span> Relatórios com dashboard</li>
+            <li><span class="mark">✓</span> Controle financeiro</li>
+            <li><span class="mark">✓</span> Previsões de agendamento</li>
+            <li><span class="mark">✓</span> Suporte humanizado</li>
+          </ul>
+          <a href="#" class="btn plan-cta">Começar teste grátis</a>
+        </div>
+
+        <div class="plan-card featured">
+          <span class="plan-badge">Economize 15%</span>
+          <div class="plan-name">Semestral</div>
+          <div class="plan-price">R$174,88<span>/semestre</span></div>
+          <p class="plan-desc">Equivale a R$29,15/mês — 15% mais barato que o mensal.</p>
+          <ul class="plan-features">
+            <li><span class="mark">✓</span> Agendamento ilimitado</li>
+            <li><span class="mark">✓</span> Relatórios com dashboard</li>
+            <li><span class="mark">✓</span> Controle financeiro</li>
+            <li><span class="mark">✓</span> Previsões de agendamento</li>
+            <li><span class="mark">✓</span> Suporte humanizado</li>
+          </ul>
+          <a href="#" class="btn btn-primary plan-cta">Começar teste grátis</a>
+        </div>
+
+        <div class="plan-card">
+          <span class="plan-badge" style="background:var(--primary);">Economize 25%</span>
+          <div class="plan-name">Anual</div>
+          <div class="plan-price">R$306,00<span>/ano</span></div>
+          <p class="plan-desc">Equivale a R$25,50/mês — 25% mais barato que o mensal.</p>
+          <ul class="plan-features">
+            <li><span class="mark">✓</span> Agendamento ilimitado</li>
+            <li><span class="mark">✓</span> Relatórios com dashboard</li>
+            <li><span class="mark">✓</span> Controle financeiro</li>
+            <li><span class="mark">✓</span> Previsões de agendamento</li>
+            <li><span class="mark">✓</span> Suporte humanizado</li>
+          </ul>
+          <a href="#" class="btn plan-cta">Começar teste grátis</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section>
+    <div class="container">
+      <div class="final-cta">
+        <h2>Pronto para colocar sua agenda no piloto automático?</h2>
+        <p>Comece o teste gratuito de 30 dias agora — sem fidelidade.</p>
+        <div class="hero-ctas">
+          <a href="#planos" class="btn btn-primary">Começar Teste Gratuito de 30 dias →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo"><span class="dot"></span>Agendai</a>
+        <p>Sistema de agendamento e gestão completo para barbearias, salões de beleza, clínicas de estética e profissionais independentes.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Produto</h5>
+        <ul>
+          <li><a href="#funcionalidades">Funcionalidades</a></li>
+          <li><a href="#planos">Planos</a></li>
+          <li><a href="#comparativo">Resultados</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Legal</h5>
+        <ul>
+          <li><a href="#">Termos de Uso</a></li>
+          <li><a href="#">Política de Privacidade</a></li>
+          <li><a href="#">Central de Ajuda</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Contato</h5>
+        <ul>
+          <li><a href="#">suporte@agendai.com.br</a></li>
+          <li><a href="#">Central de Ajuda</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Agendai. Todos os direitos reservados.</span>
+      <div class="trust-badges">
+        <span class="stripe-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 2L3 6v6c0 5.2 3.8 9.7 9 11 5.2-1.3 9-5.8 9-11V6l-9-4z" fill="#635BFF"/>
+            <path d="M9.5 12.2l1.8 1.8 3.7-3.9" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="stripe-copy">Pagamento processado com segurança por</span>
+          <span class="stripe-wordmark">Stripe</span>
+        </span>
+        <span>✓ Sem fidelidade</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<div class="cookie-banner" id="cookieBanner">
+  <h5>Usamos cookies 🍪</h5>
+  <p>Utilizamos cookies para melhorar sua experiência e personalizar conteúdo no Agendai. Ao continuar, você concorda com nossa Política de Privacidade.</p>
+  <div class="cookie-actions">
+    <button class="btn btn-ghost" id="cookieDecline">Recusar</button>
+    <button class="btn btn-primary" id="cookieAccept">Aceitar</button>
+  </div>
+</div>
+
+<script>
+  // Nav shadow on scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 10);
+  });
+
+  // Feature tabs
+  const tabs = document.querySelectorAll('.feature-tab');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('.feature-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+    });
+  });
+
+  // Onboarding progress demo
+  const steps = ['endereco','horarios','servicos','pronto'];
+  let currentStep = 0;
+  const progressFill = document.getElementById('progressFill');
+  const rows = { horarios: document.getElementById('rowHorarios'), servicos: document.getElementById('rowServicos'), pronto: document.getElementById('rowPronto') };
+  const labels = { horarios: document.getElementById('stepHorarios'), servicos: document.getElementById('stepServicos'), pronto: document.getElementById('stepPronto') };
+
+  function renderProgress(){
+    const pct = (currentStep / (steps.length - 1)) * 100;
+    progressFill.style.width = Math.max(pct, 5) + '%';
+    Object.keys(rows).forEach((key, i) => {
+      const stepIndex = i + 1;
+      const done = currentStep >= stepIndex;
+      rows[key].classList.toggle('muted', !done);
+      rows[key].querySelector('.onboard-check').classList.toggle('done', done);
+      rows[key].querySelector('.onboard-check').textContent = done ? '✓' : '·';
+      labels[key].classList.toggle('done', done);
+    });
+  }
+  document.getElementById('btnAvancar').addEventListener('click', () => {
+    if (currentStep < steps.length - 1) currentStep++;
+    renderProgress();
+  });
+  document.getElementById('btnReset').addEventListener('click', () => {
+    currentStep = 0;
+    renderProgress();
+  });
+  renderProgress();
+
+  // Team toggle switch
+  const teamSwitch = document.getElementById('teamSwitch');
+  const teamReveal = document.getElementById('teamReveal');
+  teamSwitch.addEventListener('click', () => {
+    teamSwitch.classList.toggle('on');
+    teamReveal.classList.toggle('open');
+  });
+
+  // IBGE geo cascade demo
+  const geoData = {
+    BA: { cidades: ['Salvador','Feira de Santana'], bairros: { 'Salvador':['Barra','Rio Vermelho','Pituba'], 'Feira de Santana':['Centro','Tomba'] } },
+    SP: { cidades: ['São Paulo','Campinas'], bairros: { 'São Paulo':['Pinheiros','Moema','Vila Madalena'], 'Campinas':['Cambuí','Taquaral'] } },
+    RJ: { cidades: ['Rio de Janeiro','Niterói'], bairros: { 'Rio de Janeiro':['Copacabana','Ipanema','Tijuca'], 'Niterói':['Icaraí','Centro'] } }
+  };
+  const geoEstado = document.getElementById('geoEstado');
+  const geoCidade = document.getElementById('geoCidade');
+  const geoBairro = document.getElementById('geoBairro');
+  geoEstado.addEventListener('change', () => {
+    const uf = geoEstado.value;
+    geoCidade.innerHTML = '<option value="">Cidade</option>';
+    geoBairro.innerHTML = '<option value="">Bairro</option>';
+    geoBairro.disabled = true;
+    if (uf && geoData[uf]) {
+      geoData[uf].cidades.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c; opt.textContent = c;
+        geoCidade.appendChild(opt);
+      });
+      geoCidade.disabled = false;
+    } else {
+      geoCidade.disabled = true;
+    }
+  });
+  geoCidade.addEventListener('change', () => {
+    const uf = geoEstado.value; const cidade = geoCidade.value;
+    geoBairro.innerHTML = '<option value="">Bairro</option>';
+    if (uf && cidade && geoData[uf].bairros[cidade]) {
+      geoData[uf].bairros[cidade].forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b; opt.textContent = b;
+        geoBairro.appendChild(opt);
+      });
+      geoBairro.disabled = false;
+    } else {
+      geoBairro.disabled = true;
+    }
+  });
+
+  // Cookie consent
+  const cookieBanner = document.getElementById('cookieBanner');
+  setTimeout(() => {
+    if (!localStorageSafeGet('agendai_cookie_consent')) {
+      cookieBanner.classList.add('show');
+    }
+  }, 1200);
+  function localStorageSafeGet(){ return null; } // sandboxed demo, always show once per session
+  document.getElementById('cookieAccept').addEventListener('click', () => cookieBanner.classList.remove('show'));
+  document.getElementById('cookieDecline').addEventListener('click', () => cookieBanner.classList.remove('show'));
+</script>
+
+</body>
+</html>
