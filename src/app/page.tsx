@@ -219,7 +219,17 @@ export default function Home() {
             <div className="phone-stage">
               <div className="float-card c1"><span className="ico">💈</span><div>Novo agendamento<small>Corte + Barba · 14:30</small></div></div>
               <div className="phone-frame">
-                <div className="phone-screen" style={{ background: 'none', display: 'block', padding: 0 }}>
+                <div className="phone-screen" style={{ background: '#fff', display: 'block', padding: 0, position: 'relative', overflow: 'hidden' }}>
+                  {/* Glare & Bezel Shadow Overlay */}
+                  <div style={{
+                    position: 'absolute',
+                    top: 0, left: 0, right: 0, bottom: 0,
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 45%)',
+                    boxShadow: 'inset 0 10px 20px rgba(0,0,0,0.12), inset 0 2px 5px rgba(0,0,0,0.22)',
+                    pointerEvents: 'none',
+                    zIndex: 5,
+                    borderRadius: '34px'
+                  }} />
                   <img 
                     src="/imagem_agendai_modelo.png" 
                     alt="Plataforma Agendai" 
@@ -230,7 +240,9 @@ export default function Home() {
                       objectPosition: 'top', 
                       borderRadius: '34px',
                       imageRendering: '-webkit-optimize-contrast',
-                      transform: 'translateZ(0)'
+                      transform: 'translateZ(0)',
+                      backfaceVisibility: 'hidden',
+                      willChange: 'transform'
                     }} 
                   />
                 </div>
