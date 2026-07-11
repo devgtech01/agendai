@@ -55,7 +55,7 @@ export default function Home() {
          ========================================================================= */}
       <header className="sticky top-0 z-50 w-full navbar-premium" style={{ background: 'rgba(26,26,46,0.92)', borderBottom: '1px solid rgba(232,213,183,0.1)' }}>
         <nav className="mx-auto flex max-w-7xl w-full items-center justify-between px-6 py-5">
-          <Link href="/" className="font-display text-2xl text-linen" style={{ textDecoration: 'none', fontWeight: 'bold' }}>
+          <Link href="/" className="font-display text-2xl text-linen" style={{ textDecoration: 'none' }}>
             Agend<span className="text-accent">ai</span>
           </Link>
           
@@ -73,7 +73,7 @@ export default function Home() {
             </li>
             <li>
               <Link
-                href="/profissional/planos"
+                href="#planos"
                 className="text-sm font-medium nav-link-animated"
                 style={{ color: "rgba(232,213,183,0.55)", textDecoration: 'none', transition: 'color var(--transition-normal)' }}
                 onMouseEnter={(e) => (e.currentTarget.style.color = "#E8D5B7")}
@@ -139,7 +139,7 @@ export default function Home() {
               </Link>
 
               <Link
-                href="/profissional/planos"
+                href="#planos"
                 onClick={() => setIsMobileMenuOpen(false)}
                 style={{
                   display: 'flex',
@@ -219,7 +219,15 @@ export default function Home() {
                   <img 
                     src="/imagem_agendai_modelo.png" 
                     alt="Plataforma Agendai" 
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '34px' }} 
+                    style={{ 
+                      width: '100%', 
+                      height: '100%', 
+                      objectFit: 'cover', 
+                      objectPosition: 'top', 
+                      borderRadius: '34px',
+                      imageRendering: '-webkit-optimize-contrast',
+                      transform: 'translateZ(0)'
+                    }} 
                   />
                 </div>
               </div>
@@ -552,7 +560,9 @@ export default function Home() {
         <div className="landing-container">
           <div className="footer-grid">
             <div className="footer-brand">
-              <Link href="/" className="logo" style={{ textDecoration: 'none' }}><span className="dot"></span>Agendai</Link>
+              <Link href="/" className="font-display text-2xl" style={{ textDecoration: 'none', color: 'var(--primary)' }}>
+                Agend<span className="text-accent">ai</span>
+              </Link>
               <p>Sistema de agendamento e gestão completo para barbearias, salões de beleza, clínicas de estética e profissionais independentes.</p>
             </div>
             <div className="footer-col">
@@ -574,7 +584,7 @@ export default function Home() {
             <div className="footer-col">
               <h5>Contato</h5>
               <ul style={{ padding: 0 }}>
-                <li><a href="/suporte">Suporte</a></li>
+                <li><a href="https://sisagendai.online/suporte" target="_blank" rel="noopener noreferrer">https://sisagendai.online/suporte</a></li>
                 <li><Link href="/suporte">Central de Ajuda</Link></li>
               </ul>
             </div>
@@ -587,10 +597,10 @@ export default function Home() {
                   <path d="M12 2L3 6v6c0 5.2 3.8 9.7 9 11 5.2-1.3 9-5.8 9-11V6l-9-4z" fill="#635BFF"/>
                   <path d="M9.5 12.2l1.8 1.8 3.7-3.9" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
-                <span className="stripe-copy">Pagamento 100% seguro via</span>
+                <span className="stripe-copy">Pagamento processado com segurança por</span>
                 <span className="stripe-wordmark">Stripe</span>
               </span>
-              <span className="badge-sec">✓ Sem fidelidade</span>
+              <span>✓ Sem fidelidade</span>
             </div>
           </div>
         </div>

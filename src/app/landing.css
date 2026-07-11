@@ -803,7 +803,7 @@ footer.landing-footer {
   align-items: center;
   flex-wrap: wrap;
 }
-.trust-badges span.badge-sec {
+.trust-badges span {
   font-size: 12px;
   border: 1px solid var(--border);
   padding: 6px 12px;
@@ -830,6 +830,10 @@ footer.landing-footer {
 }
 .stripe-badge .stripe-copy {
   color: var(--text-muted);
+  border: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
 }
 
 /* ============ RESPONSIVE ============ */
