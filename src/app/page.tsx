@@ -205,7 +205,11 @@ export default function Home() {
               <h1 className="landing-title">Seu salão ou barbearia no <em>piloto automático.</em></h1>
               <p className="lead">O Agendai é o sistema de agendamento e gestão completo que reduz faltas, organiza sua equipe e maximiza o faturamento do seu estabelecimento. Teste grátis hoje.</p>
               <div className="hero-ctas">
-                <Link href="/profissional/register" className="btn btn-primary">
+                <Link 
+                  href="/profissional/register" 
+                  className="btn btn-primary"
+                  onClick={() => sessionStorage.setItem('selectedPlan', 'mensal')}
+                >
                   Começar Teste Gratuito de 30 dias →
                 </Link>
                 <a href="#funcionalidades" className="btn btn-ghost">Ver como funciona</a>
@@ -495,7 +499,12 @@ export default function Home() {
                   <li><span className="mark">✓</span> Previsões de agendamento</li>
                   <li><span className="mark">✓</span> Suporte humanizado</li>
                 </ul>
-                <Link href="/profissional/register" className="btn plan-cta" style={{ textDecoration: 'none' }}>
+                <Link 
+                  href="/profissional/register" 
+                  className="btn plan-cta" 
+                  style={{ textDecoration: 'none' }}
+                  onClick={() => sessionStorage.setItem('selectedPlan', 'mensal')}
+                >
                   Começar teste grátis
                 </Link>
               </div>
@@ -512,7 +521,12 @@ export default function Home() {
                   <li><span className="mark">✓</span> Previsões de agendamento</li>
                   <li><span className="mark">✓</span> Suporte humanizado</li>
                 </ul>
-                <Link href="/profissional/register" className="btn btn-primary plan-cta" style={{ textDecoration: 'none' }}>
+                <Link 
+                  href="/profissional/register" 
+                  className="btn btn-primary plan-cta" 
+                  style={{ textDecoration: 'none' }}
+                  onClick={() => sessionStorage.setItem('selectedPlan', 'semestral')}
+                >
                   Começar teste grátis
                 </Link>
               </div>
@@ -529,7 +543,12 @@ export default function Home() {
                   <li><span className="mark">✓</span> Previsões de agendamento</li>
                   <li><span className="mark">✓</span> Suporte humanizado</li>
                 </ul>
-                <Link href="/profissional/register" className="btn plan-cta" style={{ textDecoration: 'none' }}>
+                <Link 
+                  href="/profissional/register" 
+                  className="btn plan-cta" 
+                  style={{ textDecoration: 'none' }}
+                  onClick={() => sessionStorage.setItem('selectedPlan', 'anual')}
+                >
                   Começar teste grátis
                 </Link>
               </div>
@@ -544,7 +563,12 @@ export default function Home() {
               <h2 className="landing-h2" style={{ color: '#fff' }}>Pronto para colocar sua agenda no piloto automático?</h2>
               <p>Comece o teste gratuito de 30 dias agora — sem fidelidade.</p>
               <div className="hero-ctas" style={{ justifyContent: 'center' }}>
-                <Link href="/profissional/register" className="btn btn-primary" style={{ textDecoration: 'none' }}>
+                <Link 
+                  href="/profissional/register" 
+                  className="btn btn-primary" 
+                  style={{ textDecoration: 'none' }}
+                  onClick={() => sessionStorage.setItem('selectedPlan', 'mensal')}
+                >
                   Começar Teste Gratuito de 30 dias →
                 </Link>
               </div>
