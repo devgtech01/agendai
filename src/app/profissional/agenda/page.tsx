@@ -273,11 +273,6 @@ export default function ProfissionalAgendaPage() {
   }
 
   // --- GERAÇÃO DA LINHA DO TEMPO DIÁRIA ---
-  const openingTime = establishment.openingTime ? establishment.openingTime.slice(0, 5) : '08:00';
-  const closingTime = establishment.closingTime ? establishment.closingTime.slice(0, 5) : '19:00';
-  const lunchStart = establishment.lunchStart ? establishment.lunchStart.slice(0, 5) : '12:00';
-  const lunchEnd = establishment.lunchEnd ? establishment.lunchEnd.slice(0, 5) : '13:00';
-
   const timeToMinutes = (t: string) => {
     const [h, m] = t.split(':').map(Number);
     return h * 60 + m;
@@ -289,8 +284,31 @@ export default function ProfissionalAgendaPage() {
     return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
   };
 
+  // Verificar se a data selecionada é domingo
+  const dateObj = new Date(selectedDate + 'T00:00:00');
+  const isSunday = dateObj.getDay() === 0;
+
+  const amsList = (establishment.amenities || '').split(',');
+  const isSundayActive = amsList.includes('sunday_active');
+
+  const openingTime = establishment.openingTime ? establishment.openingTime.slice(0, 5) : '08:00';
+  let closingTime = establishment.closingTime ? establishment.closingTime.slice(0, 5) : '19:00';
+
+  if (isSunday && isSundayActive) {
+    const sundayClosingField = amsList.find(a => a.startsWith('sunday_closing_'));
+    if (sundayClosingField) {
+      closingTime = sundayClosingField.replace('sunday_closing_', '');
+    } else {
+      closingTime = '12:00'; // Default se não configurado
+    }
+  }
+
+  const lunchStart = establishment.lunchStart ? establishment.lunchStart.slice(0, 5) : '12:00';
+  const lunchEnd = establishment.lunchEnd ? establishment.lunchEnd.slice(0, 5) : '13:00';
+
   const startMin = timeToMinutes(openingTime);
-  const endMin = timeToMinutes(closingTime);
+  // Se for domingo e não estiver ativo, a linha do tempo do dia terá zero slots (endMin = startMin)
+  const endMin = (isSunday && !isSundayActive) ? startMin : timeToMinutes(closingTime);
   const lunchStartMin = timeToMinutes(lunchStart);
   const lunchEndMin = timeToMinutes(lunchEnd);
   const hasLunchBreak = lunchStartMin !== lunchEndMin;
@@ -547,6 +565,19 @@ export default function ProfissionalAgendaPage() {
                   <div style={{ fontSize: '32px', marginBottom: '12px' }}>🌴</div>
                   <p style={{ fontWeight: 500, fontSize: '16px', color: 'var(--color-text)' }}>Fechado por recesso</p>
                   <p style={{ fontSize: '14px', marginTop: '4px' }}>Nenhum atendimento agendado ou disponível para hoje.</p>
+                </div>
+              ) : isSunday && !isSundayActive ? (
+                <div style={{ 
+                  padding: 'var(--space-12)', 
+                  textAlign: 'center', 
+                  background: 'var(--color-surface)', 
+                  borderRadius: 'var(--radius-lg)', 
+                  border: '0.5px solid var(--color-border)',
+                  color: 'var(--color-muted)' 
+                }}>
+                  <div style={{ fontSize: '32px', marginBottom: '12px' }}>📅</div>
+                  <p style={{ fontWeight: 500, fontSize: '16px', color: 'var(--color-text)' }}>Fechado aos Domingos</p>
+                  <p style={{ fontSize: '14px', marginTop: '4px' }}>Seu estabelecimento está configurado como fechado aos domingos nas configurações.</p>
                 </div>
               ) : (
                 timelineRows.map((row, idx) => {
