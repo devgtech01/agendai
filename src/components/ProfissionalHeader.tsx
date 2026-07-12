@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
@@ -22,8 +22,43 @@ interface ProfissionalHeaderProps {
 
 export default function ProfissionalHeader({ establishmentName }: ProfissionalHeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [establishmentId, setEstablishmentId] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
+
+  useEffect(() => {
+    async function loadEstId() {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data, error } = await supabase
+            .from('establishments')
+            .select('id')
+            .eq('owner_id', user.id)
+            .single();
+          if (!error && data) {
+            setEstablishmentId(data.id);
+          }
+        }
+      } catch (err) {
+        console.error('Erro ao obter ID do estabelecimento:', err);
+      }
+    }
+    loadEstId();
+  }, []);
+
+  const handleCopyLink = async () => {
+    if (!establishmentId) return;
+    const url = `${window.location.origin}/catalog/${establishmentId}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Erro ao copiar link:', err);
+    }
+  };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -87,6 +122,28 @@ export default function ProfissionalHeader({ establishmentName }: ProfissionalHe
 
           {/* Lado Direito Desktop & Botão Hamburguer Mobile */}
           <div className="flex items-center gap-3">
+            {establishmentId && (
+              <button
+                onClick={handleCopyLink}
+                className="hidden sm:inline-flex items-center gap-1.5"
+                style={{
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  color: 'var(--color-accent)',
+                  background: 'rgba(193, 90, 46, 0.08)',
+                  border: '0.5px solid rgba(193, 90, 46, 0.15)',
+                  padding: '6px 12px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  marginRight: '8px',
+                  transition: 'all 0.2s'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(193, 90, 46, 0.15)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(193, 90, 46, 0.08)'}
+              >
+                <span>🔗 {copied ? 'Copiado!' : 'Copiar Link de Agendamento'}</span>
+              </button>
+            )}
             {establishmentName && (
               <div className="flex items-center gap-2">
                 <span 
@@ -159,6 +216,31 @@ export default function ProfissionalHeader({ establishmentName }: ProfissionalHe
               <div style={{ fontSize: '12px', color: 'var(--color-muted)', marginBottom: '12px', paddingLeft: '4px' }}>
                 📍 Estabelecimento: <strong>{establishmentName}</strong>
               </div>
+            )}
+
+            {establishmentId && (
+              <button
+                onClick={handleCopyLink}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  color: 'var(--color-accent)',
+                  background: 'rgba(193, 90, 46, 0.08)',
+                  border: '1px solid rgba(193, 90, 46, 0.15)',
+                  padding: '10px 16px',
+                  borderRadius: '8px',
+                  marginBottom: '12px',
+                  cursor: 'pointer',
+                  width: '100%',
+                  textAlign: 'center'
+                }}
+              >
+                <span>🔗 {copied ? 'Link Copiado!' : 'Copiar Link de Agendamento'}</span>
+              </button>
             )}
 
             <div className="flex flex-col gap-1">

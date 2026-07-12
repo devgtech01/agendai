@@ -1,5 +1,6 @@
 -- 0. ADICIONAR COLUNA DE CATEGORIA EM ESTABELECIMENTOS
 ALTER TABLE establishments ADD COLUMN IF NOT EXISTS category TEXT;
+ALTER TABLE establishments ADD COLUMN IF NOT EXISTS amenities TEXT;
 
 -- 1. CORREÇÃO DA TABELA DE SERVIÇOS (services)
 DROP POLICY IF EXISTS "Dono pode gerenciar servico (insert)" ON services;

@@ -27,6 +27,10 @@ export default function ProfissionalSettingsPage() {
   const [neighborhood, setNeighborhood] = useState('');
   const [category, setCategory] = useState('Barbearia');
   const [customCategory, setCustomCategory] = useState('');
+  const [wifi, setWifi] = useState(false);
+  const [ar, setAr] = useState(false);
+  const [bebida, setBebida] = useState(false);
+  const [jogos, setJogos] = useState(false);
   const [citySuggestions, setCitySuggestions] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
@@ -226,6 +230,12 @@ export default function ProfissionalSettingsPage() {
         const isPredefined = ['Barbearia', 'Salão de Beleza', 'Clínica de Estética'].includes(estCategory);
         setCategory(isPredefined ? estCategory : 'Outros');
         setCustomCategory(isPredefined ? '' : estCategory);
+
+        const ams = (est.amenities || '').split(',');
+        setWifi(ams.includes('wifi'));
+        setAr(ams.includes('ar'));
+        setBebida(ams.includes('bebida'));
+        setJogos(ams.includes('jogos'));
       } catch (err) {
         console.error('Erro ao carregar configurações do estabelecimento:', err);
       } finally {
@@ -305,6 +315,13 @@ export default function ProfissionalSettingsPage() {
     setSuccessMsg('');
     setErrorMsg('');
 
+    const amsList: string[] = [];
+    if (wifi) amsList.push('wifi');
+    if (ar) amsList.push('ar');
+    if (bebida) amsList.push('bebida');
+    if (jogos) amsList.push('jogos');
+    const amenitiesString = amsList.join(',');
+
     const updated = await updateEstablishment(establishment.id, {
       name,
       description,
@@ -319,6 +336,7 @@ export default function ProfissionalSettingsPage() {
       city,
       neighborhood,
       category: category === 'Outros' ? customCategory : category,
+      amenities: amenitiesString,
     });
 
     if (updated) {
@@ -608,6 +626,48 @@ export default function ProfissionalSettingsPage() {
                   style={{ fontFamily: 'inherit', resize: 'vertical' }}
                   placeholder="Fale um pouco sobre o seu estabelecimento e especialidades..."
                 />
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <label className="input-label">Comodidades do Estabelecimento</label>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '12px', padding: '12px', background: 'var(--color-background)', borderRadius: 'var(--radius-md)', border: '0.5px solid var(--color-border)' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', cursor: 'pointer', userSelect: 'none', color: 'var(--color-text)' }}>
+                    <input 
+                      type="checkbox" 
+                      checked={wifi} 
+                      onChange={(e) => setWifi(e.target.checked)} 
+                      style={{ cursor: 'pointer', width: '16px', height: '16px', accentColor: 'var(--color-accent)' }} 
+                    />
+                    🛜 Wi-Fi grátis
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', cursor: 'pointer', userSelect: 'none', color: 'var(--color-text)' }}>
+                    <input 
+                      type="checkbox" 
+                      checked={ar} 
+                      onChange={(e) => setAr(e.target.checked)} 
+                      style={{ cursor: 'pointer', width: '16px', height: '16px', accentColor: 'var(--color-accent)' }} 
+                    />
+                    ❄️ Ar Condicionado
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', cursor: 'pointer', userSelect: 'none', color: 'var(--color-text)' }}>
+                    <input 
+                      type="checkbox" 
+                      checked={bebida} 
+                      onChange={(e) => setBebida(e.target.checked)} 
+                      style={{ cursor: 'pointer', width: '16px', height: '16px', accentColor: 'var(--color-accent)' }} 
+                    />
+                    🥤 Bebida grátis
+                  </label>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', cursor: 'pointer', userSelect: 'none', color: 'var(--color-text)' }}>
+                    <input 
+                      type="checkbox" 
+                      checked={jogos} 
+                      onChange={(e) => setJogos(e.target.checked)} 
+                      style={{ cursor: 'pointer', width: '16px', height: '16px', accentColor: 'var(--color-accent)' }} 
+                    />
+                    🎮 Área de Jogos
+                  </label>
+                </div>
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>

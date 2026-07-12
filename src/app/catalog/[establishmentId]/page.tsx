@@ -89,6 +89,34 @@ export default async function EstablishmentPage({ params }: PageProps) {
             <div>📍 <strong>Endereço:</strong> {establishment.address}</div>
             <div>📞 <strong>Contato:</strong> {establishment.phone}</div>
           </div>
+
+          {establishment.amenities && establishment.amenities.split(',').filter(Boolean).length > 0 && (
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginTop: '4px' }}>
+              {establishment.amenities.split(',').filter(Boolean).map(am => {
+                let label = '';
+                if (am === 'wifi') label = '🛜 Wi-Fi grátis';
+                if (am === 'ar') label = '❄️ Ar Condicionado';
+                if (am === 'bebida') label = '🥤 Bebida grátis';
+                if (am === 'jogos') label = '🎮 Área de Jogos';
+                if (!label) return null;
+                return (
+                  <span 
+                    key={am} 
+                    style={{ 
+                      fontSize: '11px', 
+                      color: 'var(--color-primary)', 
+                      background: 'var(--color-linen)', 
+                      padding: '4px 10px', 
+                      borderRadius: '12px',
+                      fontWeight: 600
+                    }}
+                  >
+                    {label}
+                  </span>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 

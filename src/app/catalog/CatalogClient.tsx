@@ -14,6 +14,7 @@ interface Establishment {
   city?: string;
   neighborhood?: string;
   category?: string;
+  amenities?: string;
 }
 
 export default function CatalogClient() {
@@ -254,6 +255,34 @@ export default function CatalogClient() {
                 <p className="text-muted" style={{ fontSize: '13px', lineHeight: 1.5, flex: 1 }}>
                   {est.description}
                 </p>
+
+                {est.amenities && est.amenities.split(',').filter(Boolean).length > 0 && (
+                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '2px', marginBottom: '6px' }}>
+                    {est.amenities.split(',').filter(Boolean).map(am => {
+                      let label = '';
+                      if (am === 'wifi') label = '🛜 Wi-Fi';
+                      if (am === 'ar') label = '❄️ Ar Cond.';
+                      if (am === 'bebida') label = '🥤 Bebida';
+                      if (am === 'jogos') label = '🎮 Jogos';
+                      if (!label) return null;
+                      return (
+                        <span 
+                          key={am} 
+                          style={{ 
+                            fontSize: '10px', 
+                            color: 'var(--color-muted)', 
+                            background: '#F1F1F4', 
+                            padding: '2px 6px', 
+                            borderRadius: '4px',
+                            fontWeight: 500
+                          }}
+                        >
+                          {label}
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
                 
                 <div style={{ borderTop: '0.5px solid var(--color-border)', paddingTop: '10px', marginTop: '4px', display: 'flex', flexDirection: 'column', gap: '4px' }}>
                   <div style={{ fontSize: '12px', color: 'var(--color-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
