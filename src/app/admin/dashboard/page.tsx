@@ -53,7 +53,7 @@ export default function AdminDashboardPage() {
   const loadData = async () => {
     try {
       setLoading(true);
-      const token = sessionStorage.getItem('adminToken') || 'AgendaiAdmin2026!';
+      const token = sessionStorage.getItem('adminToken') || '';
       const headers = { 'Authorization': `Bearer ${token}` };
       
       const [tRes, eRes, bRes, nRes] = await Promise.all([
@@ -93,7 +93,7 @@ export default function AdminDashboardPage() {
 
     try {
       setSubmittingNoCard(true);
-      const token = sessionStorage.getItem('adminToken') || 'AgendaiAdmin2026!';
+      const token = sessionStorage.getItem('adminToken') || '';
       const res = await fetch('/api/admin/no-card', {
         method: 'POST',
         headers: {
@@ -127,7 +127,7 @@ export default function AdminDashboardPage() {
     if (!confirm('Deseja realmente remover esta pré-autorização?')) return;
 
     try {
-      const token = sessionStorage.getItem('adminToken') || 'AgendaiAdmin2026!';
+      const token = sessionStorage.getItem('adminToken') || '';
       const res = await fetch(`/api/admin/no-card?id=${id}`, {
         method: 'DELETE',
         headers: {
@@ -151,7 +151,7 @@ export default function AdminDashboardPage() {
 
     try {
       setUpdatingTicket(true);
-      const token = sessionStorage.getItem('adminToken') || 'AgendaiAdmin2026!';
+      const token = sessionStorage.getItem('adminToken') || '';
       const res = await fetch('/api/support', {
         method: 'POST',
         headers: { 
@@ -193,7 +193,7 @@ export default function AdminDashboardPage() {
 
     try {
       setIsDeleting(true);
-      const token = sessionStorage.getItem('adminToken') || 'AgendaiAdmin2026!';
+      const token = sessionStorage.getItem('adminToken') || '';
       const res = await fetch(`/api/establishments?id=${deletingEstablishment.id}`, {
         method: 'DELETE',
         headers: {

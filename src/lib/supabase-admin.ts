@@ -13,7 +13,7 @@ export const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
 
 export function verifyAdminRequest(req: Request): boolean {
   const authHeader = req.headers.get('authorization');
-  const expectedPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'AgendaiAdmin2026!';
+  const expectedPassword = process.env.ADMIN_PASSWORD || 'AgendaiAdmin2026!';
   
   if (!authHeader) return false;
   const token = authHeader.replace('Bearer ', '').trim();
@@ -26,7 +26,7 @@ export async function getAuthenticatedUser(req: Request): Promise<{ isAdmin: boo
   const token = authHeader.replace('Bearer ', '').trim();
 
   // 1. Verificar se é a senha de Super-Admin
-  const expectedPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'AgendaiAdmin2026!';
+  const expectedPassword = process.env.ADMIN_PASSWORD || 'AgendaiAdmin2026!';
   if (token === expectedPassword) {
     return { isAdmin: true };
   }

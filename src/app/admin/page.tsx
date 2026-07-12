@@ -8,23 +8,34 @@ export default function AdminLoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [loadingLogin, setLoadingLogin] = useState(false);
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg('');
+    setLoadingLogin(true);
 
-    // Credenciais padrão de administrador da plataforma
-    const validEmail = process.env.NEXT_PUBLIC_ADMIN_EMAIL || 'admin@sisagendai.online';
-    const validPassword = process.env.NEXT_PUBLIC_ADMIN_PASSWORD || 'AgendaiAdmin2026!';
+    try {
+      const res = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
+      });
 
-    if (email.trim().toLowerCase() === validEmail.toLowerCase() && password === validPassword) {
-      // Salvar sessão simples do admin
-      sessionStorage.setItem('adminAuthenticated', 'true');
-      sessionStorage.setItem('adminToken', password);
-      router.push('/admin/dashboard');
-    } else {
-      setErrorMsg('E-mail ou senha de administrador incorretos.');
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        sessionStorage.setItem('adminAuthenticated', 'true');
+        sessionStorage.setItem('adminToken', password);
+        router.push('/admin/dashboard');
+      } else {
+        setErrorMsg(data.error || 'E-mail ou senha de administrador incorretos.');
+      }
+    } catch (err) {
+      setErrorMsg('Erro de conexão ao autenticar.');
+    } finally {
+      setLoadingLogin(false);
     }
   };
 
@@ -73,8 +84,8 @@ export default function AdminLoginPage() {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary btn-full" style={{ marginTop: 'var(--space-2)' }}>
-            Entrar
+          <button type="submit" className="btn btn-primary btn-full" style={{ marginTop: 'var(--space-2)' }} disabled={loadingLogin}>
+            {loadingLogin ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
       </div>
