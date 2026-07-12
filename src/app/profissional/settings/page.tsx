@@ -25,6 +25,8 @@ export default function ProfissionalSettingsPage() {
   const [state, setState] = useState('');
   const [city, setCity] = useState('');
   const [neighborhood, setNeighborhood] = useState('');
+  const [category, setCategory] = useState('Barbearia');
+  const [customCategory, setCustomCategory] = useState('');
   const [citySuggestions, setCitySuggestions] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
@@ -219,6 +221,11 @@ export default function ProfissionalSettingsPage() {
         setState(est.state || '');
         setCity(est.city || '');
         setNeighborhood(est.neighborhood || '');
+        
+        const estCategory = est.category || 'Barbearia';
+        const isPredefined = ['Barbearia', 'Salão de Beleza', 'Clínica de Estética'].includes(estCategory);
+        setCategory(isPredefined ? estCategory : 'Outros');
+        setCustomCategory(isPredefined ? '' : estCategory);
       } catch (err) {
         console.error('Erro ao carregar configurações do estabelecimento:', err);
       } finally {
@@ -311,6 +318,7 @@ export default function ProfissionalSettingsPage() {
       state,
       city,
       neighborhood,
+      category: category === 'Outros' ? customCategory : category,
     });
 
     if (updated) {
@@ -486,6 +494,35 @@ export default function ProfissionalSettingsPage() {
                   required 
                 />
               </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <label className="input-label">Categoria do Estabelecimento</label>
+                <select 
+                  className="input" 
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  required
+                >
+                  <option value="Barbearia">Barbearia</option>
+                  <option value="Salão de Beleza">Salão de Beleza</option>
+                  <option value="Clínica de Estética">Clínica de Estética</option>
+                  <option value="Outros">Outros (Especifique abaixo)</option>
+                </select>
+              </div>
+
+              {category === 'Outros' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                  <label className="input-label">Especifique a Categoria</label>
+                  <input 
+                    type="text" 
+                    className="input" 
+                    value={customCategory}
+                    onChange={(e) => setCustomCategory(e.target.value)}
+                    placeholder="Ex: Estúdio de Tattoo, Petshop, Spa"
+                    required={category === 'Outros'}
+                  />
+                </div>
+              )}
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                 <label className="input-label">Telefone (WhatsApp)</label>

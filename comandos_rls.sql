@@ -1,7 +1,5 @@
--- ==========================================
--- CORREÇÃO DE POLÍTICAS DE RLS (SEGURANÇA)
--- Cole e execute este script no SQL Editor do seu painel do Supabase.
--- ==========================================
+-- 0. ADICIONAR COLUNA DE CATEGORIA EM ESTABELECIMENTOS
+ALTER TABLE establishments ADD COLUMN IF NOT EXISTS category TEXT;
 
 -- 1. CORREÇÃO DA TABELA DE SERVIÇOS (services)
 DROP POLICY IF EXISTS "Dono pode gerenciar servico (insert)" ON services;

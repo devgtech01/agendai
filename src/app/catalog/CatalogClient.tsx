@@ -13,6 +13,7 @@ interface Establishment {
   state?: string;
   city?: string;
   neighborhood?: string;
+  category?: string;
 }
 
 export default function CatalogClient() {
@@ -230,9 +231,25 @@ export default function CatalogClient() {
               }} />
               
               <div style={{ padding: 'var(--space-4)', display: 'flex', flexDirection: 'column', flex: 1, gap: '8px' }}>
-                <h3 style={{ fontSize: '18px', fontWeight: 500, color: 'var(--color-text)' }}>
-                  {est.name}
-                </h3>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
+                  <h3 style={{ fontSize: '17px', fontWeight: 600, color: 'var(--color-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', flex: 1 }}>
+                    {est.name}
+                  </h3>
+                  {est.category && (
+                    <span style={{ 
+                      fontSize: '10px', 
+                      fontWeight: 600, 
+                      color: 'var(--color-accent)', 
+                      background: 'rgba(193, 90, 46, 0.08)', 
+                      padding: '2px 8px', 
+                      borderRadius: '12px',
+                      border: '0.5px solid rgba(193, 90, 46, 0.15)',
+                      whiteSpace: 'nowrap'
+                    }}>
+                      {est.category}
+                    </span>
+                  )}
+                </div>
                 
                 <p className="text-muted" style={{ fontSize: '13px', lineHeight: 1.5, flex: 1 }}>
                   {est.description}

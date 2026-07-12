@@ -15,6 +15,9 @@ export default function ProfissionalRegisterPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   
+  const [category, setCategory] = useState('Barbearia');
+  const [customCategory, setCustomCategory] = useState('');
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -74,7 +77,9 @@ export default function ProfissionalRegisterPage() {
           ownerName,
           establishmentName,
           phone,
-          selectedPlan
+          selectedPlan,
+          category,
+          customCategory
         })
       });
 
@@ -191,6 +196,35 @@ export default function ProfissionalRegisterPage() {
               required
             />
           </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <label className="input-label">Categoria do Estabelecimento</label>
+            <select 
+              className="input"
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              required
+            >
+              <option value="Barbearia">Barbearia</option>
+              <option value="Salão de Beleza">Salão de Beleza</option>
+              <option value="Clínica de Estética">Clínica de Estética</option>
+              <option value="Outros">Outros (Especifique abaixo)</option>
+            </select>
+          </div>
+
+          {category === 'Outros' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+              <label className="input-label">Especifique a Categoria</label>
+              <input 
+                type="text" 
+                className="input"
+                value={customCategory}
+                onChange={(e) => setCustomCategory(e.target.value)}
+                placeholder="Ex: Estúdio de Tattoo, Petshop, Spa"
+                required={category === 'Outros'}
+              />
+            </div>
+          )}
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <label className="input-label">Telefone (WhatsApp)</label>

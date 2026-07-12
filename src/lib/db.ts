@@ -33,6 +33,7 @@ export interface Establishment {
   state?: string;
   city?: string;
   neighborhood?: string;
+  category?: string;
 }
 
 export interface Service {
@@ -86,6 +87,7 @@ function mapEstablishment(data: any): Establishment {
     state: data.state || '',
     city: data.city || '',
     neighborhood: data.neighborhood || '',
+    category: data.category || '',
   };
 }
 
@@ -167,6 +169,7 @@ export async function addEstablishment(establishment: Omit<Establishment, 'id'>)
         phone: establishment.phone,
         image_url: establishment.imageUrl,
         owner_id: establishment.ownerId,
+        category: establishment.category || '',
       },
     ])
     .select()
@@ -194,6 +197,7 @@ export async function updateEstablishment(id: string, updates: Partial<Omit<Esta
   if (updates.state !== undefined) dbUpdates.state = updates.state;
   if (updates.city !== undefined) dbUpdates.city = updates.city;
   if (updates.neighborhood !== undefined) dbUpdates.neighborhood = updates.neighborhood;
+  if (updates.category !== undefined) dbUpdates.category = updates.category;
 
   const { data, error } = await supabase
     .from('establishments')

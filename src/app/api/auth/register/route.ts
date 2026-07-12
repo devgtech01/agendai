@@ -5,11 +5,13 @@ import { supabaseAdmin } from '@/lib/supabase-admin';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, password, ownerName, establishmentName, phone, selectedPlan } = body;
+    const { email, password, ownerName, establishmentName, phone, selectedPlan, category, customCategory } = body;
 
     if (!email || !password || !ownerName || !establishmentName || !phone || !selectedPlan) {
       return NextResponse.json({ error: 'Campos obrigatórios ausentes.' }, { status: 400 });
     }
+
+    const finalCategory = category === 'Outros' && customCategory ? customCategory : (category || 'Outros');
 
     // Calcular expiração do teste grátis (30 dias para mensal)
     const trialEndDate = new Date();
@@ -49,7 +51,8 @@ export async function POST(request: Request) {
           address: '',
           phone: phone,
           image_url: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-          owner_id: userId
+          owner_id: userId,
+          category: finalCategory
         }
       ])
       .select()
