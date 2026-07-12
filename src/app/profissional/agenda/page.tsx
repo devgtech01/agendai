@@ -71,17 +71,21 @@ export default function ProfissionalAgendaPage() {
   };
 
   const handleConcluir = async (bookingId: string) => {
-    const { data, error } = await supabase
-      .from('bookings')
-      .update({ status: 'Concluido' })
-      .eq('id', bookingId)
-      .select()
-      .single();
+    try {
+      const res = await fetch('/api/bookings/conclude', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bookingId })
+      });
 
-    if (!error && data) {
-      setBookings((prev) => prev.map((b) => (b.id === bookingId ? { ...b, status: 'Concluido' } : b)));
-    } else {
-      alert('Erro ao concluir agendamento.');
+      if (res.ok) {
+        setBookings((prev) => prev.map((b) => (b.id === bookingId ? { ...b, status: 'Concluido' } : b)));
+      } else {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || 'Erro ao concluir agendamento.');
+      }
+    } catch (err) {
+      alert('Erro de conexão ao concluir agendamento.');
     }
   };
 

@@ -210,64 +210,66 @@ export default function CancelBookingPage({ params }: PageProps) {
               )}
 
               {/* SEÇÃO DE AVALIAÇÃO COM ESTRELAS (1 A 5) */}
-              <div 
-                style={{ 
-                  background: 'var(--color-surface)', 
-                  border: '1px solid var(--color-border)', 
-                  borderRadius: '16px', 
-                  padding: '20px', 
-                  marginBottom: '24px',
-                  textAlign: 'center'
-                }}
-              >
-                <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-text)', margin: '0 0 6px 0' }}>
-                  ⭐ Avaliar Atendimento
-                </h3>
-                <p style={{ fontSize: '13px', color: 'var(--color-muted)', margin: '0 0 16px 0' }}>
-                  Como foi sua experiência neste serviço? Selecione de 1 a 5 estrelas.
-                </p>
+              {booking?.status === 'Concluido' && (
+                <div 
+                  style={{ 
+                    background: 'var(--color-surface)', 
+                    border: '1px solid var(--color-border)', 
+                    borderRadius: '16px', 
+                    padding: '20px', 
+                    marginBottom: '24px',
+                    textAlign: 'center'
+                  }}
+                >
+                  <h3 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-text)', margin: '0 0 6px 0' }}>
+                    ⭐ Avaliar Atendimento
+                  </h3>
+                  <p style={{ fontSize: '13px', color: 'var(--color-muted)', margin: '0 0 16px 0' }}>
+                    Como foi sua experiência neste serviço? Selecione de 1 a 5 estrelas.
+                  </p>
 
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '12px' }}>
-                  {[1, 2, 3, 4, 5].map((star) => {
-                    const active = (hoverRating || userRating) >= star;
-                    return (
-                      <button
-                        key={star}
-                        type="button"
-                        onClick={() => handleRate(star)}
-                        onMouseEnter={() => !ratingSubmitted && setHoverRating(star)}
-                        onMouseLeave={() => !ratingSubmitted && setHoverRating(0)}
-                        disabled={ratingSubmitted || isSubmittingRating}
-                        style={{
-                          background: 'transparent',
-                          border: 'none',
-                          cursor: ratingSubmitted ? 'default' : 'pointer',
-                          padding: '4px',
-                          transition: 'transform 0.15s ease',
-                          transform: active ? 'scale(1.15)' : 'scale(1)',
-                          outline: 'none'
-                        }}
-                        title={`${star} Estrela${star > 1 ? 's' : ''}`}
-                      >
-                        <Star 
-                          className="h-8 w-8" 
+                  <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', marginBottom: '12px' }}>
+                    {[1, 2, 3, 4, 5].map((star) => {
+                      const active = (hoverRating || userRating) >= star;
+                      return (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => handleRate(star)}
+                          onMouseEnter={() => !ratingSubmitted && setHoverRating(star)}
+                          onMouseLeave={() => !ratingSubmitted && setHoverRating(0)}
+                          disabled={ratingSubmitted || isSubmittingRating}
                           style={{
-                            fill: active ? 'var(--color-accent)' : 'transparent',
-                            color: active ? 'var(--color-accent)' : 'var(--color-border)',
-                            strokeWidth: active ? 1.5 : 1.5
-                          }} 
-                        />
-                      </button>
-                    );
-                  })}
-                </div>
-
-                {ratingMsg && (
-                  <div style={{ fontSize: '13px', color: 'var(--color-accent)', fontWeight: 500, marginTop: '8px' }}>
-                    {ratingMsg}
+                            background: 'transparent',
+                            border: 'none',
+                            cursor: ratingSubmitted ? 'default' : 'pointer',
+                            padding: '4px',
+                            transition: 'transform 0.15s ease',
+                            transform: active ? 'scale(1.15)' : 'scale(1)',
+                            outline: 'none'
+                          }}
+                          title={`${star} Estrela${star > 1 ? 's' : ''}`}
+                        >
+                          <Star 
+                            className="h-8 w-8" 
+                            style={{
+                              fill: active ? 'var(--color-accent)' : 'transparent',
+                              color: active ? 'var(--color-accent)' : 'var(--color-border)',
+                              strokeWidth: active ? 1.5 : 1.5
+                            }} 
+                          />
+                        </button>
+                      );
+                    })}
                   </div>
-                )}
-              </div>
+
+                  {ratingMsg && (
+                    <div style={{ fontSize: '13px', color: 'var(--color-accent)', fontWeight: 500, marginTop: '8px' }}>
+                      {ratingMsg}
+                    </div>
+                  )}
+                </div>
+              )}
 
               {errorMsg && (
                 <div style={{ 
@@ -284,20 +286,22 @@ export default function CancelBookingPage({ params }: PageProps) {
               )}
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                <button 
-                  onClick={handleConfirmCancel} 
-                  className="btn btn-full" 
-                  disabled={isCanceling}
-                  style={{ 
-                    background: 'var(--color-danger)', 
-                    color: '#FFFFFF',
-                    height: '44px',
-                    fontWeight: 600,
-                    borderRadius: '12px'
-                  }}
-                >
-                  {isCanceling ? 'Cancelando...' : 'Cancelar Agendamento'}
-                </button>
+                {booking?.status !== 'Concluido' && (
+                  <button 
+                    onClick={handleConfirmCancel} 
+                    className="btn btn-full" 
+                    disabled={isCanceling}
+                    style={{ 
+                      background: 'var(--color-danger)', 
+                      color: '#FFFFFF',
+                      height: '44px',
+                      fontWeight: 600,
+                      borderRadius: '12px'
+                    }}
+                  >
+                    {isCanceling ? 'Cancelando...' : 'Cancelar Agendamento'}
+                  </button>
+                )}
                 
                 <Link href="/catalog" className="btn btn-ghost btn-full" style={{ height: '44px', textDecoration: 'none', borderRadius: '12px' }}>
                   Voltar ao Catálogo
