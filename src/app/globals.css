@@ -1005,6 +1005,23 @@ button, input, select, textarea {
   }
 }
 
+/* ==========================================
+   CLASSES DE ROLAGEM HORIZONTAL E SCROLLBARS
+   ========================================== */
+.overflow-x-auto {
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none !important;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+}
+
 
 
 
