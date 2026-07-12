@@ -142,16 +142,11 @@ header.nav.scrolled {
 }
 .phone-frame {
   position: relative;
-  width: 290px;
-  height: 588px;
   background: #ffffff;
-  border-radius: 46px;
   box-shadow:
     0 40px 80px -20px rgba(26,26,46,0.35),
     0 10px 30px rgba(26,26,46,0.12),
     inset 0 0 0 2px #f0efec;
-  border: 8px solid #ffffff;
-  z-index: 2;
   animation: floaty 5.5s ease-in-out infinite;
 }
 .phone-frame::before {
@@ -159,21 +154,71 @@ header.nav.scrolled {
   position: absolute;
   top: 0; left: 50%;
   transform: translateX(-50%);
-  width: 120px; height: 26px;
+  width: 45%; height: 20px;
   background: #111;
-  border-radius: 0 0 18px 18px;
-  z-index: 3;
+  border-radius: 0 0 15px 15px;
+  z-index: 6;
 }
 .phone-screen {
   width: 100%;
   height: 100%;
-  border-radius: 34px;
-  background: linear-gradient(160deg, var(--accent-soft) 0%, var(--bg) 55%, var(--linen) 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: #fff;
+  display: block;
+  padding: 0;
   position: relative;
   overflow: hidden;
+}
+.phone-glare {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 45%);
+  box-shadow: inset 0 10px 20px rgba(0,0,0,0.12), inset 0 2px 5px rgba(0,0,0,0.22);
+  pointer-events: none;
+  z-index: 5;
+}
+.phone-screen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  image-rendering: -webkit-optimize-contrast;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+/* Classes específicas para os dois celulares */
+.phone-frame.p1 {
+  transform: rotate(-5deg);
+  z-index: 2;
+  margin-right: -35px;
+  margin-top: -40px;
+  width: 260px;
+  height: 528px;
+  border-radius: 42px;
+  border: 6px solid #ffffff;
+}
+.phone-frame.p1 .phone-screen,
+.phone-frame.p1 .phone-screen img,
+.phone-frame.p1 .phone-glare {
+  border-radius: 34px;
+}
+
+.phone-frame.p2 {
+  transform: rotate(5deg);
+  z-index: 3;
+  margin-left: -35px;
+  margin-top: 40px;
+  width: 260px;
+  height: 528px;
+  border-radius: 42px;
+  border: 6px solid #ffffff;
+  animation-delay: 1.2s;
+}
+.phone-frame.p2 .phone-screen,
+.phone-frame.p2 .phone-screen img,
+.phone-frame.p2 .phone-glare {
+  border-radius: 34px;
 }
 .float-card {
   position: absolute;
@@ -842,12 +887,26 @@ footer.landing-footer {
     grid-template-columns: 1fr;
   }
   .phone-stage {
-    height: 480px;
+    height: 560px;
     margin-top: 20px;
   }
-  .phone-frame {
-    width: 230px;
-    height: 460px;
+  .phone-frame.p2 {
+    display: none; /* Esconde o segundo celular em telas menores */
+  }
+  .phone-frame.p1 {
+    transform: none;
+    margin: 0 auto;
+    width: 260px;
+    height: 528px;
+    z-index: 2;
+  }
+  .float-card.c1 {
+    left: 10px;
+    top: 50px;
+  }
+  .float-card.c2 {
+    right: 10px;
+    bottom: 80px;
   }
   .feature-grid, .demo-card, .team-grid, .plans-grid, .compare-grid, .geo-row {
     grid-template-columns: 1fr;
@@ -869,6 +928,23 @@ footer.landing-footer {
   }
 }
 @media (max-width: 560px) {
+  .phone-stage {
+    height: 440px;
+  }
+  .phone-frame.p1 {
+    width: 210px;
+    height: 426px;
+    border-radius: 34px;
+    border-width: 5px;
+  }
+  .phone-frame.p1 .phone-screen,
+  .phone-frame.p1 .phone-screen img,
+  .phone-frame.p1 .phone-glare {
+    border-radius: 26px;
+  }
+  .float-card {
+    display: none; /* Esconde os balões flutuantes para não quebrar largura em celulares pequenos */
+  }
   .footer-grid {
     grid-template-columns: 1fr;
   }
