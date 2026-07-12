@@ -55,7 +55,7 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { establishmentId, serviceId, professionalId, clientName, clientEmail, clientPhone, date, time } = body;
 
-    if (!establishmentId || !serviceId || !professionalId || !clientName || !clientEmail || !clientPhone || !date || !time) {
+    if (!establishmentId || !serviceId || !clientName || !clientEmail || !clientPhone || !date || !time) {
       return NextResponse.json({ error: 'Campos obrigatórios ausentes.' }, { status: 400 });
     }
 
