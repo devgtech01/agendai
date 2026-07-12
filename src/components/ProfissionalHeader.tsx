@@ -18,16 +18,20 @@ import {
 
 interface ProfissionalHeaderProps {
   establishmentName?: string;
+  establishmentId?: string;
 }
 
-export default function ProfissionalHeader({ establishmentName }: ProfissionalHeaderProps) {
+export default function ProfissionalHeader({ establishmentName, establishmentId }: ProfissionalHeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [establishmentId, setEstablishmentId] = useState<string | null>(null);
+  const [localEstId, setLocalEstId] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
+  const currentEstId = establishmentId || localEstId;
+
   useEffect(() => {
+    if (establishmentId) return;
     async function loadEstId() {
       try {
         const { data: { user } } = await supabase.auth.getUser();
@@ -38,7 +42,7 @@ export default function ProfissionalHeader({ establishmentName }: ProfissionalHe
             .eq('owner_id', user.id)
             .single();
           if (!error && data) {
-            setEstablishmentId(data.id);
+            setLocalEstId(data.id);
           }
         }
       } catch (err) {
@@ -46,11 +50,11 @@ export default function ProfissionalHeader({ establishmentName }: ProfissionalHe
       }
     }
     loadEstId();
-  }, []);
+  }, [establishmentId]);
 
   const handleCopyLink = async () => {
-    if (!establishmentId) return;
-    const url = `${window.location.origin}/catalog/${establishmentId}`;
+    if (!currentEstId) return;
+    const url = `${window.location.origin}/catalog/${currentEstId}`;
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
@@ -122,27 +126,43 @@ export default function ProfissionalHeader({ establishmentName }: ProfissionalHe
 
           {/* Lado Direito Desktop & Botão Hamburguer Mobile */}
           <div className="flex items-center gap-3">
-            {establishmentId && (
-              <button
-                onClick={handleCopyLink}
-                className="hidden sm:inline-flex items-center gap-1.5"
-                style={{
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  color: 'var(--color-accent)',
-                  background: 'rgba(193, 90, 46, 0.08)',
-                  border: '0.5px solid rgba(193, 90, 46, 0.15)',
-                  padding: '6px 12px',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  marginRight: '8px',
-                  transition: 'all 0.2s'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(193, 90, 46, 0.15)'}
-                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(193, 90, 46, 0.08)'}
-              >
-                <span>🔗 {copied ? 'Copiado!' : 'Copiar Link de Agendamento'}</span>
-              </button>
+            {currentEstId && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginRight: '12px' }}>
+                <a
+                  href={`/catalog/${currentEstId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    fontSize: '12px',
+                    fontWeight: 500,
+                    color: 'var(--color-muted)',
+                    textDecoration: 'underline',
+                    transition: 'color 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-accent)'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-muted)'}
+                >
+                  Ver Catálogo ↗
+                </a>
+                <button
+                  onClick={handleCopyLink}
+                  style={{
+                    fontSize: '11px',
+                    fontWeight: 600,
+                    color: 'var(--color-accent)',
+                    background: 'rgba(193, 90, 46, 0.08)',
+                    border: '0.5px solid rgba(193, 90, 46, 0.15)',
+                    padding: '4px 8px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    transition: 'all 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(193, 90, 46, 0.15)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(193, 90, 46, 0.08)'}
+                >
+                  <span>🔗 {copied ? 'Copiado!' : 'Copiar Link'}</span>
+                </button>
+              </div>
             )}
             {establishmentName && (
               <div className="flex items-center gap-2">
@@ -218,29 +238,53 @@ export default function ProfissionalHeader({ establishmentName }: ProfissionalHe
               </div>
             )}
 
-            {establishmentId && (
-              <button
-                onClick={handleCopyLink}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '10px',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  color: 'var(--color-accent)',
-                  background: 'rgba(193, 90, 46, 0.08)',
-                  border: '1px solid rgba(193, 90, 46, 0.15)',
-                  padding: '10px 16px',
-                  borderRadius: '8px',
-                  marginBottom: '12px',
-                  cursor: 'pointer',
-                  width: '100%',
-                  textAlign: 'center'
-                }}
-              >
-                <span>🔗 {copied ? 'Link Copiado!' : 'Copiar Link de Agendamento'}</span>
-              </button>
+            {currentEstId && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '12px' }}>
+                <a
+                  href={`/catalog/${currentEstId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    color: 'var(--color-text)',
+                    background: 'var(--color-background)',
+                    border: '1px solid var(--color-border)',
+                    padding: '10px 16px',
+                    borderRadius: '8px',
+                    textDecoration: 'none',
+                    width: '100%',
+                    textAlign: 'center'
+                  }}
+                >
+                  🔗 Abrir Catálogo Público ↗
+                </a>
+                <button
+                  onClick={handleCopyLink}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '10px',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    color: 'var(--color-accent)',
+                    background: 'rgba(193, 90, 46, 0.08)',
+                    border: '1px solid rgba(193, 90, 46, 0.15)',
+                    padding: '10px 16px',
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    width: '100%',
+                    textAlign: 'center'
+                  }}
+                >
+                  <span>📋 {copied ? 'Link Copiado!' : 'Copiar Link para Enviar'}</span>
+                </button>
+              </div>
             )}
 
             <div className="flex flex-col gap-1">
