@@ -279,9 +279,9 @@ export default function Home() {
                   <p>Faturamento diário, semanal, mensal e anual em gráficos interativos e elegantes, sempre à mão.</p>
                 </div>
                 <div className="feature-card">
-                  <div className="ico">🗺️</div>
-                  <h4 className="landing-h4">Ajustes com API do IBGE</h4>
-                  <p>Digite o Estado e o sistema sugere cidades e bairros corretos automaticamente, sem erro de cadastro.</p>
+                  <div className="ico">📅</div>
+                  <h4 className="landing-h4">Controle de Agendamentos</h4>
+                  <p>Gerencie horários, profissionais e serviços de forma prática e em tempo real, evitando conflitos.</p>
                 </div>
                 <div className="feature-card">
                   <div className="ico">🎧</div>
