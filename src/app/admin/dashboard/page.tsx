@@ -176,16 +176,16 @@ export default function AdminDashboardPage() {
               <ShieldCheck size={20} />
             </div>
             <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-linen)', letterSpacing: '0.02em' }}>
-              Agend<span style={{ color: 'var(--color-accent)' }}>ai</span> <span style={{ fontWeight: 400, color: 'rgba(232,213,183,0.55)', fontSize: '13px' }}>Super-Admin</span>
+              Agend<span style={{ color: 'var(--color-accent)' }}>ai</span> <span className="hidden md:inline" style={{ fontWeight: 400, color: 'rgba(232,213,183,0.55)', fontSize: '13px' }}>Super-Admin</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <button onClick={loadData} className="flex items-center gap-1.5 text-xs font-medium text-linen opacity-80 hover:opacity-100 bg-transparent border-0 cursor-pointer">
-              <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> Recarregar
+              <RefreshCw size={14} className={loading ? 'animate-spin' : ''} /> <span className="hidden md:inline">Recarregar</span>
             </button>
             <button onClick={handleLogout} className="btn btn-secondary btn-sm flex items-center gap-1.5" style={{ borderColor: 'rgba(232,213,183,0.3)', color: 'var(--color-linen)' }}>
-              <LogOut size={14} /> Sair
+              <LogOut size={14} /> <span className="hidden md:inline">Sair</span>
             </button>
           </div>
         </div>
@@ -343,54 +343,91 @@ export default function AdminDashboardPage() {
                   Nenhum chamado de suporte encontrado.
                 </div>
               ) : (
-                <div style={{ overflowX: 'auto' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
-                    <thead>
-                      <tr style={{ background: 'var(--color-background)', borderBottom: '1px solid var(--color-border)' }}>
-                        <th style={{ padding: '14px 16px', fontWeight: 600, color: 'var(--color-muted)' }}>Remetente</th>
-                        <th style={{ padding: '14px 16px', fontWeight: 600, color: 'var(--color-muted)' }}>Assunto</th>
-                        <th style={{ padding: '14px 16px', fontWeight: 600, color: 'var(--color-muted)' }}>Tipo</th>
-                        <th style={{ padding: '14px 16px', fontWeight: 600, color: 'var(--color-muted)' }}>Prioridade</th>
-                        <th style={{ padding: '14px 16px', fontWeight: 600, color: 'var(--color-muted)' }}>Status</th>
-                        <th style={{ padding: '14px 16px', fontWeight: 600, color: 'var(--color-muted)', textAlign: 'right' }}>Ação</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {filteredTickets.map((t) => (
-                        <tr key={t.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
-                          <td style={{ padding: '14px 16px' }}>
-                            <div className="font-semibold text-foreground">{t.name}</div>
-                            <div className="text-xs text-muted">{t.email}</div>
-                          </td>
-                          <td style={{ padding: '14px 16px' }}>
-                            <div className="font-medium text-foreground max-w-xs truncate">{t.subject}</div>
-                            <div className="text-xs text-muted">{new Date(t.createdAt).toLocaleDateString('pt-BR')}</div>
-                          </td>
-                          <td style={{ padding: '14px 16px' }}>
-                            <span className="text-xs px-2 py-0.5 rounded bg-background border border-border">
-                              {t.userType === 'professional' ? '💈 Profissional' : '👤 Cliente'}
-                            </span>
-                          </td>
-                          <td style={{ padding: '14px 16px' }}>
-                            <span className={`text-xs font-semibold ${t.priority === 'Urgente' || t.priority === 'Alta' ? 'text-danger' : 'text-muted-foreground'}`}>
-                              {t.priority}
-                            </span>
-                          </td>
-                          <td style={{ padding: '14px 16px' }}>
-                            <span className={`badge ${t.status === 'Resolvido' ? 'badge-success' : t.status === 'Em Andamento' ? 'badge-info' : 'badge-warning'}`}>
-                              {t.status}
-                            </span>
-                          </td>
-                          <td style={{ padding: '14px 16px', textAlign: 'right' }}>
-                            <button onClick={() => openTicketModal(t)} className="btn btn-primary btn-sm">
-                              Atender / Responder
-                            </button>
-                          </td>
+                <>
+                  {/* Tabela Desktop */}
+                  <div className="hidden md:block" style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+                      <thead>
+                        <tr style={{ background: 'var(--color-background)', borderBottom: '1px solid var(--color-border)' }}>
+                          <th style={{ padding: '14px 16px', fontWeight: 600, color: 'var(--color-muted)' }}>Remetente</th>
+                          <th style={{ padding: '14px 16px', fontWeight: 600, color: 'var(--color-muted)' }}>Assunto</th>
+                          <th style={{ padding: '14px 16px', fontWeight: 600, color: 'var(--color-muted)' }}>Tipo</th>
+                          <th style={{ padding: '14px 16px', fontWeight: 600, color: 'var(--color-muted)' }}>Prioridade</th>
+                          <th style={{ padding: '14px 16px', fontWeight: 600, color: 'var(--color-muted)' }}>Status</th>
+                          <th style={{ padding: '14px 16px', fontWeight: 600, color: 'var(--color-muted)', textAlign: 'right' }}>Ação</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                      </thead>
+                      <tbody>
+                        {filteredTickets.map((t) => (
+                          <tr key={t.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                            <td style={{ padding: '14px 16px' }}>
+                              <div className="font-semibold text-foreground">{t.name}</div>
+                              <div className="text-xs text-muted">{t.email}</div>
+                            </td>
+                            <td style={{ padding: '14px 16px' }}>
+                              <div className="font-medium text-foreground max-w-xs truncate">{t.subject}</div>
+                              <div className="text-xs text-muted">{new Date(t.createdAt).toLocaleDateString('pt-BR')}</div>
+                            </td>
+                            <td style={{ padding: '14px 16px' }}>
+                              <span className="text-xs px-2 py-0.5 rounded bg-background border border-border">
+                                {t.userType === 'professional' ? '💈 Profissional' : '👤 Cliente'}
+                              </span>
+                            </td>
+                            <td style={{ padding: '14px 16px' }}>
+                              <span className={`text-xs font-semibold ${t.priority === 'Urgente' || t.priority === 'Alta' ? 'text-danger' : 'text-muted-foreground'}`}>
+                                {t.priority}
+                              </span>
+                            </td>
+                            <td style={{ padding: '14px 16px' }}>
+                              <span className={`badge ${t.status === 'Resolvido' ? 'badge-success' : t.status === 'Em Andamento' ? 'badge-info' : 'badge-warning'}`}>
+                                {t.status}
+                              </span>
+                            </td>
+                            <td style={{ padding: '14px 16px', textAlign: 'right' }}>
+                              <button onClick={() => openTicketModal(t)} className="btn btn-primary btn-sm">
+                                Atender / Responder
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Cards Mobile */}
+                  <div className="md:hidden flex flex-col gap-4" style={{ padding: '16px' }}>
+                    {filteredTickets.map((t) => (
+                      <div key={t.id} style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <div>
+                            <div style={{ fontWeight: 600, fontSize: '14px', color: 'var(--color-text)' }}>{t.name}</div>
+                            <div style={{ fontSize: '11px', color: 'var(--color-muted)' }}>{t.email}</div>
+                          </div>
+                          <span className={`badge ${t.status === 'Resolvido' ? 'badge-success' : t.status === 'Em Andamento' ? 'badge-info' : 'badge-warning'}`}>
+                            {t.status}
+                          </span>
+                        </div>
+                        <div style={{ borderTop: '0.5px solid var(--color-border)', paddingTop: '10px' }}>
+                          <div style={{ fontWeight: 500, fontSize: '13px', color: 'var(--color-text)' }}>{t.subject}</div>
+                          <div style={{ fontSize: '11px', color: 'var(--color-muted)', marginTop: '2px' }}>
+                            Criado em: {new Date(t.createdAt).toLocaleDateString('pt-BR')}
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+                          <span style={{ padding: '2px 8px', borderRadius: '4px', background: 'var(--color-background)', border: '0.5px solid var(--color-border)' }}>
+                            {t.userType === 'professional' ? '💈 Profissional' : '👤 Cliente'}
+                          </span>
+                          <span style={{ fontWeight: 600, color: t.priority === 'Urgente' || t.priority === 'Alta' ? 'var(--color-danger)' : 'var(--color-muted)' }}>
+                            {t.priority}
+                          </span>
+                        </div>
+                        <button onClick={() => openTicketModal(t)} className="btn btn-primary btn-full btn-sm" style={{ marginTop: '4px' }}>
+                          Atender / Responder
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </>
               )}
             </div>
           </div>
@@ -405,48 +442,80 @@ export default function AdminDashboardPage() {
               {establishments.length === 0 ? (
                 <div className="text-muted text-center py-8">Nenhum estabelecimento encontrado.</div>
               ) : (
-                <div style={{ overflowX: 'auto' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
-                    <thead>
-                      <tr style={{ background: 'var(--color-background)', borderBottom: '1px solid var(--color-border)' }}>
-                        <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Nome</th>
-                        <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Localização</th>
-                        <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Rua/Avenida</th>
-                        <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Telefone</th>
-                        <th style={{ padding: '12px 16px', color: 'var(--color-muted)', textAlign: 'right' }}>Ação</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {establishments.map((est) => (
-                        <tr key={est.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
-                          <td style={{ padding: '12px 16px', fontWeight: 600 }}>{est.name}</td>
-                          <td style={{ padding: '12px 16px', color: 'var(--color-accent)', fontWeight: 500 }}>
-                            {est.neighborhood || '---'} · {est.city || '---'} - {est.state || '---'}
-                          </td>
-                          <td style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>{est.address}</td>
-                          <td style={{ padding: '12px 16px' }}>{est.phone}</td>
-                          <td style={{ padding: '12px 16px', textAlign: 'right' }}>
-                            <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
-                              <Link href={`/catalog/${est.id}`} target="_blank" className="btn btn-ghost btn-sm">
-                                Ver Vitrine
-                              </Link>
-                              <button 
-                                onClick={() => {
-                                  setDeletingEstablishment(est);
-                                  setConfirmNameText('');
-                                }} 
-                                className="btn btn-sm"
-                                style={{ background: '#FCEAEA', color: '#D9383A', border: '1px solid #F3C3C3', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}
-                              >
-                                <Trash2 size={14} /> Excluir
-                              </button>
-                            </div>
-                          </td>
+                <>
+                  {/* Tabela Desktop */}
+                  <div className="hidden md:block" style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+                      <thead>
+                        <tr style={{ background: 'var(--color-background)', borderBottom: '1px solid var(--color-border)' }}>
+                          <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Nome</th>
+                          <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Localização</th>
+                          <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Rua/Avenida</th>
+                          <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Telefone</th>
+                          <th style={{ padding: '12px 16px', color: 'var(--color-muted)', textAlign: 'right' }}>Ação</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                      </thead>
+                      <tbody>
+                        {establishments.map((est) => (
+                          <tr key={est.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                            <td style={{ padding: '12px 16px', fontWeight: 600 }}>{est.name}</td>
+                            <td style={{ padding: '12px 16px', color: 'var(--color-accent)', fontWeight: 500 }}>
+                              {est.neighborhood || '---'} · {est.city || '---'} - {est.state || '---'}
+                            </td>
+                            <td style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>{est.address}</td>
+                            <td style={{ padding: '12px 16px' }}>{est.phone}</td>
+                            <td style={{ padding: '12px 16px', textAlign: 'right' }}>
+                              <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', alignItems: 'center' }}>
+                                <Link href={`/catalog/${est.id}`} target="_blank" className="btn btn-ghost btn-sm">
+                                  Ver Vitrine
+                                </Link>
+                                <button 
+                                  onClick={() => {
+                                    setDeletingEstablishment(est);
+                                    setConfirmNameText('');
+                                  }} 
+                                  className="btn btn-sm"
+                                  style={{ background: '#FCEAEA', color: '#D9383A', border: '1px solid #F3C3C3', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                                >
+                                  <Trash2 size={14} /> Excluir
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Cards Mobile */}
+                  <div className="md:hidden flex flex-col gap-4">
+                    {establishments.map((est) => (
+                      <div key={est.id} style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <div style={{ fontWeight: 600, fontSize: '15px', color: 'var(--color-text)' }}>{est.name}</div>
+                        <div style={{ fontSize: '12px', color: 'var(--color-muted)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <div>📍 {est.address}</div>
+                          <div style={{ color: 'var(--color-accent)', fontWeight: 500 }}>{est.neighborhood || '---'} · {est.city || '---'} - {est.state || '---'}</div>
+                          <div>📞 {est.phone}</div>
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+                          <Link href={`/catalog/${est.id}`} target="_blank" className="btn btn-ghost btn-sm flex-1 text-center" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                            Ver Vitrine
+                          </Link>
+                          <button 
+                            onClick={() => {
+                              setDeletingEstablishment(est);
+                              setConfirmNameText('');
+                            }} 
+                            className="btn btn-sm flex-1"
+                            style={{ background: '#FCEAEA', color: '#D9383A', border: '1px solid #F3C3C3', fontWeight: 600, display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}
+                          >
+                            <Trash2 size={14} /> Excluir
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
               )}
             </div>
           </div>
@@ -461,32 +530,58 @@ export default function AdminDashboardPage() {
               {bookings.length === 0 ? (
                 <div className="text-muted text-center py-8">Nenhum agendamento encontrado.</div>
               ) : (
-                <div style={{ overflowX: 'auto' }}>
-                  <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
-                    <thead>
-                      <tr style={{ background: 'var(--color-background)', borderBottom: '1px solid var(--color-border)' }}>
-                        <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Cliente</th>
-                        <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Data & Hora</th>
-                        <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Contato</th>
-                        <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {bookings.map((b) => (
-                        <tr key={b.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
-                          <td style={{ padding: '12px 16px', fontWeight: 600 }}>{b.clientName}</td>
-                          <td style={{ padding: '12px 16px' }}>{b.date.split('-').reverse().join('/')} às {b.time.slice(0, 5)} hs</td>
-                          <td style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>{b.clientPhone} ({b.clientEmail})</td>
-                          <td style={{ padding: '12px 16px' }}>
-                            <span className={b.status === 'Cancelado' ? 'badge badge-danger' : 'badge badge-success'}>
-                              {b.status}
-                            </span>
-                          </td>
+                <>
+                  {/* Tabela Desktop */}
+                  <div className="hidden md:block" style={{ overflowX: 'auto' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+                      <thead>
+                        <tr style={{ background: 'var(--color-background)', borderBottom: '1px solid var(--color-border)' }}>
+                          <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Cliente</th>
+                          <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Data & Hora</th>
+                          <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Contato</th>
+                          <th style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>Status</th>
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                      </thead>
+                      <tbody>
+                        {bookings.map((b) => (
+                          <tr key={b.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                            <td style={{ padding: '12px 16px', fontWeight: 600 }}>{b.clientName}</td>
+                            <td style={{ padding: '12px 16px' }}>{b.date.split('-').reverse().join('/')} às {b.time.slice(0, 5)} hs</td>
+                            <td style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>{b.clientPhone} ({b.clientEmail})</td>
+                            <td style={{ padding: '12px 16px' }}>
+                              <span className={b.status === 'Cancelado' ? 'badge badge-danger' : 'badge badge-success'}>
+                                {b.status}
+                              </span>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  {/* Cards Mobile */}
+                  <div className="md:hidden flex flex-col gap-4">
+                    {bookings.map((b) => (
+                      <div key={b.id} style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)', borderRadius: '12px', padding: '16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span style={{ fontWeight: 600, fontSize: '14px', color: 'var(--color-text)' }}>{b.clientName}</span>
+                          <span className={b.status === 'Cancelado' ? 'badge badge-danger' : 'badge badge-success'}>
+                            {b.status}
+                          </span>
+                        </div>
+                        <div style={{ fontSize: '12px', color: 'var(--color-muted)' }}>
+                          📅 {b.date.split('-').reverse().join('/')} às {b.time.slice(0, 5)} hs
+                        </div>
+                        <div style={{ fontSize: '12px', color: 'var(--color-muted)' }}>
+                          📞 {b.clientPhone}
+                        </div>
+                        <div style={{ fontSize: '11px', color: 'var(--color-muted)', borderTop: '0.5px solid var(--color-border)', paddingTop: '6px' }}>
+                          📧 {b.clientEmail}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
               )}
             </div>
           </div>
