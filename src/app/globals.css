@@ -971,6 +971,40 @@ button, input, select, textarea {
   max-width: 100% !important;
 }
 
+/* ==========================================
+   CLASSES UTILITÁRIAS DE RESPONSIVIDADE
+   ========================================== */
+.hidden {
+  display: none !important;
+}
+
+.block {
+  display: block !important;
+}
+
+.inline {
+  display: inline !important;
+}
+
+.flex {
+  display: flex !important;
+}
+
+@media (min-width: 768px) {
+  .md\:hidden {
+    display: none !important;
+  }
+  .md\:block {
+    display: block !important;
+  }
+  .md\:inline {
+    display: inline !important;
+  }
+  .md\:flex {
+    display: flex !important;
+  }
+}
+
 
 
 

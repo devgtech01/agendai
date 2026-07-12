@@ -297,7 +297,7 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      <main className="container" style={{ flex: 1, padding: 'var(--space-8) var(--space-6)' }}>
+      <main className="container" style={{ flex: 1, paddingTop: 'var(--space-8)', paddingBottom: 'var(--space-8)' }}>
         {/* ABA 1: VISÃO GERAL */}
         {activeTab === 'overview' && (
           <div className="animate-fade-in flex flex-col gap-8">
