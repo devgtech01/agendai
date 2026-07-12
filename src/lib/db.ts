@@ -279,7 +279,7 @@ export async function deleteService(id: string): Promise<boolean> {
 
 // Métodos para Agendamentos (Bookings)
 export async function getBookings(establishmentId?: string): Promise<Booking[]> {
-  let query = supabase.from('bookings').select('*').order('date', { ascending: true }).order('time', { ascending: true });
+  let query = supabaseAdmin.from('bookings').select('*').order('date', { ascending: true }).order('time', { ascending: true });
   if (establishmentId) {
     query = query.eq('establishment_id', establishmentId);
   }
@@ -292,7 +292,7 @@ export async function getBookings(establishmentId?: string): Promise<Booking[]> 
 }
 
 export async function getBookingsByDate(establishmentId: string, date: string, professionalId?: string): Promise<Booking[]> {
-  let query = supabase
+  let query = supabaseAdmin
     .from('bookings')
     .select('*')
     .eq('establishment_id', establishmentId)
@@ -313,7 +313,7 @@ export async function getBookingsByDate(establishmentId: string, date: string, p
 }
 
 export async function getBookingById(id: string): Promise<Booking | undefined> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('bookings')
     .select('*')
     .eq('id', id)
@@ -327,7 +327,7 @@ export async function getBookingById(id: string): Promise<Booking | undefined> {
 }
 
 export async function addBooking(booking: Omit<Booking, 'id' | 'status'>): Promise<Booking | null> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('bookings')
     .insert([
       {
@@ -353,7 +353,7 @@ export async function addBooking(booking: Omit<Booking, 'id' | 'status'>): Promi
 }
 
 export async function updateBookingStatus(bookingId: string, status: Booking['status']): Promise<Booking | null> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('bookings')
     .update({ status })
     .eq('id', bookingId)

@@ -77,14 +77,20 @@ export async function POST(request: Request) {
 
     // Verificar se o dono do estabelecimento possui plano ativo
     if (establishment.ownerId) {
-      const { supabaseAdmin } = await import('@/lib/supabase-admin');
-      const { data: { user: owner } } = await supabaseAdmin.auth.admin.getUserById(establishment.ownerId);
-      const isOwnerActive = owner?.user_metadata?.plan_status === 'active';
-      if (!isOwnerActive) {
-        return NextResponse.json(
-          { error: 'Este estabelecimento está temporariamente indisponível para novos agendamentos por motivos administrativos.' },
-          { status: 403 }
-        );
+      try {
+        const { supabaseAdmin } = await import('@/lib/supabase-admin');
+        const { data: { user: owner } } = await supabaseAdmin.auth.admin.getUserById(establishment.ownerId);
+        if (owner) {
+          const isOwnerActive = owner?.user_metadata?.plan_status === 'active';
+          if (!isOwnerActive) {
+            return NextResponse.json(
+              { error: 'Este estabelecimento está temporariamente indisponível para novos agendamentos por motivos administrativos.' },
+              { status: 403 }
+            );
+          }
+        }
+      } catch (err) {
+        console.error('Erro ao verificar plano do proprietário (ignorando para permitir fluxo):', err);
       }
     }
 
