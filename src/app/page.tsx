@@ -218,8 +218,10 @@ export default function Home() {
             </div>
             <div className="phone-stage">
               <div className="float-card c1"><span className="ico">💈</span><div>Novo agendamento<small>Corte + Barba · 14:30</small></div></div>
-              <div className="phone-frame">
-                <div className="phone-screen" style={{ background: '#fff', display: 'block', padding: 0, position: 'relative', overflow: 'hidden' }}>
+              
+              {/* Celular 1 (Painel de Gestão) */}
+              <div className="phone-frame" style={{ transform: 'rotate(-5deg)', zIndex: 2, marginRight: '-35px', marginTop: '-40px', width: '260px', height: '528px', borderRadius: '42px', borderWidth: '6px' }}>
+                <div className="phone-screen" style={{ background: '#fff', display: 'block', padding: 0, position: 'relative', overflow: 'hidden', height: '100%', borderRadius: '34px' }}>
                   {/* Glare & Bezel Shadow Overlay */}
                   <div style={{
                     position: 'absolute',
@@ -232,7 +234,7 @@ export default function Home() {
                   }} />
                   <img 
                     src="/imagem_agendai_modelo.png" 
-                    alt="Plataforma Agendai" 
+                    alt="Painel Agendai" 
                     style={{ 
                       width: '100%', 
                       height: '100%', 
@@ -247,6 +249,38 @@ export default function Home() {
                   />
                 </div>
               </div>
+
+              {/* Celular 2 (Tela de Agendamento do Cliente) */}
+              <div className="phone-frame" style={{ transform: 'rotate(5deg)', zIndex: 3, marginLeft: '-35px', marginTop: '40px', width: '260px', height: '528px', borderRadius: '42px', borderWidth: '6px', animationDelay: '1.2s' }}>
+                <div className="phone-screen" style={{ background: '#fff', display: 'block', padding: 0, position: 'relative', overflow: 'hidden', height: '100%', borderRadius: '34px' }}>
+                  {/* Glare & Bezel Shadow Overlay */}
+                  <div style={{
+                    position: 'absolute',
+                    top: 0, left: 0, right: 0, bottom: 0,
+                    background: 'linear-gradient(135deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 45%)',
+                    boxShadow: 'inset 0 10px 20px rgba(0,0,0,0.12), inset 0 2px 5px rgba(0,0,0,0.22)',
+                    pointerEvents: 'none',
+                    zIndex: 5,
+                    borderRadius: '34px'
+                  }} />
+                  <img 
+                    src="/imagem_agendai_modelo2.png" 
+                    alt="Agendamento Agendai" 
+                    style={{ 
+                      width: '100%', 
+                      height: '100%', 
+                      objectFit: 'cover', 
+                      objectPosition: 'top', 
+                      borderRadius: '34px',
+                      imageRendering: '-webkit-optimize-contrast',
+                      transform: 'translateZ(0)',
+                      backfaceVisibility: 'hidden',
+                      willChange: 'transform'
+                    }} 
+                  />
+                </div>
+              </div>
+
               <div className="float-card c2"><span className="ico">⭐</span><div>Avaliação recebida<small>5.0 · Ana P.</small></div></div>
             </div>
           </div>
