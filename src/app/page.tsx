@@ -264,7 +264,7 @@ export default function Home() {
                     borderRadius: '34px'
                   }} />
                   <img 
-                    src="/imagem_agendai_modelo2.png" 
+                    src="/imagem_agendai_modelo2.jpg" 
                     alt="Agendamento Agendai" 
                     style={{ 
                       width: '100%', 
@@ -397,57 +397,6 @@ export default function Home() {
                       <div className="team-member"><div className="avatar">CM</div><div><div className="name">Camila M.</div><div className="rev">R$ 3.910 no mês</div></div><div className="rank">🥈</div></div>
                       <div className="team-member"><div className="avatar">RS</div><div><div className="name">Rafael S.</div><div className="rev">R$ 3.402 no mês</div></div><div className="rank">🥉</div></div>
                     </div>
-                  </div>
-                </div>
-
-                {/* IBGE demo */}
-                <div className="geo-block">
-                  <div className="txt">
-                    <h4 className="landing-h4">Preenchimento preditivo com o IBGE</h4>
-                    <p>Selecione o Estado e veja Cidade e Bairro se ajustarem automaticamente — sem digitar endereço errado.</p>
-                  </div>
-                  <div className="geo-row">
-                    <select 
-                      className="geo-select" 
-                      value={geoEstado} 
-                      onChange={(e) => {
-                        setGeoEstado(e.target.value);
-                        setGeoCidade('');
-                        setGeoBairro('');
-                      }}
-                    >
-                      <option value="">Estado</option>
-                      <option value="BA">Bahia</option>
-                      <option value="SP">São Paulo</option>
-                      <option value="RJ">Rio de Janeiro</option>
-                    </select>
-
-                    <select 
-                      className="geo-select" 
-                      value={geoCidade} 
-                      disabled={!geoEstado}
-                      onChange={(e) => {
-                        setGeoCidade(e.target.value);
-                        setGeoBairro('');
-                      }}
-                    >
-                      <option value="">Cidade</option>
-                      {geoEstado && geoData[geoEstado]?.cidades.map(c => (
-                        <option key={c} value={c}>{c}</option>
-                      ))}
-                    </select>
-
-                    <select 
-                      className="geo-select" 
-                      value={geoBairro} 
-                      disabled={!geoCidade}
-                      onChange={(e) => setGeoBairro(e.target.value)}
-                    >
-                      <option value="">Bairro</option>
-                      {geoEstado && geoCidade && geoData[geoEstado]?.bairros[geoCidade]?.map(b => (
-                        <option key={b} value={b}>{b}</option>
-                      ))}
-                    </select>
                   </div>
                 </div>
               </div>
