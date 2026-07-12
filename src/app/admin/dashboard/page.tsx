@@ -25,11 +25,14 @@ import { SupportTicket, Establishment, Booking } from '@/lib/db';
 
 export default function AdminDashboardPage() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'overview' | 'support' | 'establishments' | 'bookings'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'support' | 'nocard' | 'establishments' | 'bookings'>('overview');
   
   const [tickets, setTickets] = useState<SupportTicket[]>([]);
   const [establishments, setEstablishments] = useState<Establishment[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [noCardEmails, setNoCardEmails] = useState<{ id: string; email: string; created_at: string }[]>([]);
+  const [newNoCardEmail, setNewNoCardEmail] = useState('');
+  const [submittingNoCard, setSubmittingNoCard] = useState(false);
   const [loading, setLoading] = useState(true);
 
   // Filtros
@@ -53,15 +56,17 @@ export default function AdminDashboardPage() {
       const token = sessionStorage.getItem('adminToken') || 'AgendaiAdmin2026!';
       const headers = { 'Authorization': `Bearer ${token}` };
       
-      const [tRes, eRes, bRes] = await Promise.all([
+      const [tRes, eRes, bRes, nRes] = await Promise.all([
         fetch('/api/support', { headers }),
         fetch('/api/establishments', { headers }),
-        fetch('/api/bookings', { headers })
+        fetch('/api/bookings', { headers }),
+        fetch('/api/admin/no-card', { headers }).catch(() => null)
       ]);
 
       if (tRes.ok) setTickets(await tRes.json());
       if (eRes.ok) setEstablishments(await eRes.json());
       if (bRes.ok) setBookings(await bRes.json());
+      if (nRes && nRes.ok) setNoCardEmails(await nRes.json());
     } catch (err) {
       console.error('Erro ao carregar dados do admin:', err);
     } finally {
@@ -80,6 +85,65 @@ export default function AdminDashboardPage() {
 
   const handleLogout = () => {
     router.push('/admin');
+  };
+
+  const handleAddNoCardEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newNoCardEmail.trim()) return;
+
+    try {
+      setSubmittingNoCard(true);
+      const token = sessionStorage.getItem('adminToken') || 'AgendaiAdmin2026!';
+      const res = await fetch('/api/admin/no-card', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ email: newNoCardEmail })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        alert(data.message);
+        setNewNoCardEmail('');
+        // Recarregar os e-mails
+        const nRes = await fetch('/api/admin/no-card', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        if (nRes.ok) setNoCardEmails(await nRes.json());
+      } else {
+        alert(data.error || 'Erro ao pré-autorizar e-mail.');
+      }
+    } catch (err) {
+      alert('Erro de conexão ao pré-autorizar e-mail.');
+    } finally {
+      setSubmittingNoCard(false);
+    }
+  };
+
+  const handleDeleteNoCardEmail = async (id: string) => {
+    if (!confirm('Deseja realmente remover esta pré-autorização?')) return;
+
+    try {
+      const token = sessionStorage.getItem('adminToken') || 'AgendaiAdmin2026!';
+      const res = await fetch(`/api/admin/no-card?id=${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (res.ok) {
+        setNoCardEmails(noCardEmails.filter(x => x.id !== id));
+      } else {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || 'Erro ao remover pré-autorização.');
+      }
+    } catch (err) {
+      alert('Erro de conexão ao remover pré-autorização.');
+    }
   };
 
   const handleUpdateTicket = async () => {
@@ -197,6 +261,7 @@ export default function AdminDashboardPage() {
           {[
             { id: 'overview', label: 'Visão Geral', icon: LayoutDashboard },
             { id: 'support', label: `Suporte & Chamados (${openTicketsCount})`, icon: MessageSquare, badge: openTicketsCount > 0 },
+            { id: 'nocard', label: 'Acesso Sem Cartão', icon: ShieldCheck },
             { id: 'establishments', label: 'Estabelecimentos', icon: Store },
             { id: 'bookings', label: 'Agendamentos Globais', icon: Calendar },
           ].map((tab) => {
@@ -429,6 +494,106 @@ export default function AdminDashboardPage() {
                   </div>
                 </>
               )}
+            </div>
+          </div>
+        )}
+        {/* ABA: ACESSO SEM CARTÃO */}
+        {activeTab === 'nocard' && (
+          <div className="animate-fade-in flex flex-col gap-6">
+            <div style={{ background: 'var(--color-surface)', padding: '24px', borderRadius: '16px', border: '0.5px solid var(--color-border)' }}>
+              <h2 className="heading-2 mb-2 flex items-center gap-2" style={{ fontSize: '18px' }}>
+                🔓 Liberar Acesso Sem Cartão de Crédito (30 Dias Grátis)
+              </h2>
+              <p className="text-xs text-muted-foreground mb-6" style={{ lineHeight: 1.5 }}>
+                Adicione o e-mail do profissional parceiro abaixo. Se ele já tiver uma conta, o acesso dele será ativado imediatamente.
+                Caso ainda não possua conta, o e-mail será pré-autorizado para que ele possa realizar o cadastro normalmente e usar a plataforma 
+                por 30 dias grátis sem qualquer validação ou preenchimento de cartão de crédito.
+              </p>
+
+              <form onSubmit={handleAddNoCardEmail} className="flex flex-col sm:flex-row gap-3 items-end max-w-2xl mb-8">
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', flex: 1, width: '100%' }}>
+                  <label className="input-label">E-mail do Profissional</label>
+                  <input 
+                    type="email" 
+                    className="input" 
+                    placeholder="exemplo@parceiro.com" 
+                    value={newNoCardEmail}
+                    onChange={(e) => setNewNoCardEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <button type="submit" disabled={submittingNoCard} className="btn btn-primary w-full sm:w-auto flex items-center justify-center gap-2 h-[42px] px-6">
+                  {submittingNoCard ? 'Processando...' : 'Liberar Acesso 30 Dias'}
+                </button>
+              </form>
+
+              <div style={{ borderTop: '1px solid var(--color-border)', paddingTop: '24px' }}>
+                <h3 className="heading-3 mb-4" style={{ fontSize: '15px', fontWeight: 600 }}>
+                  E-mails Pré-autorizados (Aguardando Registro)
+                </h3>
+
+                {noCardEmails.length === 0 ? (
+                  <div className="text-muted text-center py-8 bg-background rounded-xl border border-border" style={{ fontSize: '13px' }}>
+                    Nenhum e-mail pré-autorizado aguardando cadastro no momento.
+                  </div>
+                ) : (
+                  <>
+                    {/* Tabela Desktop */}
+                    <div className="hidden md:block" style={{ overflowX: 'auto' }}>
+                      <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '13px' }}>
+                        <thead>
+                          <tr style={{ background: 'var(--color-background)', borderBottom: '1px solid var(--color-border)' }}>
+                            <th style={{ padding: '12px 16px', color: 'var(--color-muted)', fontWeight: 600 }}>E-mail</th>
+                            <th style={{ padding: '12px 16px', color: 'var(--color-muted)', fontWeight: 600 }}>Liberado em</th>
+                            <th style={{ padding: '12px 16px', color: 'var(--color-muted)', fontWeight: 600, textAlign: 'right' }}>Ação</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {noCardEmails.map((item) => (
+                            <tr key={item.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                              <td style={{ padding: '12px 16px', fontWeight: 600, color: 'var(--color-text)' }}>{item.email}</td>
+                              <td style={{ padding: '12px 16px', color: 'var(--color-muted)' }}>
+                                {new Date(item.created_at).toLocaleDateString('pt-BR')} às {new Date(item.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })} hs
+                              </td>
+                              <td style={{ padding: '12px 16px', textAlign: 'right' }}>
+                                <button 
+                                  onClick={() => handleDeleteNoCardEmail(item.id)} 
+                                  className="btn btn-ghost btn-sm"
+                                  style={{ color: 'var(--color-danger)' }}
+                                  title="Revogar Pré-autorização"
+                                >
+                                  <Trash2 size={16} /> Revogar
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+
+                    {/* Cards Mobile */}
+                    <div className="md:hidden flex flex-col gap-3">
+                      {noCardEmails.map((item) => (
+                        <div key={item.id} style={{ background: 'var(--color-background)', border: '1px solid var(--color-border)', borderRadius: '12px', padding: '14px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                          <div style={{ fontWeight: 600, fontSize: '14px', color: 'var(--color-text)', wordBreak: 'break-all' }}>{item.email}</div>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <span style={{ fontSize: '11px', color: 'var(--color-muted)' }}>
+                              📅 {new Date(item.created_at).toLocaleDateString('pt-BR')}
+                            </span>
+                            <button 
+                              onClick={() => handleDeleteNoCardEmail(item.id)} 
+                              className="btn btn-sm"
+                              style={{ background: '#FCEAEA', color: '#D9383A', border: '1px solid #F3C3C3', padding: '4px 8px', fontSize: '11px', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                            >
+                              <Trash2 size={12} /> Revogar
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           </div>
         )}

@@ -13,10 +13,20 @@ export async function POST(request: Request) {
 
     const finalCategory = category === 'Outros' && customCategory ? customCategory : (category || 'Outros');
 
-    // Calcular expiração do teste grátis (30 dias para mensal)
+    // Verificar se o e-mail está pré-autorizado para acesso sem cartão
+    const { data: noCardData, error: noCardError } = await supabaseAdmin
+      .from('no_card_access')
+      .select('id')
+      .eq('email', email.trim().toLowerCase())
+      .maybeSingle();
+
+    const isPreAuthorized = !noCardError && noCardData !== null;
+    const finalPlanStatus = isPreAuthorized ? 'active' : 'inactive';
+
+    // Calcular expiração do teste grátis (30 dias para mensal ou se for liberado sem cartão)
     const trialEndDate = new Date();
     trialEndDate.setDate(trialEndDate.getDate() + 30);
-    const trialUntil = selectedPlan === 'mensal' ? trialEndDate.toISOString().split('T')[0] : null;
+    const trialUntil = (selectedPlan === 'mensal' || isPreAuthorized) ? trialEndDate.toISOString() : null;
 
     // 1. Criar usuário usando o cliente padrão (para disparar os e-mails de confirmação nativos do Supabase)
     const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -27,6 +37,7 @@ export async function POST(request: Request) {
           full_name: ownerName,
           plan: selectedPlan,
           trial_until: trialUntil,
+          plan_status: finalPlanStatus,
         }
       }
     });
@@ -52,7 +63,8 @@ export async function POST(request: Request) {
           phone: phone,
           image_url: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
           owner_id: userId,
-          category: finalCategory
+          category: finalCategory,
+          plan_status: finalPlanStatus
         }
       ])
       .select()
@@ -63,6 +75,13 @@ export async function POST(request: Request) {
       // Limpeza: Deleta o usuário criado no Auth para evitar inconsistências
       await supabaseAdmin.auth.admin.deleteUser(userId);
       return NextResponse.json({ error: 'Erro ao criar o perfil do estabelecimento no banco de dados.' }, { status: 500 });
+    }
+
+    if (isPreAuthorized && noCardData) {
+      await supabaseAdmin
+        .from('no_card_access')
+        .delete()
+        .eq('id', noCardData.id);
     }
 
     const session = authData.session;

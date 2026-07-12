@@ -99,3 +99,21 @@ FOR DELETE USING (
         AND establishments.owner_id = auth.uid()
     )
 );
+
+
+-- 4. TABELA PARA LIBERAR ACESSO SEM CARTÃO
+CREATE TABLE IF NOT EXISTS no_card_access (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email TEXT UNIQUE NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW())
+);
+
+ALTER TABLE no_card_access ENABLE ROW LEVEL SECURITY;
+
+-- Como as operações no_card_access no Next.js usam supabaseAdmin (com a service role key bypassando RLS),
+-- criamos uma política para permitir acesso completo em desenvolvimento e garantir RLS correto.
+DROP POLICY IF EXISTS "Acesso total para o Admin" ON no_card_access;
+CREATE POLICY "Acesso total para o Admin" ON no_card_access
+    USING (true)
+    WITH CHECK (true);
+
