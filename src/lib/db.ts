@@ -251,6 +251,9 @@ export async function addService(service: Omit<Service, 'id'>): Promise<Service 
 
   if (error) {
     console.error('Error adding service:', error);
+    if (typeof window !== 'undefined') {
+      alert('Erro detalhado do Supabase: ' + (error.message || JSON.stringify(error)));
+    }
     return null;
   }
   return mapService(data);
