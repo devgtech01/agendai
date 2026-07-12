@@ -127,7 +127,7 @@ export default function ProfissionalHeader({ establishmentName, establishmentId 
           {/* Lado Direito Desktop & Botão Hamburguer Mobile */}
           <div className="flex items-center gap-3">
             {currentEstId && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginRight: '12px' }}>
+              <div className="hidden md:flex items-center gap-2 mr-3">
                 <a
                   href={`/catalog/${currentEstId}`}
                   target="_blank"
@@ -165,7 +165,7 @@ export default function ProfissionalHeader({ establishmentName, establishmentId 
               </div>
             )}
             {establishmentName && (
-              <div className="flex items-center gap-2">
+              <div className="hidden md:flex items-center gap-2">
                 <span 
                   style={{ 
                     fontSize: '13px', 
