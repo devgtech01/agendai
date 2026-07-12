@@ -22,6 +22,8 @@ export default function ProfissionalSettingsPage() {
   const [closingTime, setClosingTime] = useState('19:00');
   const [lunchStart, setLunchStart] = useState('12:00');
   const [lunchEnd, setLunchEnd] = useState('13:00');
+  const [sundayActive, setSundayActive] = useState(false);
+  const [sundayClosingTime, setSundayClosingTime] = useState('12:00');
   const [state, setState] = useState('');
   const [city, setCity] = useState('');
   const [neighborhood, setNeighborhood] = useState('');
@@ -236,6 +238,16 @@ export default function ProfissionalSettingsPage() {
         setAr(ams.includes('ar'));
         setBebida(ams.includes('bebida'));
         setJogos(ams.includes('jogos'));
+
+        // Domingo funcionamento
+        const hasSunday = ams.includes('sunday_active');
+        setSundayActive(hasSunday);
+        const closingTimeField = ams.find(a => a.startsWith('sunday_closing_'));
+        if (closingTimeField) {
+          setSundayClosingTime(closingTimeField.replace('sunday_closing_', ''));
+        } else {
+          setSundayClosingTime('12:00');
+        }
       } catch (err) {
         console.error('Erro ao carregar configurações do estabelecimento:', err);
       } finally {
@@ -320,6 +332,10 @@ export default function ProfissionalSettingsPage() {
     if (ar) amsList.push('ar');
     if (bebida) amsList.push('bebida');
     if (jogos) amsList.push('jogos');
+    if (sundayActive) {
+      amsList.push('sunday_active');
+      amsList.push(`sunday_closing_${sundayClosingTime}`);
+    }
     const amenitiesString = amsList.join(',');
 
     const updated = await updateEstablishment(establishment.id, {
@@ -691,6 +707,43 @@ export default function ProfissionalSettingsPage() {
                     required 
                   />
                 </div>
+              </div>
+
+              {/* Configurações de Domingo */}
+              <div style={{ 
+                background: 'rgba(232, 213, 183, 0.05)', 
+                border: '1px dashed rgba(232, 213, 183, 0.25)', 
+                padding: 'var(--space-4)', 
+                borderRadius: '12px',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                    <label className="input-label" style={{ margin: 0, fontWeight: 600, color: 'var(--color-text)' }}>Funcionamento aos Domingos</label>
+                    <span style={{ fontSize: '12px', color: 'var(--color-muted)' }}>Liberar agendamentos para clientes aos domingos</span>
+                  </div>
+                  <input 
+                    type="checkbox" 
+                    checked={sundayActive}
+                    onChange={(e) => setSundayActive(e.target.checked)}
+                    style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: 'var(--color-primary)' }}
+                  />
+                </div>
+
+                {sundayActive && (
+                  <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '4px', borderTop: '0.5px solid rgba(232, 213, 183, 0.15)', paddingTop: '10px' }}>
+                    <label className="input-label">Até que horas funciona aos domingos?</label>
+                    <input 
+                      type="time" 
+                      className="input" 
+                      value={sundayClosingTime}
+                      onChange={(e) => setSundayClosingTime(e.target.value)}
+                      required 
+                    />
+                  </div>
+                )}
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 'var(--space-4)' }}>

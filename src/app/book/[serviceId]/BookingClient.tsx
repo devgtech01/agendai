@@ -22,6 +22,7 @@ interface Establishment {
   closingTime?: string;
   lunchStart?: string;
   lunchEnd?: string;
+  amenities?: string;
 }
 
 interface Professional {
@@ -168,8 +169,29 @@ export default function BookingClient({ serviceId }: { serviceId: string }) {
 
   const generateSlots = () => {
     if (!establishment || !service) return [];
+
+    // Verificar se a data selecionada é domingo
+    const dateObj = new Date(selectedDate + 'T00:00:00');
+    const isSunday = dateObj.getDay() === 0;
+
+    const amsList = (establishment.amenities || '').split(',');
+    const isSundayActive = amsList.includes('sunday_active');
+
+    if (isSunday && !isSundayActive) {
+      return []; // Fechado aos domingos
+    }
+
     const openingTime = establishment.openingTime ? establishment.openingTime.slice(0, 5) : '08:00';
-    const closingTime = establishment.closingTime ? establishment.closingTime.slice(0, 5) : '19:00';
+    let closingTime = establishment.closingTime ? establishment.closingTime.slice(0, 5) : '19:00';
+
+    if (isSunday && isSundayActive) {
+      const sundayClosingField = amsList.find(a => a.startsWith('sunday_closing_'));
+      if (sundayClosingField) {
+        closingTime = sundayClosingField.replace('sunday_closing_', '');
+      } else {
+        closingTime = '12:00'; // Default se não configurado
+      }
+    }
 
     const startMin = timeToMinutes(openingTime);
     const endMin = timeToMinutes(closingTime);
@@ -451,6 +473,20 @@ export default function BookingClient({ serviceId }: { serviceId: string }) {
                   lineHeight: '1.5'
                 }}>
                   🌴 O estabelecimento está fechado nesta data devido a férias/recesso. Por favor, selecione outro dia.
+                </div>
+              ) : selectedDate && new Date(selectedDate + 'T00:00:00').getDay() === 0 && !(establishment.amenities || '').split(',').includes('sunday_active') ? (
+                <div style={{
+                  padding: '24px 16px',
+                  background: '#FEF3E2',
+                  border: '1.5px dashed #FCD9A5',
+                  borderRadius: 'var(--radius-lg)',
+                  color: '#8B5A0A',
+                  textAlign: 'center',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  lineHeight: '1.5'
+                }}>
+                  📅 Este estabelecimento não funciona aos domingos. Por favor, selecione outro dia.
                 </div>
               ) : (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(90px, 1fr))', gap: '8px' }}>
