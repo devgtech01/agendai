@@ -96,7 +96,7 @@ export default async function EstablishmentPage({ params }: PageProps) {
                 let label = '';
                 if (am === 'wifi') label = '🛜 Wi-Fi grátis';
                 if (am === 'ar') label = '❄️ Ar Condicionado';
-                if (am === 'bebida') label = '🥤 Bebida grátis';
+                if (am === 'bebida') label = '🥤 Bebida disponível';
                 if (am === 'jogos') label = '🎮 Área de Jogos';
                 if (!label) return null;
                 return (

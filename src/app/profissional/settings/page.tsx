@@ -656,7 +656,7 @@ export default function ProfissionalSettingsPage() {
                       onChange={(e) => setBebida(e.target.checked)} 
                       style={{ cursor: 'pointer', width: '16px', height: '16px', accentColor: 'var(--color-accent)' }} 
                     />
-                    🥤 Bebida grátis
+                    🥤 Bebida disponível
                   </label>
                   <label style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', cursor: 'pointer', userSelect: 'none', color: 'var(--color-text)' }}>
                     <input 
