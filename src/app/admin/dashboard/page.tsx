@@ -257,7 +257,19 @@ export default function AdminDashboardPage() {
 
       {/* Subnav com Abas Admin */}
       <div style={{ background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)', padding: '0 24px' }}>
-        <div className="container flex items-center gap-2 overflow-x-auto no-scrollbar" style={{ padding: 0 }}>
+        <div 
+          className="container no-scrollbar" 
+          style={{ 
+            padding: 0, 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '8px', 
+            overflowX: 'auto',
+            flexWrap: 'nowrap',
+            maxWidth: '100%',
+            WebkitOverflowScrolling: 'touch'
+          }}
+        >
           {[
             { id: 'overview', label: 'Visão Geral', icon: LayoutDashboard },
             { id: 'support', label: `Suporte & Chamados (${openTicketsCount})`, icon: MessageSquare, badge: openTicketsCount > 0 },
@@ -286,6 +298,7 @@ export default function AdminDashboardPage() {
                   borderRight: 'none',
                   cursor: 'pointer',
                   whiteSpace: 'nowrap',
+                  flexShrink: 0,
                   transition: 'all 0.2s'
                 }}
               >
