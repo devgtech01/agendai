@@ -94,6 +94,9 @@ export default function BookingClient({ serviceId }: { serviceId: string }) {
             if (resProfs.ok) {
               const profs = await resProfs.json();
               setProfessionals(profs);
+              if (profs.length === 0) {
+                setStep(1); // Avança direto para Data & Hora se não houver profissionais cadastrados
+              }
             }
           }
         }
@@ -281,13 +284,17 @@ export default function BookingClient({ serviceId }: { serviceId: string }) {
       {step < 4 && (
         <div style={{ marginBottom: 'var(--space-6)' }}>
           <div style={{ display: 'flex', gap: '4px', marginBottom: '8px' }}>
-            <div style={{ flex: 1, height: '3px', borderRadius: '2px', background: step >= 0 ? 'var(--color-primary)' : 'var(--color-border)' }}></div>
+            {professionals.length > 0 && (
+              <div style={{ flex: 1, height: '3px', borderRadius: '2px', background: step >= 0 ? 'var(--color-primary)' : 'var(--color-border)' }}></div>
+            )}
             <div style={{ flex: 1, height: '3px', borderRadius: '2px', background: step >= 1 ? 'var(--color-primary)' : 'var(--color-border)' }}></div>
             <div style={{ flex: 1, height: '3px', borderRadius: '2px', background: step >= 2 ? 'var(--color-primary)' : 'var(--color-border)' }}></div>
             <div style={{ flex: 1, height: '3px', borderRadius: '2px', background: step >= 3 ? 'var(--color-primary)' : 'var(--color-border)' }}></div>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--color-muted)' }}>
-            <span style={{ color: step >= 0 ? 'var(--color-accent)' : '', fontWeight: step >= 0 ? 500 : 400 }}>Equipe</span>
+            {professionals.length > 0 && (
+              <span style={{ color: step >= 0 ? 'var(--color-accent)' : '', fontWeight: step >= 0 ? 500 : 400 }}>Equipe</span>
+            )}
             <span style={{ color: step >= 1 ? 'var(--color-accent)' : '', fontWeight: step >= 1 ? 500 : 400 }}>Data & Hora</span>
             <span style={{ color: step >= 2 ? 'var(--color-accent)' : '', fontWeight: step >= 2 ? 500 : 400 }}>Dados</span>
             <span style={{ color: step >= 3 ? 'var(--color-accent)' : '', fontWeight: step >= 3 ? 500 : 400 }}>Confirmação</span>
@@ -391,7 +398,13 @@ export default function BookingClient({ serviceId }: { serviceId: string }) {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
               <button 
-                onClick={() => setStep(0)} 
+                onClick={() => {
+                  if (professionals.length === 0) {
+                    router.push(`/catalog/${service.establishmentId}`);
+                  } else {
+                    setStep(0);
+                  }
+                }} 
                 style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: '4px', display: 'flex', alignItems: 'center' }}
               >
                 <span style={{ fontSize: '16px' }}>←</span>
