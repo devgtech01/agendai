@@ -272,12 +272,26 @@ export default function ProfissionalServicesPage() {
             {getSuggestions(establishment.category || '').map((rec, index) => {
               const alreadyHas = services.some(s => s.name.toLowerCase() === rec.name.toLowerCase());
               return (
-                <div key={index} style={{ border: '1px solid var(--color-border)', borderRadius: 'var(--radius-lg)', padding: 'var(--space-3)', display: 'flex', flexDirection: 'column', gap: '8px', background: alreadyHas ? '#F7F7FA' : 'var(--color-surface)', opacity: alreadyHas ? 0.75 : 1 }}>
-                  <img src={rec.imageUrl} alt={rec.name} style={{ width: '100%', height: '90px', objectFit: 'cover', borderRadius: 'var(--radius-md)' }} />
+                <div 
+                  key={index} 
+                  style={{ 
+                    border: '1px solid var(--color-border)', 
+                    borderRadius: 'var(--radius-lg)', 
+                    padding: '16px', 
+                    display: 'flex', 
+                    flexDirection: 'column', 
+                    justifyContent: 'space-between',
+                    gap: '12px', 
+                    background: alreadyHas ? 'rgba(0,0,0,0.01)' : 'var(--color-surface)', 
+                    opacity: alreadyHas ? 0.6 : 1,
+                    minHeight: '110px'
+                  }}
+                >
                   <div>
                     <div style={{ fontWeight: 600, fontSize: '14px', color: 'var(--color-text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{rec.name}</div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--color-muted)', marginTop: '4px' }}>
+                    <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: 'var(--color-muted)', marginTop: '4px' }}>
                       <span>R$ {rec.price.toFixed(2).replace('.', ',')}</span>
+                      <span>•</span>
                       <span>{rec.durationMinutes} min</span>
                     </div>
                   </div>
@@ -288,7 +302,7 @@ export default function ProfissionalServicesPage() {
                     onClick={() => handleAddRecommendedService(rec)}
                     disabled={isSubmitting || alreadyHas}
                   >
-                    {alreadyHas ? '✓ Adicionado' : '+ 1 Clique'}
+                    {alreadyHas ? '✓ Adicionado' : '+ Adicionar'}
                   </button>
                 </div>
               );
@@ -307,38 +321,53 @@ export default function ProfissionalServicesPage() {
           ) : (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: 'var(--space-5)' }}>
               {services.map((service) => (
-                <div key={service.id} style={{ display: 'flex', gap: 'var(--space-4)', padding: 'var(--space-4)', background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', border: '0.5px solid var(--color-border)', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-                  <img src={service.imageUrl} alt={service.name} style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: 'var(--radius-md)' }} />
-                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                      <h4 style={{ fontWeight: 500, fontSize: '16px', color: 'var(--color-text)' }}>{service.name}</h4>
-                      <span className="badge" style={{ fontSize: '10px' }}>{service.category}</span>
+                <div 
+                  key={service.id} 
+                  style={{ 
+                    display: 'flex', 
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    padding: '20px', 
+                    background: 'var(--color-surface)', 
+                    borderRadius: 'var(--radius-lg)', 
+                    border: '0.5px solid var(--color-border)', 
+                    borderLeft: '4px solid var(--color-accent)',
+                    boxShadow: '0 4px 12px rgba(0,0,0,0.02)',
+                    minHeight: '130px'
+                  }}
+                >
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', marginBottom: '8px' }}>
+                      <h4 style={{ fontWeight: 600, fontSize: '15px', color: 'var(--color-text)', margin: 0 }}>{service.name}</h4>
+                      <span className="badge" style={{ fontSize: '10px', whiteSpace: 'nowrap' }}>{service.category}</span>
                     </div>
-                    <p style={{ fontSize: '13px', color: 'var(--color-muted)', marginTop: '4px' }}>
+                    <p style={{ fontSize: '13px', color: 'var(--color-muted)', display: 'flex', alignItems: 'center', gap: '4px', margin: 0 }}>
                       ⏱ {service.durationMinutes} minutos
                     </p>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '8px' }}>
-                      <p style={{ fontSize: '16px', fontWeight: 500, color: 'var(--color-accent)', margin: 0 }}>
-                        R$ {Number(service.price).toFixed(2).replace('.', ',')}
-                      </p>
-                      <button 
-                        onClick={() => handleDeleteService(service.id)} 
-                        style={{ 
-                          background: 'transparent', 
-                          border: 'none', 
-                          color: 'var(--color-danger)', 
-                          cursor: 'pointer',
-                          fontSize: '12px',
-                          fontWeight: 500,
-                          padding: '4px 8px',
-                          borderRadius: 'var(--radius-sm)',
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.background = '#FCEAEA'}
-                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
-                      >
-                        Excluir
-                      </button>
-                    </div>
+                  </div>
+                  
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', borderTop: '0.5px solid var(--color-border)', paddingTop: '12px' }}>
+                    <p style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>
+                      R$ {Number(service.price).toFixed(2).replace('.', ',')}
+                    </p>
+                    <button 
+                      onClick={() => handleDeleteService(service.id)} 
+                      style={{ 
+                        background: 'transparent', 
+                        border: 'none', 
+                        color: 'var(--color-danger)', 
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        fontWeight: 600,
+                        padding: '4px 8px',
+                        borderRadius: 'var(--radius-sm)',
+                        transition: 'background var(--transition-normal)'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.background = '#FCEAEA'}
+                      onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                    >
+                      Excluir
+                    </button>
                   </div>
                 </div>
               ))}

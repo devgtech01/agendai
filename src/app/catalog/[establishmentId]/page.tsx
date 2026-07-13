@@ -140,25 +140,20 @@ export default async function EstablishmentPage({ params }: PageProps) {
                 style={{
                   background: 'var(--color-surface)',
                   border: '0.5px solid var(--color-border)',
+                  borderLeft: '4px solid var(--color-accent)',
                   borderRadius: 'var(--radius-lg)',
                   overflow: 'hidden',
                   display: 'flex',
                   flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  minHeight: '170px',
                   transition: 'box-shadow var(--transition-normal), border-color var(--transition-normal)'
                 }}
               >
-                <div style={{ 
-                  height: '100px', 
-                  backgroundImage: `url(${service.imageUrl})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  opacity: 0.9
-                }} />
-                
                 <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                    <h3 style={{ fontSize: '16px', fontWeight: 500, color: 'var(--color-text)' }}>{service.name}</h3>
-                    {service.price >= 90 && <span className="badge badge-popular">Popular</span>}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px', gap: '8px' }}>
+                    <h3 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--color-text)', margin: 0 }}>{service.name}</h3>
+                    <span className="badge" style={{ fontSize: '10px', whiteSpace: 'nowrap' }}>{service.category}</span>
                   </div>
                   
                   <p className="text-muted" style={{ fontSize: '13px', lineHeight: 1.5, flex: 1, marginBottom: '12px' }}>
@@ -167,9 +162,9 @@ export default async function EstablishmentPage({ params }: PageProps) {
                   
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '0.5px solid var(--color-border)', paddingTop: '12px', marginTop: 'auto' }}>
                     <div>
-                      <div style={{ fontSize: '11px', color: 'var(--color-muted)' }}>{service.durationMinutes} min · {service.category}</div>
-                      <div style={{ fontSize: '16px', fontWeight: 500, color: 'var(--color-accent)', marginTop: '2px' }}>
-                        R$ {service.price.toFixed(2)}
+                      <div style={{ fontSize: '11px', color: 'var(--color-muted)' }}>⏱ {service.durationMinutes} min</div>
+                      <div style={{ fontSize: '16px', fontWeight: 600, color: 'var(--color-accent)', marginTop: '2px' }}>
+                        R$ {service.price.toFixed(2).replace('.', ',')}
                       </div>
                     </div>
                     
