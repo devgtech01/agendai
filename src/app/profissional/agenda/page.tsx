@@ -330,28 +330,34 @@ export default function ProfissionalAgendaPage() {
     })
     .sort((a, b) => a.start - b.start);
 
-  const timelineRows = [];
-  let currentMin = startMin;
+  // 1. Gerar os minutos do grid padrão (de 30 em 30 min)
   const gridStep = 30;
+  const gridMinutes: number[] = [];
+  let tempMin = startMin;
+  while (tempMin <= endMin) {
+    gridMinutes.push(tempMin);
+    tempMin += gridStep;
+  }
 
-  while (currentMin + 30 <= endMin) {
-    // 1. Almoço
-    if (hasLunchBreak && currentMin >= lunchStartMin && currentMin < lunchEndMin) {
-      timelineRows.push({
-        type: 'lunch',
-        timeStr: minutesToTime(currentMin),
-        label: 'Almoço',
-        duration: lunchEndMin - currentMin
-      });
-      currentMin = lunchEndMin;
+  // 2. Coletar os minutos de início de todos os agendamentos ativos
+  const bookingStartMinutes = activeBookings.map(b => b.start);
+
+  // 3. Mesclar, remover duplicatas e ordenar de forma crescente
+  const allTimelineMinutes = Array.from(new Set([...gridMinutes, ...bookingStartMinutes]))
+    .sort((a, b) => a - b);
+
+  const timelineRows: any[] = [];
+  
+  for (let i = 0; i < allTimelineMinutes.length; i++) {
+    const currentMin = allTimelineMinutes[i];
+    
+    // Se o minuto for maior ou igual ao fechamento (endMin), e não houver agendamento começando exatamente neste minuto, paramos
+    const bookingsStartingHere = activeBookings.filter(b => b.start === currentMin);
+    if (currentMin >= endMin && bookingsStartingHere.length === 0) {
       continue;
     }
 
-    // Encontrar todos os agendamentos que começam EXATAMENTE neste minuto
-    const bookingsStartingHere = activeBookings.filter(b => b.start === currentMin);
-
     if (bookingsStartingHere.length > 0) {
-      // Adicionar uma linha para cada agendamento começando aqui
       bookingsStartingHere.forEach(b => {
         timelineRows.push({
           type: 'booking',
@@ -359,23 +365,35 @@ export default function ProfissionalAgendaPage() {
           timeStr: minutesToTime(currentMin)
         });
       });
-      currentMin += gridStep;
-    } else {
-      // Verificar se o horário está ocupado por algum agendamento em andamento
-      const isOccupied = activeBookings.some(b => currentMin >= b.start && currentMin < b.end);
+      continue;
+    }
 
-      if (isOccupied) {
+    // Almoço (se o minuto estiver estritamente dentro do horário de almoço)
+    if (hasLunchBreak && currentMin >= lunchStartMin && currentMin < lunchEndMin) {
+      if (!timelineRows.some(r => r.type === 'lunch')) {
         timelineRows.push({
-          type: 'occupied',
-          timeStr: minutesToTime(currentMin)
-        });
-      } else {
-        timelineRows.push({
-          type: 'free',
-          timeStr: minutesToTime(currentMin)
+          type: 'lunch',
+          timeStr: minutesToTime(lunchStartMin),
+          label: 'Almoço',
+          duration: lunchEndMin - lunchStartMin
         });
       }
-      currentMin += gridStep;
+      continue;
+    }
+
+    // Verificar se este minuto é de ocupação
+    const isOccupied = activeBookings.some(b => currentMin >= b.start && currentMin < b.end);
+    
+    if (isOccupied) {
+      timelineRows.push({
+        type: 'occupied',
+        timeStr: minutesToTime(currentMin)
+      });
+    } else {
+      timelineRows.push({
+        type: 'free',
+        timeStr: minutesToTime(currentMin)
+      });
     }
   }
 
