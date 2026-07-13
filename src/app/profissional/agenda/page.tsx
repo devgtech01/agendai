@@ -776,7 +776,7 @@ export default function ProfissionalAgendaPage() {
                             {apt.clientName}
                           </span>
                           <a 
-                            href={`https://wa.me/55${apt.clientPhone.replace(/\D/g, '')}`} 
+                            href={`https://wa.me/55${(apt.clientPhone || '').replace(/\D/g, '')}`} 
                             target="_blank" 
                             rel="noopener noreferrer" 
                             style={{ 
@@ -789,7 +789,7 @@ export default function ProfissionalAgendaPage() {
                               gap: '2px'
                             }}
                           >
-                            💬 {apt.clientPhone}
+                            💬 {apt.clientPhone || 'Sem telefone'}
                           </a>
                         </div>
                         <div style={{ fontSize: '14px', color: 'var(--color-muted)', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
