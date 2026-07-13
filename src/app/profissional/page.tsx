@@ -91,7 +91,7 @@ export default function ProfissionalLoginPage() {
         <div style={{ textAlign: 'center', marginTop: 'var(--space-5)' }}>
           <p className="text-muted" style={{ fontSize: '14px' }}>
             Não possui uma conta?{' '}
-            <Link href="/profissional/planos" style={{ color: 'var(--color-accent)', textDecoration: 'none', fontWeight: 500 }}>
+            <Link href="/profissional/register" style={{ color: 'var(--color-accent)', textDecoration: 'none', fontWeight: 500 }}>
               Cadastre-se
             </Link>
           </p>

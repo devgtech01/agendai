@@ -5,9 +5,9 @@ import { supabaseAdmin } from '@/lib/supabase-admin';
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { email, password, ownerName, establishmentName, phone, selectedPlan, category, customCategory } = body;
+    const { email, password, ownerName, establishmentName, phone, selectedPlan = 'mensal', category, customCategory } = body;
 
-    if (!email || !password || !ownerName || !establishmentName || !phone || !selectedPlan) {
+    if (!email || !password || !ownerName || !establishmentName || !phone) {
       return NextResponse.json({ error: 'Campos obrigatórios ausentes.' }, { status: 400 });
     }
 
@@ -90,6 +90,7 @@ export async function POST(request: Request) {
       success: true,
       userId,
       session,
+      isPreAuthorized,
       requiresConfirmation: !session,
       message: !session 
         ? 'Cadastro realizado! Por favor, verifique seu e-mail para ativar sua conta.' 

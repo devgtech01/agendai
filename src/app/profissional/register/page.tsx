@@ -21,23 +21,9 @@ export default function ProfissionalRegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  const [checkedFunnel, setCheckedFunnel] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState('');
+  const [checkedFunnel, setCheckedFunnel] = useState(true);
+  const [selectedPlan, setSelectedPlan] = useState('mensal');
   const router = useRouter();
-
-  useEffect(() => {
-    const plan = sessionStorage.getItem('selectedPlan');
-    if (!plan || !['mensal', 'semestral', 'anual'].includes(plan)) {
-      setError('Por favor, selecione um plano antes de prosseguir com o cadastro.');
-      const timer = setTimeout(() => {
-        router.replace('/profissional/planos');
-      }, 2000);
-      return () => clearTimeout(timer);
-    } else {
-      setSelectedPlan(plan);
-      setCheckedFunnel(true);
-    }
-  }, [router]);
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,22 +89,12 @@ export default function ProfissionalRegisterPage() {
         await supabase.auth.setSession(data.session);
       }
 
-      // Iniciar fluxo de checkout
-      const response = await fetch('/api/stripe/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          email,
-          planKey: selectedPlan,
-          userId: data.userId,
-        }),
-      });
-
-      const checkoutData = await response.json();
-      if (response.ok && checkoutData.url) {
-        router.push(checkoutData.url);
-      } else {
+      // Se for usuário liberado de 30 dias sem cartão (pre-authorized), vai direto ao painel
+      if (data.isPreAuthorized) {
         router.push('/profissional/dashboard');
+      } else {
+        // Caso contrário, vai para a escolha do plano para pagar
+        router.push('/profissional/planos');
       }
     } catch (err: any) {
       console.error('Erro no cadastro:', err);
