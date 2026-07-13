@@ -225,11 +225,26 @@ export default function CatalogClient() {
               <div style={{ 
                 height: '160px', 
                 background: 'var(--color-primary)',
-                backgroundImage: `url(${est.imageUrl})`,
+                backgroundImage: est.imageUrl ? `url(${est.imageUrl})` : 'none',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                opacity: 0.95
-              }} />
+                opacity: 0.95,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: 'rgba(232, 213, 183, 0.45)',
+                fontSize: '13px',
+                fontWeight: 500,
+                flexDirection: 'column',
+                gap: '8px'
+              }}>
+                {!est.imageUrl && (
+                  <>
+                    <span style={{ fontSize: '32px' }}>💈</span>
+                    <span>Sem foto cadastrada</span>
+                  </>
+                )}
+              </div>
               
               <div style={{ padding: 'var(--space-4)', display: 'flex', flexDirection: 'column', flex: 1, gap: '8px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>

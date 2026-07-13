@@ -24,7 +24,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Campos obrigatórios ausentes.' }, { status: 400 });
     }
 
-    const defaultImg = imageUrl || 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?w=500&q=80';
+    const defaultImg = imageUrl || '';
 
     const newEstablishment = await addEstablishment({
       name,

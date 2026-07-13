@@ -203,7 +203,7 @@ export default function ProfissionalSettingsPage() {
             description: '',
             address: '',
             phone: user.user_metadata?.phone || '71981032968',
-            imageUrl: 'https://images.unsplash.com/photo-1585747860715-2ba37e788b70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+            imageUrl: '',
             ownerId: user.id
           };
           const created = await addEstablishment(fallbackEst);
@@ -772,12 +772,32 @@ export default function ProfissionalSettingsPage() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <label className="input-label">Foto de Capa do Estabelecimento</label>
                 
-                {imageUrl && (
-                  <div style={{ position: 'relative', width: '100%', aspectRatio: '16/9', borderRadius: '12px', overflow: 'hidden', border: '1px solid var(--color-border)', backgroundColor: '#1E1B18' }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                <div style={{ 
+                  position: 'relative', 
+                  width: '100%', 
+                  aspectRatio: '16/9', 
+                  borderRadius: '12px', 
+                  overflow: 'hidden', 
+                  border: imageUrl ? '1px solid var(--color-border)' : '1.5px dashed var(--color-border)', 
+                  backgroundColor: 'var(--color-background)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'var(--color-muted)',
+                  fontSize: '13px',
+                  flexDirection: 'column',
+                  gap: '8px'
+                }}>
+                  {imageUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img src={imageUrl} alt="Preview da Capa" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  </div>
-                )}
+                  ) : (
+                    <>
+                      <span style={{ fontSize: '32px' }}>📷</span>
+                      <span>Nenhuma foto cadastrada. Envie uma foto abaixo.</span>
+                    </>
+                  )}
+                </div>
 
                 <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
                   <label className="btn btn-secondary btn-full" style={{ cursor: 'pointer', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', height: '42px', padding: '0 16px', margin: 0 }}>
