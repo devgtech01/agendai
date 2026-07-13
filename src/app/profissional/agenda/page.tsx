@@ -347,23 +347,34 @@ export default function ProfissionalAgendaPage() {
       continue;
     }
 
-    // 2. Colisão ou agendamento ativo
-    const overlappingBooking = activeBookings.find(b => currentMin >= b.start && currentMin < b.end);
+    // Encontrar todos os agendamentos que começam EXATAMENTE neste minuto
+    const bookingsStartingHere = activeBookings.filter(b => b.start === currentMin);
 
-    if (overlappingBooking) {
-      if (overlappingBooking.start === currentMin) {
+    if (bookingsStartingHere.length > 0) {
+      // Adicionar uma linha para cada agendamento começando aqui
+      bookingsStartingHere.forEach(b => {
         timelineRows.push({
           type: 'booking',
-          booking: overlappingBooking,
+          booking: b,
+          timeStr: minutesToTime(currentMin)
+        });
+      });
+      currentMin += gridStep;
+    } else {
+      // Verificar se o horário está ocupado por algum agendamento em andamento
+      const isOccupied = activeBookings.some(b => currentMin >= b.start && currentMin < b.end);
+
+      if (isOccupied) {
+        timelineRows.push({
+          type: 'occupied',
+          timeStr: minutesToTime(currentMin)
+        });
+      } else {
+        timelineRows.push({
+          type: 'free',
           timeStr: minutesToTime(currentMin)
         });
       }
-      currentMin = overlappingBooking.end;
-    } else {
-      timelineRows.push({
-        type: 'free',
-        timeStr: minutesToTime(currentMin)
-      });
       currentMin += gridStep;
     }
   }
@@ -606,6 +617,29 @@ export default function ProfissionalAgendaPage() {
                     );
                   }
 
+                   if (row.type === 'occupied') {
+                    return (
+                      <div 
+                        key={`occupied-${row.timeStr}`}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          background: 'rgba(232, 213, 183, 0.05)',
+                          borderRadius: 'var(--radius-lg)',
+                          border: '0.5px solid rgba(232, 213, 183, 0.15)',
+                          padding: '16px 20px',
+                        }}
+                      >
+                        <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-muted)', minWidth: '70px' }}>{row.timeStr}</div>
+                        <div style={{ flex: 1, marginLeft: '16px', fontSize: '14px', color: 'var(--color-muted)' }}>
+                          ⏳ Em atendimento / Ocupado
+                        </div>
+                        <div style={{ fontSize: '12px', color: 'var(--color-muted)', fontStyle: 'italic' }}>Horário ocupado</div>
+                      </div>
+                    );
+                  }
+
                   if (row.type === 'free') {
                     return (
                       <div 
@@ -636,7 +670,7 @@ export default function ProfissionalAgendaPage() {
                   }
 
                   // Tipo: Booking (Real ou Bloqueado)
-                  const apt = row.booking!;
+                  const apt = (row as any).booking;
                   const isBlocked = apt.clientEmail === 'blocked@agendai.com';
 
                   if (isBlocked) {
