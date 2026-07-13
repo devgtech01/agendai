@@ -181,6 +181,34 @@ export default function AdminDashboardPage() {
     }
   };
 
+  const handleQuickResolve = async (ticketId: string) => {
+    try {
+      const token = sessionStorage.getItem('adminToken') || '';
+      const res = await fetch('/api/support', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          action: 'updateStatus',
+          ticketId,
+          status: 'Resolvido',
+          adminNotes: 'Chamado encerrado/solucionado pela administração.'
+        })
+      });
+
+      if (res.ok) {
+        const updated = await res.json();
+        setTickets(tickets.map(t => t.id === updated.id ? updated : t));
+      } else {
+        alert('Erro ao solucionar o chamado.');
+      }
+    } catch (err) {
+      alert('Erro de conexão ao solucionar chamado.');
+    }
+  };
+
   const openTicketModal = (t: SupportTicket) => {
     setSelectedTicket(t);
     setNewStatus(t.status);
@@ -462,9 +490,20 @@ export default function AdminDashboardPage() {
                               </span>
                             </td>
                             <td style={{ padding: '14px 16px', textAlign: 'right' }}>
-                              <button onClick={() => openTicketModal(t)} className="btn btn-primary btn-sm">
-                                Atender / Responder
-                              </button>
+                              <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+                                <button onClick={() => openTicketModal(t)} className="btn btn-primary btn-sm">
+                                  Atender / Responder
+                                </button>
+                                {t.status !== 'Resolvido' && (
+                                  <button 
+                                    onClick={() => handleQuickResolve(t.id)} 
+                                    className="btn btn-secondary btn-sm"
+                                    style={{ color: '#10B981', borderColor: '#10B981' }}
+                                  >
+                                    Solucionar
+                                  </button>
+                                )}
+                              </div>
                             </td>
                           </tr>
                         ))}
@@ -499,9 +538,20 @@ export default function AdminDashboardPage() {
                             {t.priority}
                           </span>
                         </div>
-                        <button onClick={() => openTicketModal(t)} className="btn btn-primary btn-full btn-sm" style={{ marginTop: '4px' }}>
-                          Atender / Responder
-                        </button>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '4px' }}>
+                          <button onClick={() => openTicketModal(t)} className="btn btn-primary btn-full btn-sm">
+                            Atender / Responder
+                          </button>
+                          {t.status !== 'Resolvido' && (
+                            <button 
+                              onClick={() => handleQuickResolve(t.id)} 
+                              className="btn btn-secondary btn-full btn-sm"
+                              style={{ color: '#10B981', borderColor: '#10B981', background: 'transparent' }}
+                            >
+                              Marcar como Solucionado
+                            </button>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>

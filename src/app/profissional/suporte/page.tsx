@@ -17,6 +17,74 @@ export default function ProfissionalSuportePage() {
   const [priority, setPriority] = useState<'Baixa' | 'Media' | 'Alta' | 'Urgente'>('Media');
   const [feedback, setFeedback] = useState<{ type: 'success' | 'danger'; text: string } | null>(null);
 
+  // Estados e manipuladores para réplica e conclusão de chamado
+  const [replyTexts, setReplyTexts] = useState<{[key: string]: string}>({});
+
+  const handleMarkSolved = async (ticketId: string) => {
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      const headers: any = { 'Content-Type': 'application/json' };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const res = await fetch('/api/support', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          action: 'updateStatus',
+          ticketId,
+          status: 'Resolvido',
+          adminNotes: 'Chamado resolvido pelo cliente.'
+        }),
+      });
+
+      if (res.ok) {
+        const updated = await res.json();
+        setTickets(tickets.map(t => t.id === updated.id ? updated : t));
+      } else {
+        alert('Erro ao marcar chamado como resolvido.');
+      }
+    } catch (err) {
+      alert('Erro de conexão ao atualizar chamado.');
+    }
+  };
+
+  const handleSendReply = async (ticketId: string) => {
+    const text = replyTexts[ticketId] || '';
+    if (!text.trim()) return;
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      const headers: any = { 'Content-Type': 'application/json' };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
+      const res = await fetch('/api/support', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          action: 'reply',
+          ticketId,
+          replyText: text
+        }),
+      });
+
+      if (res.ok) {
+        const updated = await res.json();
+        setTickets(tickets.map(t => t.id === updated.id ? updated : t));
+        setReplyTexts({ ...replyTexts, [ticketId]: '' });
+      } else {
+        alert('Erro ao enviar resposta.');
+      }
+    } catch (err) {
+      alert('Erro de conexão ao enviar resposta.');
+    }
+  };
+
   useEffect(() => {
     async function loadUserAndTickets() {
       try {
@@ -226,14 +294,56 @@ export default function ProfissionalSuportePage() {
                         </div>
                       </div>
 
-                      <p className="text-sm text-muted-foreground mb-3" style={{ lineHeight: 1.5 }}>
+                      <p className="text-sm text-muted-foreground mb-3" style={{ lineHeight: 1.5, whiteSpace: 'pre-wrap' }}>
                         {t.message}
                       </p>
 
                       {t.adminNotes && (
-                        <div style={{ background: 'var(--color-surface)', borderLeft: '3px solid var(--color-accent)', padding: '10px 14px', borderRadius: '6px', fontSize: '13px' }}>
+                        <div style={{ background: 'var(--color-surface)', borderLeft: '3px solid var(--color-accent)', padding: '10px 14px', borderRadius: '6px', fontSize: '13px', marginBottom: '12px' }}>
                           <strong style={{ color: 'var(--color-accent)' }}>💬 Resposta da Equipe Agendai:</strong>
-                          <p style={{ margin: '4px 0 0 0', color: 'var(--color-text)' }}>{t.adminNotes}</p>
+                          <p style={{ margin: '4px 0 0 0', color: 'var(--color-text)', whiteSpace: 'pre-wrap' }}>{t.adminNotes}</p>
+                        </div>
+                      )}
+
+                      {t.status !== 'Resolvido' && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '14px', borderTop: '0.5px solid var(--color-border)', paddingTop: '14px' }}>
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <input 
+                              type="text" 
+                              className="input text-sm" 
+                              placeholder="Escreva sua resposta para a equipe..."
+                              value={replyTexts[t.id] || ''}
+                              onChange={(e) => setReplyTexts({ ...replyTexts, [t.id]: e.target.value })}
+                              style={{ flex: 1, height: '38px' }}
+                            />
+                            <button
+                              onClick={() => handleSendReply(t.id)}
+                              disabled={!(replyTexts[t.id] || '').trim()}
+                              className="btn btn-primary btn-sm"
+                              style={{ height: '38px', padding: '0 16px' }}
+                            >
+                              Responder
+                            </button>
+                          </div>
+                          
+                          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <button
+                              onClick={() => handleMarkSolved(t.id)}
+                              className="btn btn-secondary btn-sm"
+                              style={{ 
+                                display: 'inline-flex', 
+                                alignItems: 'center', 
+                                gap: '6px', 
+                                color: '#10B981', 
+                                borderColor: '#10B981',
+                                background: 'transparent'
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(16, 185, 129, 0.05)'}
+                              onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                            >
+                              <CheckCircle2 size={14} /> Marcar como Solucionado
+                            </button>
+                          </div>
                         </div>
                       )}
                     </div>
