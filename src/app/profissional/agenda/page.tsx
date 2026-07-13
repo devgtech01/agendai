@@ -382,12 +382,13 @@ export default function ProfissionalAgendaPage() {
     }
 
     // Verificar se este minuto é de ocupação
-    const isOccupied = activeBookings.some(b => currentMin >= b.start && currentMin < b.end);
+    const overlappingBooking = activeBookings.find(b => currentMin >= b.start && currentMin < b.end);
     
-    if (isOccupied) {
+    if (overlappingBooking) {
       timelineRows.push({
         type: 'occupied',
-        timeStr: minutesToTime(currentMin)
+        timeStr: minutesToTime(currentMin),
+        booking: overlappingBooking
       });
     } else {
       timelineRows.push({
@@ -636,6 +637,11 @@ export default function ProfissionalAgendaPage() {
                   }
 
                    if (row.type === 'occupied') {
+                    const b = (row as any).booking;
+                    const clientName = b ? b.clientName : '';
+                    const s = b ? services.find((srv) => srv.id === b.serviceId) : null;
+                    const serviceName = s ? s.name : '';
+                    
                     return (
                       <div 
                         key={`occupied-${row.timeStr}`}
@@ -643,15 +649,15 @@ export default function ProfissionalAgendaPage() {
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'space-between',
-                          background: 'rgba(232, 213, 183, 0.05)',
+                          background: 'rgba(232, 213, 183, 0.03)',
                           borderRadius: 'var(--radius-lg)',
-                          border: '0.5px solid rgba(232, 213, 183, 0.15)',
+                          border: '0.5px solid rgba(232, 213, 183, 0.1)',
                           padding: '16px 20px',
                         }}
                       >
                         <div style={{ fontSize: '18px', fontWeight: 600, color: 'var(--color-muted)', minWidth: '70px' }}>{row.timeStr}</div>
                         <div style={{ flex: 1, marginLeft: '16px', fontSize: '14px', color: 'var(--color-muted)' }}>
-                          ⏳ Em atendimento / Ocupado
+                          ⏳ Em andamento: <strong style={{ color: 'var(--color-text)' }}>{clientName}</strong> {serviceName ? `— ${serviceName}` : ''}
                         </div>
                         <div style={{ fontSize: '12px', color: 'var(--color-muted)', fontStyle: 'italic' }}>Horário ocupado</div>
                       </div>
