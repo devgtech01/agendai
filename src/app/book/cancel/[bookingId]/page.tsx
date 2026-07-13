@@ -182,10 +182,10 @@ export default function CancelBookingPage({ params }: PageProps) {
                   border: '1px solid var(--color-border)'
                 }}>
                   <div style={{ fontSize: '14px', color: 'var(--color-text)' }}>
-                    💈 <strong>Local:</strong> {establishment ? establishment.name : 'Carregando...'}
+                    📍 <strong>Local:</strong> {establishment ? establishment.name : 'Carregando...'}
                   </div>
                   <div style={{ fontSize: '14px', color: 'var(--color-text)' }}>
-                    ✂️ <strong>Serviço:</strong> {service ? service.name : 'Carregando...'}
+                    ✨ <strong>Serviço:</strong> {service ? service.name : 'Carregando...'}
                   </div>
                   <div style={{ fontSize: '14px', color: 'var(--color-text)' }}>
                     📅 <strong>Data:</strong> {booking.date.split('-').reverse().join('/')}

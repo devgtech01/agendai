@@ -135,10 +135,10 @@ export async function POST(request: Request) {
 
                   <div style="background-color: #FDF2F2; border-left: 4px solid #D9383A; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
                     <p style="margin: 0 0 8px 0; font-size: 14px; color: #9B1C1C;">
-                      💈 <strong>Local:</strong> ${estName}
+                      📍 <strong>Local:</strong> ${estName}
                     </p>
                     <p style="margin: 0 0 8px 0; font-size: 14px; color: #9B1C1C;">
-                      ✂️ <strong>Serviço:</strong> ${srvName}
+                      ✨ <strong>Serviço:</strong> ${srvName}
                     </p>
                     <p style="margin: 0 0 8px 0; font-size: 14px; color: #9B1C1C;">
                       📅 <strong>Data:</strong> ${formattedDate}

@@ -162,7 +162,7 @@ export async function POST(request: Request) {
           await resend.emails.send({
             from: process.env.EMAIL_FROM || 'Agendai <atendimento@sisagendai.online>',
             to: clientEmail,
-            subject: `Agendamento Confirmado no ${estName}! ✂️`,
+            subject: `Agendamento Confirmado no ${estName}! ✨`,
             html: `
               <div style="font-family: system-ui, -apple-system, sans-serif; background-color: #F8F7F4; padding: 40px 20px;">
                 <div style="max-width: 500px; margin: 0 auto; background-color: #FFFFFF; border: 1px solid #E4E1DC; border-radius: 16px; padding: 32px; box-shadow: 0 4px 12px rgba(0,0,0,0.02);">
@@ -180,10 +180,10 @@ export async function POST(request: Request) {
 
                   <div style="background-color: #FEF3E2; border-left: 4px solid #C15A2E; padding: 16px; border-radius: 8px; margin-bottom: 24px;">
                     <p style="margin: 0 0 8px 0; font-size: 14px; color: #8B5A0A;">
-                      💈 <strong>Local:</strong> ${estName}
+                      📍 <strong>Local:</strong> ${estName}
                     </p>
                     <p style="margin: 0 0 8px 0; font-size: 14px; color: #8B5A0A;">
-                      ✂️ <strong>Serviço:</strong> ${srvName}
+                      ✨ <strong>Serviço:</strong> ${srvName}
                     </p>
                     <p style="margin: 0 0 8px 0; font-size: 14px; color: #8B5A0A;">
                       📅 <strong>Data:</strong> ${formattedDate}
@@ -248,7 +248,7 @@ export async function POST(request: Request) {
                         📞 <strong>Contato:</strong> ${clientPhone}
                       </p>
                       <p style="margin: 0 0 8px 0; font-size: 14px; color: #235A45;">
-                        ✂️ <strong>Serviço:</strong> ${srvName}
+                        ✨ <strong>Serviço:</strong> ${srvName}
                       </p>
                       <p style="margin: 0 0 8px 0; font-size: 14px; color: #235A45;">
                         📅 <strong>Data:</strong> ${formattedDate}
